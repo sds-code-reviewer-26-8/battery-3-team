@@ -1,0 +1,933 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>코드 설명서 - 배터리 주문 관리</title>
+<style>
+:root{
+  --bg:#f5f6fa;--card:#fff;--ink:#1b2130;--mut:#5b6478;--line:#e2e5ee;--soft:#eef1f8;
+  --acc:#3b5bdb;--acc-soft:#e7ecff;--acc-ink:#2745b8;
+  --g:#1c9a55;--g-soft:#e2f5ea;--y:#b97d00;--y-soft:#fff3d1;--r:#d63b3b;--r-soft:#fde6e6;
+  --code:#eceff7;--shadow:0 1px 2px rgba(20,30,60,.06),0 4px 14px rgba(20,30,60,.05);
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#12151d;--card:#1a1f2b;--ink:#e8ebf3;--mut:#9aa3b8;--line:#2b3244;--soft:#222938;
+    --acc:#8aa2ff;--acc-soft:#252d4d;--acc-ink:#b4c3ff;
+    --g:#4cc489;--g-soft:#17332a;--y:#e8b441;--y-soft:#3a2f12;--r:#ff7b7b;--r-soft:#3d1c1f;
+    --code:#252b3b;--shadow:none;
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:16px/1.65 system-ui,-apple-system,"Segoe UI","Malgun Gothic","Apple SD Gothic Neo",sans-serif}
+.wrap{max-width:1080px;margin:0 auto;padding:28px 16px 64px}
+header h1{margin:0 0 4px;font-size:26px;letter-spacing:-.02em}
+header p{margin:0;color:var(--mut)}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 4px}
+.chip{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:3px 12px;font-size:13px;color:var(--mut)}
+.chip b{color:var(--ink);font-weight:600}
+.scope{font-size:14px;color:var(--mut);margin:8px 0 0}
+
+.tabs{position:sticky;top:0;z-index:20;display:flex;flex-wrap:wrap;gap:6px;margin:20px -4px 18px;padding:8px 4px;
+  background:var(--bg);border-bottom:1px solid var(--line)}
+.tab{flex:1 1 150px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;
+  padding:10px 12px;text-align:left;cursor:pointer;font:inherit;line-height:1.3}
+.tab small{display:block;color:var(--mut);font-size:12px;margin-top:2px}
+.tab .no{display:inline-block;width:20px;height:20px;line-height:20px;text-align:center;border-radius:50%;
+  background:var(--soft);font-size:12px;margin-right:6px;font-weight:600}
+.tab[aria-selected=true]{border-color:var(--acc);background:var(--acc-soft);box-shadow:inset 0 0 0 1px var(--acc)}
+.tab[aria-selected=true] .no{background:var(--acc);color:#fff}
+button{font:inherit;color:inherit}
+button:focus-visible,select:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+
+.panel[hidden]{display:none}
+.modebar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:14px}
+.modebar .lbl{font-size:13px;color:var(--mut)}
+.seg{display:inline-flex;background:var(--soft);border-radius:10px;padding:3px}
+.seg button{border:0;background:transparent;padding:6px 14px;border-radius:8px;cursor:pointer;font-size:14px;color:var(--mut)}
+.seg button[aria-pressed=true]{background:var(--card);color:var(--acc-ink);font-weight:600;box-shadow:var(--shadow)}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;box-shadow:var(--shadow)}
+.sum{padding:18px 22px;margin-bottom:16px;border-left:4px solid var(--acc)}
+.sum ol{margin:0;padding-left:22px}
+.sum li{margin:3px 0;font-size:17px}
+.hint{font-size:13px;color:var(--mut);margin:0 0 12px}
+code{background:var(--code);border-radius:5px;padding:1px 6px;font:13px/1.5 ui-monospace,Consolas,monospace}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.item{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.item>button.hd{width:100%;display:flex;gap:10px;align-items:center;justify-content:space-between;text-align:left;
+  background:transparent;border:0;padding:14px 16px;cursor:pointer;font-weight:600}
+.item>button.hd:hover{background:var(--soft)}
+.item .chev{transition:transform .15s;color:var(--mut)}
+.item.open .chev{transform:rotate(90deg)}
+.item .bd{display:none;padding:0 16px 14px;color:var(--ink);font-size:15px}
+.item.open .bd{display:block}
+.refs{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.ref{font:12px ui-monospace,Consolas,monospace;background:var(--code);color:var(--mut);border-radius:6px;padding:2px 8px}
+.badge{display:inline-block;font-size:11px;font-weight:600;border-radius:6px;padding:1px 7px;margin-left:6px;vertical-align:middle;white-space:nowrap}
+.b-guess{background:var(--y-soft);color:var(--y)}
+.b-t1{background:var(--g-soft);color:var(--g)}
+.b-t2{background:var(--y-soft);color:var(--y)}
+.b-t3{background:var(--r-soft);color:var(--r)}
+.b-g{background:var(--g-soft);color:var(--g)}.b-y{background:var(--y-soft);color:var(--y)}.b-r{background:var(--r-soft);color:var(--r)}
+
+/* flow */
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px}
+select{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:8px 12px;font-size:15px}
+.layers{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 14px}
+.layer-pill{padding:4px 12px;border-radius:999px;font-size:13px;background:var(--soft);color:var(--mut);border:1px solid transparent}
+.layer-pill.on{background:var(--acc);color:#fff}
+.dots{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.dot{width:32px;height:32px;border-radius:50%;border:1px solid var(--line);background:var(--card);cursor:pointer;font-size:13px}
+.dot.done{background:var(--acc-soft);border-color:var(--acc)}
+.dot.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+.step h3{margin:0 0 6px;font-size:19px}
+.step .lyr{font-size:12px;color:var(--acc-ink);font-weight:600;letter-spacing:.02em;margin-bottom:4px}
+.step p{margin:8px 0 0;font-size:16px}
+.nav{display:flex;justify-content:space-between;gap:10px;margin-top:14px}
+.btn{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:8px 18px;cursor:pointer;font-size:15px}
+.btn.pri{background:var(--acc);border-color:var(--acc);color:#fff}
+.btn[disabled]{opacity:.4;cursor:default}
+
+/* graph */
+.graph{position:relative;display:flex;flex-direction:column;gap:26px;padding:14px 4px}
+.graph svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.lrow{position:relative;z-index:1}
+.lname{font-size:12px;color:var(--mut);margin-bottom:6px;font-weight:600}
+.nodes{display:flex;flex-wrap:wrap;gap:8px}
+.node{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:7px 11px;font-size:13px;cursor:pointer;
+  transition:opacity .12s,border-color .12s,background .12s;max-width:100%}
+.node:hover{border-color:var(--acc)}
+.node.sel{background:var(--acc);border-color:var(--acc);color:#fff}
+.node.rel{border-color:var(--acc);background:var(--acc-soft)}
+.node.dim{opacity:.28}
+.edge{stroke:var(--mut);stroke-width:1.2;opacity:.16;fill:none}
+.edge.on{stroke:var(--acc);stroke-width:2;opacity:1}
+.edge.off{opacity:.04}
+.detail h3{margin:0 0 6px;font-size:18px}
+.detail .rel-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;align-items:center}
+.detail .rel-list b{font-size:13px;color:var(--mut);margin-right:2px}
+.mini{border:1px solid var(--line);background:var(--soft);border-radius:8px;padding:2px 10px;font-size:13px;cursor:pointer}
+
+/* rules/review */
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.fbtn{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 14px;cursor:pointer;font-size:14px}
+.fbtn[aria-pressed=true]{border-color:var(--acc);background:var(--acc-soft);color:var(--acc-ink);font-weight:600}
+.fbtn .n{color:var(--mut);margin-left:4px;font-weight:400}
+.list{display:flex;flex-direction:column;gap:8px}
+.item.lv-g{border-left:5px solid var(--g)}.item.lv-y{border-left:5px solid var(--y)}.item.lv-r{border-left:5px solid var(--r)}
+.item.k-rule{border-left:5px solid var(--acc)}.item.k-exc{border-left:5px solid var(--y)}
+.hd .l{display:flex;flex-wrap:wrap;align-items:center;gap:2px}
+.bar{display:flex;height:12px;border-radius:999px;overflow:hidden;margin:4px 0 14px;background:var(--soft)}
+.bar span{display:block}
+.legend{font-size:13px;color:var(--mut);margin:0 0 12px}
+.empty{color:var(--mut);padding:18px;text-align:center}
+footer{margin-top:28px;font-size:13px;color:var(--mut)}
+footer ul{margin:6px 0 0;padding-left:20px}
+@media (max-width:560px){
+  header h1{font-size:22px}
+  .sum li{font-size:16px}
+  .card{padding:14px}
+  .tab{flex:1 1 44%}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>배터리 주문 관리 · 코드 설명서</h1>
+    <p>배터리 생산·수거 시뮬레이션과 주문 관리 웹앱</p>
+    <div class="meta">
+      <span class="chip">대상 <b>전체</b></span>
+      <span class="chip">분석 일자 <b>2026-10-21</b></span>
+      <span class="chip">브랜치 <b>mission1/hgkim</b></span>
+    </div>
+    <p class="scope">범위 해석: <b>전체</b> = 저장소의 <code>src/main</code>(Java·템플릿·JS·설정), <code>src/test</code>, <code>build.gradle.kts</code>. 빌드 산출물·<code>.gradle</code>·<code>.idea</code>·<code>data/</code>는 제외했습니다.</p>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="설명 탭" id="tabs"></nav>
+  <main id="panels"></main>
+
+  <footer>
+    <div><span class="badge b-guess">추정</span> 표시는 코드에서 직접 확인하지 못했거나 실행해 보지 않은 판단입니다.</div>
+    <ul>
+      <li>읽지 못함(미확인): <code>app.css</code>, <code>DemoApplication.java</code>, <code>settings.gradle.kts</code>, Gradle wrapper, <code>.gitignore</code></li>
+      <li>앱을 실행해 화면·오류 문구를 직접 확인한 것이 아니라 소스와 테스트를 읽고 정리한 내용입니다.</li>
+      <li><code>파일:줄</code> 표기는 2026-10-21 시점의 <code>mission1/hgkim</code> 브랜치 기준입니다.</li>
+    </ul>
+  </footer>
+</div>
+
+<script>
+(function () {
+'use strict';
+
+/* ---------- 유틸 ---------- */
+var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); };
+var rich = function (s) { return esc(s).replace(/`([^`]+)`/g, '<code>$1</code>'); };
+var MODES = [['s', '3줄 요약'], ['p', '비개발자용'], ['d', '개발자용']];
+var txt = function (it, m) {
+  if (m === 's') return it.s || it.p || it.d || '';
+  if (m === 'p') return it.p || it.s || it.d || '';
+  return it.d || it.p || it.s || '';
+};
+var ttl = function (it, m) { return m === 'd' ? (it.t || it.tp) : (it.tp || it.t); };
+var refsHtml = function (it, m) {
+  return (m === 'd' && it.refs && it.refs.length)
+    ? '<div class="refs">' + it.refs.map(function (r) { return '<span class="ref">' + esc(r) + '</span>'; }).join('') + '</div>' : '';
+};
+var guess = function (it, m) { return it.guess && m === 'd' ? '<span class="badge b-guess">추정</span>' : (it.guess ? '<span class="badge b-guess">추정</span>' : ''); };
+
+/* ---------- 데이터: 1. 한눈에 보기 ---------- */
+var OVERVIEW = [
+  {id:'o1', tp:'이 프로그램이 하는 일', t:'핵심 목적',
+   s:'나라별 필요 수량을 넣으면 배 운항 계획 3가지를 계산한다.',
+   p:'배터리가 필요한 양을 나라별로 입력하면, 배를 어떻게 보내면 좋을지 세 가지 방법으로 알려 줍니다. 돈이 가장 적게 드는 방법, 가장 빨리 끝나는 방법, 가까운 나라부터 도는 방법입니다.',
+   d:'`Planner.plan(master, orders)`가 `Plan` 3개(COST/FAST/NEAR)를 반환한다. COST/FAST는 나라 분할 × 왕복 패턴 × 방문 순서를 전수 탐색해 고르고, NEAR는 거리순 라운드로빈 휴리스틱이다.',
+   refs:['Planner.java:49-79','Planner.java:255-284']},
+  {id:'o2', tp:'넣는 것과 나오는 것', t:'입력과 출력',
+   s:'입력은 나라별 수량(K), 출력은 일수·비용·배 경로·일별 생산이다.',
+   p:'넣는 것은 중국·일본·베트남·인도네시아에서 각각 몇 K(1K = 천 개)가 필요한지입니다. 나오는 것은 며칠 걸리는지, 돈이 얼마 드는지, 배가 어느 순서로 어느 나라를 돌며 얼마를 싣는지, 공장이 날마다 얼마를 만드는지입니다.',
+   d:'입력 `Map<Country,Integer>`(합계 1~100,000K). 출력 `Plan`(totalDays, productionCost, shippingCost, totalCost, ships→trips→stops, 나라별 stock[]/production[]). 금액은 원(long), 화면에서 억원으로 변환(`eok`).',
+   refs:['Plan.java:13-24','BatteryService.java:197-216','common.js:7-8']},
+  {id:'o3', tp:'기준값(마스터 데이터)', t:'마스터 데이터',
+   s:'공장·뱃길·배 숫자를 DB에 두고 화면에서 고친다.',
+   p:'계산에 쓰는 기본 숫자들입니다. 공장마다 하루 최대 생산량·창고 한도·셀 하나 원가, 나라 사이 뱃길 일수, 배 척수(1~4척)와 하루 운항비입니다. 화면에서 고칠 수 있고, 처음 실행하면 기본값이 채워집니다.',
+   d:'`Factory`(maxDaily, stockLimit, unitCost) 4건, `Route` 10건(양방향 1건만 저장), `Setting` 1건(shipCount, shipDailyCostWon, masterVersion). 비어 있으면 `DataInitializer`→`initDefaults()`가 기본값(중국 400/4000/700 등, 배 3척, 1억원/일)을 넣는다.',
+   refs:['BatteryService.java:64-86','Setting.java:9-24','Factory.java:10-28']},
+  {id:'o4', tp:'주문 관리', t:'주문과 상태',
+   s:'고른 계획을 주문으로 확정하고 확정→진행→완료/취소로 관리한다.',
+   p:'고른 계획을 주문으로 확정하면 번호가 붙고, 확정 → 진행 → 완료 순서로 상태를 넘깁니다. 확정이나 진행 중에는 취소할 수 있습니다. 누가 언제 바꿨는지 이력이 남습니다.',
+   d:'`confirm()`이 `Order`(+`planJson` 스냅샷)와 최초 이력을 저장한다. 전이는 `OrderStatus.next()`, 동시 변경은 `Order.version`(@Version)으로 방어한다. 취소는 `orders.delete`.',
+   refs:['BatteryService.java:224-248','OrderStatus.java:21-31','BatteryService.java:277-298']},
+  {id:'o5', tp:'화면 5개', t:'화면 구성',
+   s:'로그인·목록·추가·상세·기준값 화면과 지도 애니메이션.',
+   p:'로그인, 주문 목록, 주문 추가(수량 조절 → 결과 → 확정), 주문 상세(저장된 계획·이력·상태 버튼), 기준값 수정 화면입니다. 결과 화면에는 지도 위에서 배가 움직이는 애니메이션이 있습니다.',
+   d:'Thymeleaf 서버 렌더링 5개(`login`, `orders`, `order-new`, `order-detail`, `master`) + 공통 헤더 `fragments`. `order-new.js`가 `/api/*`를 호출하고, `planview.js`·`anim.js`가 결과를 표·지도로 그린다(주문 상세에서도 재사용).',
+   refs:['order-new.html:9-50','order-detail.html:64-68','order-new.js:127-149']},
+  {id:'o6', tp:'기술 구성과 규모', t:'기술 스택과 규모',
+   s:'자바 웹앱, 파일 DB(H2), 소스 약 2,400줄.',
+   p:'자바로 만든 웹 프로그램이고, 데이터는 컴퓨터 안의 작은 데이터베이스 파일에 저장됩니다. 소스는 약 2,400줄로 작은 편입니다.',
+   d:'Spring Boot 4.1.1 / Java 17 / Gradle(Kotlin DSL), Thymeleaf + Spring MVC + Data JPA, H2 파일 DB(`./data/battery`). main의 자바 하위 패키지 + JS + 템플릿 합계 약 2,400줄.',
+   refs:['build.gradle.kts:3','build.gradle.kts:12','build.gradle.kts:21-25','application.properties:2']},
+  {id:'o7', tp:'아직 없는 것', t:'현재 비어 있는 부분',
+   s:'사용자별 계정, 브라우저 자동 테스트, 소개 문서가 없다.',
+   p:'사용자마다 따로 쓰는 계정(지금은 한 계정뿐), 화면을 실제 브라우저로 자동 점검하는 테스트, 프로그램 소개 문서가 아직 없습니다.',
+   d:'계정은 `admin/admin` 하드코딩, 브라우저 E2E·JS 테스트 없음(테스트 22개는 모두 JUnit/MockMvc), README/PRD 없음(`CLAUDE.md` 제외).',
+   refs:['AppController.java:30','OrderFlowTests.java:25-27']}
+];
+
+/* ---------- 데이터: 2. 사용자 흐름 ---------- */
+var LAYERS = ['화면', '접근 확인', '컨트롤러', '서비스', '계산', '저장'];
+var FLOWS = [
+ {id:'sim', name:'새 주문 시뮬레이션', steps:[
+  {layer:'화면', tp:'수량 조절', t:'게이지 입력 (order-new.js)',
+   s:'나라별 수량을 맞춘다. 합계는 그대로.',
+   p:'총 수량을 정하고 나라별 막대를 움직입니다. 한 나라를 바꾸면 옆 나라가 반대로 변해서 합계가 늘 같게 유지됩니다.',
+   d:'`move()`가 이웃 나라(맨 오른쪽은 맨 왼쪽)와 합을 보존하며 값을 조정한다. `values`는 `{CHINA:…, JAPAN:…}` 형태.',
+   refs:['order-new.js:50-60']},
+  {layer:'화면', tp:'“시뮬레이션 실행” 누르기', t:'postJson(/api/simulate)',
+   s:'입력값을 서버로 보낸다.',
+   p:'버튼을 누르면 입력값을 서버로 보냅니다. 로그인이 풀렸으면 로그인 화면으로 돌아갑니다.',
+   d:'`postJson`이 JSON POST. 401이면 `/login`으로 이동, 그 외 오류는 `Error(error)`로 던져 화면에 표시한다.',
+   refs:['order-new.js:101-106','common.js:11-30']},
+  {layer:'접근 확인', tp:'로그인 확인', t:'LoginInterceptor',
+   s:'로그인하지 않았으면 여기서 막힌다.',
+   p:'입구에서 로그인한 사람인지 확인합니다. 아니면 들여보내지 않습니다.',
+   d:'`/**` 전체에 등록(`/login`·정적 리소스·`/error` 제외). 세션 속성 `loginUser`가 없으면 `/api/`는 401, 그 외는 `/login`으로 리다이렉트.',
+   refs:['WebConfig.java:12-14','LoginInterceptor.java:16-25']},
+  {layer:'컨트롤러', tp:'요청 접수', t:'AppController.simulate',
+   s:'요청을 받아 서비스에 넘기고 오류를 JSON으로 바꾼다.',
+   p:'창구가 요청을 받아 업무 담당자에게 넘기고, 업무상 오류가 나면 이유를 담아 돌려줍니다.',
+   d:'`@PostMapping("/api/simulate")`. `BusinessException`은 400(충돌이면 409) + `{error, conflict}` JSON으로 변환.',
+   refs:['AppController.java:172-180','AppController.java:194-197']},
+  {layer:'서비스', tp:'입력 검증과 기준값 읽기', t:'BatteryService.simulate',
+   s:'수량을 검증하고 현재 기준값으로 계산을 시작한다.',
+   p:'수량이 음수이거나 합계가 0이거나 너무 크면 거절합니다. 통과하면 지금 저장된 기준값을 읽어 옵니다.',
+   d:'`validateOrders`(음수 불가, 합계 1~100,000) → `currentMaster()`로 엔티티를 불변 `Master` 레코드로 변환 → `Planner.visits/plan` 호출.',
+   refs:['BatteryService.java:190-216','BatteryService.java:88-101']},
+  {layer:'계산', tp:'세 가지 계획 계산', t:'Planner.plan',
+   s:'가능한 조합을 모두 따져 가장 싼 것·가장 빠른 것을 고른다.',
+   p:'배를 나누는 방법, 도는 순서, 출발일을 가능한 모두 따져 보고 가장 싼 것과 가장 빠른 것을 고릅니다. 가까운 곳부터 도는 계획은 따로 만듭니다.',
+   d:'`partitions` × `tripStructures`(FRONT/BACK/SPREAD, 순열 최단) × `schedule`로 후보를 만들어 COST/FAST를 선택하고 `nearest`로 NEAR를 만든다.',
+   refs:['Planner.java:49-79','Planner.java:147-197','Planner.java:295-344']},
+  {layer:'계산', tp:'하루씩 다시 맞춰 보기', t:'toPlan / simulateFactory',
+   s:'계획대로 공장 재고를 하루씩 재현해 맞는지 검증한다.',
+   p:'완성된 계획대로 공장이 날마다 얼마를 만들고 얼마가 쌓이는지 다시 계산해서, 배가 가져가는 양과 딱 맞는지 확인합니다.',
+   d:'일별 production/stock 배열을 만든다. 수거량≠재고이거나 미수거 잔량이 있으면 `IllegalStateException`. 생산비+운항비를 합산해 `Plan` 완성.',
+   refs:['Planner.java:352-411']},
+  {layer:'화면', tp:'결과 보여 주기 (응답)', t:'renderResult',
+   s:'세 계획을 카드로 보여 주고 표·애니메이션을 그린다.',
+   p:'세 계획의 일수와 비용을 카드로 보여 주고, 하나를 고르면 표와 지도 애니메이션이 바뀝니다.',
+   d:'`result.options` 렌더링 후 `PlanView.renderSummary/renderDetails`, `BatteryAnim.mount/update`. 입력이 바뀌면 `invalidate()`로 이전 결과를 폐기.',
+   refs:['order-new.js:127-149','order-new.js:88-92','planview.js:4-22']}
+ ]},
+ {id:'confirm', name:'주문 확정', steps:[
+  {layer:'화면', tp:'계획 고르고 “주문 확정”', t:'postJson(/api/orders)',
+   s:'고른 경로·수량·메모·기준값 번호를 보낸다.',
+   p:'마음에 드는 계획을 고르고 메모를 적은 뒤 확정 버튼을 누릅니다. 시뮬레이션 때 쓴 기준값의 “번호”도 함께 보냅니다.',
+   d:'`{orders, routeType, masterVersion, memo}`를 POST. 성공하면 `/orders/{id}`로 이동, 실패하면 메시지 표시.',
+   refs:['order-new.js:153-169']},
+  {layer:'컨트롤러', tp:'요청 접수', t:'AppController.confirm',
+   s:'로그인한 사용자 이름과 함께 서비스에 넘긴다.',
+   p:'창구가 요청을 받으면서 지금 로그인한 사람의 이름을 같이 넘깁니다.',
+   d:'세션의 `loginUser`를 작성자로 `service.confirm(...)` 호출, 결과는 `{id}` JSON.',
+   refs:['AppController.java:182-192']},
+  {layer:'서비스', tp:'서버가 처음부터 다시 계산', t:'confirm → simulate 재실행',
+   s:'화면 값은 믿지 않고 다시 계산한다. 기준값이 바뀌었으면 거절.',
+   p:'화면에서 보여 준 계산 결과는 쓰지 않고 서버가 같은 입력으로 다시 계산합니다. 그 사이 기준값이 바뀌었다면 확정을 거절하고 다시 시뮬레이션하게 합니다.',
+   d:'`simulate(requested)` 재호출 후 `result.master().version() != masterVersion`이면 conflict(409) `BusinessException`.',
+   refs:['BatteryService.java:224-230']},
+  {layer:'서비스', tp:'계획 고르기와 메모 확인', t:'경로 탐색·메모 검증',
+   s:'선택한 경로를 찾고 메모 길이를 확인한다.',
+   p:'고른 방법을 서버가 만든 세 계획 중에서 찾고, 메모가 너무 길면(1000자 초과) 거절합니다.',
+   d:'`options`에서 `routeType` 일치 항목 탐색(없으면 오류), `memo.strip()` 후 1000자 초과 거절, 빈 문자열은 null.',
+   refs:['BatteryService.java:231-239']},
+  {layer:'저장', tp:'주문과 첫 기록 저장', t:'Order + OrderStatusHistory 저장',
+   s:'당시 기준값·수량·계획을 JSON으로 통째로 저장한다.',
+   p:'그 순간의 기준값, 수량, 고른 계획을 한 묶음으로 저장하고 “확정” 상태의 주문을 만듭니다. 상태 기록도 첫 줄이 남습니다.',
+   d:'`StoredPlan(master, orders, visits, plan)`을 Jackson으로 직렬화해 `Order.planJson`에 저장, 이력(null→CONFIRMED) 저장.',
+   refs:['BatteryService.java:241-247','StoredPlan.java:7']},
+  {layer:'화면', tp:'상세 화면 열기 (응답)', t:'/orders/{id} → order-detail',
+   s:'저장된 사본으로 표와 애니메이션을 다시 그린다.',
+   p:'확정된 주문의 상세 화면으로 이동합니다. 이 화면은 지금의 기준값이 아니라 확정 당시 저장해 둔 계획을 다시 그립니다.',
+   d:'`AppController.detail`이 주문·이력을 모델에 담고, 템플릿이 `order.planJson`을 `JSON.parse` 해 `PlanView`·`BatteryAnim`(autoplay 없음)에 전달.',
+   refs:['AppController.java:100-106','order-detail.html:64-68']}
+ ]},
+ {id:'status', name:'주문 상태 변경', steps:[
+  {layer:'화면', tp:'상태 변경 버튼', t:'order-detail.html 폼',
+   s:'다음에 갈 수 있는 상태 버튼만 보인다.',
+   p:'지금 상태에서 갈 수 있는 다음 상태의 버튼만 보입니다. 누르면 “정말 바꿀까요?” 확인창이 뜹니다.',
+   d:'`order.status.next()`로 버튼 렌더, 폼에 `status`와 화면을 연 시점의 `version`을 hidden으로 포함. 제출 전 `confirm()` 창.',
+   refs:['order-detail.html:24-32','order-detail.html:70-72']},
+  {layer:'컨트롤러', tp:'요청 접수', t:'AppController.changeStatus',
+   s:'서비스 호출 후 결과 메시지를 담아 상세로 되돌린다.',
+   p:'창구가 요청을 담당자에게 넘기고, 성공이든 실패든 결과 메시지를 담아 주문 화면으로 되돌려 보냅니다.',
+   d:'`BusinessException`은 flash `error`, 성공은 flash `message`. 항상 `redirect:/orders/{id}`.',
+   refs:['AppController.java:108-118']},
+  {layer:'서비스', tp:'충돌·순서 검사', t:'changeStatus 검증',
+   s:'화면을 연 뒤 바뀌었거나 허용되지 않는 순서면 거절한다.',
+   p:'내가 화면을 연 뒤 다른 사람이 먼저 바꿨다면 거절합니다. 확정에서 바로 완료로 가는 것처럼 허용되지 않은 순서도 거절합니다.',
+   d:'`order.getVersion() != expectedVersion`이면 conflict. `canChangeTo(target)`이 아니면 업무 오류.',
+   refs:['BatteryService.java:278-286','OrderStatus.java:21-31']},
+  {layer:'저장', tp:'상태 저장과 이력 기록', t:'saveAndFlush + 이력 + 취소 시 삭제',
+   s:'낙관적 락으로 저장하고 이력을 쌓는다. 취소면 주문을 삭제한다.',
+   p:'상태를 바꿔 저장하고 누가 언제 바꿨는지 기록합니다. 그런데 “취소”를 고르면 주문 자체가 지워지고 기록만 남습니다.',
+   d:'`saveAndFlush`의 `ObjectOptimisticLockingFailureException`을 conflict로 변환, 이력 저장, `CANCELED`이면 `orders.delete(order)`.',
+   refs:['BatteryService.java:287-297']},
+  {layer:'화면', tp:'주문 화면으로 되돌아가기 (응답)', t:'redirect:/orders/{id}',
+   s:'취소했다면 이미 삭제된 주문 주소로 이동하게 된다.',
+   p:'결과 메시지와 함께 그 주문 화면으로 되돌아갑니다. 다만 방금 취소한 주문은 이미 지워져서, 되돌아갈 곳이 없는 문제가 있어 보입니다.',
+   d:'취소 후에도 `redirect:/orders/{id}`가 실행되고 `getOrder`가 `BusinessException`을 던지는데 `detail`은 이를 처리하지 않는다. 리뷰 포인트 Red 참고.',
+   refs:['AppController.java:117','AppController.java:100-106','BatteryService.java:265-267'], guess:true}
+ ]},
+ {id:'master', name:'기준값 저장', steps:[
+  {layer:'화면', tp:'기준값 입력 후 저장', t:'master.html 폼',
+   s:'공장 표·배 설정·뱃길 표를 한 번에 제출한다.',
+   p:'공장별 숫자, 배 척수와 운항비, 나라 사이 뱃길 일수를 고치고 저장 버튼을 누릅니다.',
+   d:'공장 표(`maxDaily_*`, `stockLimit_*`, `unitCost_*`), 선박(`shipCount`, `shipDailyCost`(억원)), 항로 매트릭스(`days_A_B`)를 한 폼으로 POST.',
+   refs:['master.html:16-63']},
+  {layer:'컨트롤러', tp:'요청 접수', t:'AppController.saveMaster',
+   s:'폼 전체를 Map으로 받아 서비스에 넘긴다.',
+   p:'창구가 입력한 값을 통째로 받아 담당자에게 넘깁니다.',
+   d:'`@RequestParam Map<String,String>`로 수신. 오류면 같은 화면을 `errors`·`form`과 함께 렌더, 성공이면 flash 후 redirect.',
+   refs:['AppController.java:132-145']},
+  {layer:'서비스', tp:'모든 값을 먼저 검사', t:'updateMaster 검증',
+   s:'오류를 전부 모은 뒤 하나라도 있으면 아무것도 저장하지 않는다.',
+   p:'모든 칸을 먼저 검사해서 틀린 곳을 전부 모아 둡니다. 하나라도 틀리면 아무것도 저장하지 않고 이유 목록을 보여 줍니다.',
+   d:'`parseInt`(범위: 배 1~4, 일수 1~365 등)와 운항비 `BigDecimal` 검증(0 초과, 원 단위). 오류가 있으면 `BusinessException(List)`.',
+   refs:['BatteryService.java:113-156','BatteryService.java:173-186']},
+  {layer:'저장', tp:'한꺼번에 반영하고 버전 올리기', t:'엔티티 갱신 + bumpMasterVersion',
+   s:'공장·항로·설정을 갱신하고 마스터 버전을 1 올린다.',
+   p:'검사를 통과하면 한꺼번에 반영하고 “기준값 번호”를 1 올립니다. 이 번호가 바뀌면 이전 시뮬레이션은 확정할 수 없게 됩니다.',
+   d:'`Factory`/`Route`/`Setting` setter 호출(JPA dirty checking), `bumpMasterVersion()`. `confirm`의 버전 비교가 이 값을 쓴다.',
+   refs:['BatteryService.java:158-170','Setting.java:58-60']},
+  {layer:'화면', tp:'결과 표시 (응답)', t:'성공 flash / 실패 시 오류 목록',
+   s:'성공은 메시지, 실패는 오류 목록과 입력값 유지.',
+   p:'성공하면 “저장했습니다”가 보이고, 실패하면 같은 화면에 틀린 이유 목록이 나오며 입력한 값은 그대로 남습니다.',
+   d:'성공: `redirect:/master` + flash `message`. 실패: `master` 뷰에 `errors`와 사용자가 입력한 `form` 맵을 다시 바인딩.',
+   refs:['AppController.java:135-144','master.html:10-14']}
+ ]},
+ {id:'login', name:'로그인', steps:[
+  {layer:'화면', tp:'아이디·비밀번호 입력', t:'login.html',
+   s:'폼을 POST /login 으로 보낸다.',
+   p:'아이디와 비밀번호를 넣고 로그인 버튼을 누릅니다.',
+   d:'`POST /login`(`username`, `password`). 실패 시 같은 템플릿에 `error` 표시.',
+   refs:['login.html:9-13']},
+  {layer:'컨트롤러', tp:'계정 확인', t:'AppController.login',
+   s:'admin/admin 이면 세션에 사용자 이름을 저장한다.',
+   p:'정해진 계정(한 개)과 같으면 “로그인한 사람”으로 기억해 둡니다. 다르면 오류 문구를 보여 줍니다.',
+   d:'`"admin".equals(username) && "admin".equals(password)`이면 `session.setAttribute("loginUser")`, `/orders`로 redirect. 로그아웃은 `session.invalidate()`.',
+   refs:['AppController.java:30','AppController.java:65-80']},
+  {layer:'접근 확인', tp:'이후 모든 요청 확인', t:'LoginInterceptor.preHandle',
+   s:'이후 모든 요청은 세션의 사용자 정보로 통과 여부를 정한다.',
+   p:'이후의 모든 요청은 입구에서 “로그인한 사람”으로 기억돼 있는지 확인한 뒤에야 들어갈 수 있습니다.',
+   d:'`request.getSession(false)`의 `loginUser` 유무로 통과/차단. 로그인 시점에 세션 ID를 새로 발급하지는 않는다.',
+   refs:['LoginInterceptor.java:16-18','AppController.java:65-70']}
+ ]}
+];
+
+/* ---------- 데이터: 3. 구조 ---------- */
+var GLAYERS = [
+  {id:'ui', name:'화면 (브라우저)'},
+  {id:'gate', name:'접근 · 설정'},
+  {id:'ctl', name:'컨트롤러'},
+  {id:'svc', name:'서비스'},
+  {id:'calc', name:'계산 (순수 코드)'},
+  {id:'db', name:'저장 (DB)'}
+];
+var NODES = [
+ {id:'tpl_login', l:'ui', f:'login.html', tp:'로그인 화면', p:'아이디와 비밀번호를 넣는 첫 화면입니다.', d:'`POST /login` 폼. 실패 시 `error` 모델 속성을 표시.', refs:['login.html:9-13']},
+ {id:'tpl_orders', l:'ui', f:'orders.html', tp:'주문 목록 화면', p:'확정된 주문을 상태별로 걸러 보는 표입니다. 행을 누르면 상세로 갑니다.', d:'상태 필터 칩(개수 포함)과 주문 표. 행 클릭은 `/orders/{id}` 이동.', refs:['orders.html:12-44']},
+ {id:'tpl_new', l:'ui', f:'order-new.html', tp:'주문 추가 화면', p:'수량을 정하고 결과를 보고 확정하는 한 장짜리 화면입니다. 결과 영역은 처음에 숨겨져 있습니다.', d:'게이지 영역 + 숨김 `#result`(옵션·요약·애니메이션·상세·확정). 스크립트 4개 로드.', refs:['order-new.html:9-50']},
+ {id:'tpl_detail', l:'ui', f:'order-detail.html', tp:'주문 상세 화면', p:'확정 당시 저장해 둔 계획을 다시 보여 주고 상태를 바꾸는 화면입니다.', d:'`order.planJson`을 `JSON.parse`해 `PlanView`·`BatteryAnim`에 전달. 다음 가능 상태 버튼만 렌더.', refs:['order-detail.html:24-32','order-detail.html:64-68']},
+ {id:'tpl_master', l:'ui', f:'master.html', tp:'기준값 화면', p:'공장·배·뱃길 숫자를 고치는 표입니다.', d:'공장 표 / 선박 / 항로 매트릭스 폼. 서버 오류 시 `errors` 목록과 입력값을 유지.', refs:['master.html:16-63']},
+ {id:'js_new', l:'ui', f:'order-new.js', tp:'입력 조작 담당', p:'막대 움직임, 시뮬레이션 버튼, 확정 버튼 동작을 맡습니다.', d:'게이지 `move()`, `/api/simulate`·`/api/orders` 호출, 결과 렌더 조율.', refs:['order-new.js:50-60','order-new.js:101-120','order-new.js:153-169']},
+ {id:'js_plan', l:'ui', f:'planview.js', tp:'결과 표 그리기', p:'요약, 주문량, 배 경로, 일별 생산, 기준값 표를 그립니다. 주문 추가와 상세가 함께 씁니다.', d:'`PlanView.renderSummary/renderDetails`(stored = {master, orders, visits, plan}).', refs:['planview.js:4-22']},
+ {id:'js_anim', l:'ui', f:'anim.js', tp:'지도 애니메이션', p:'지도 위에서 배가 움직이고 재고·비용이 변하는 모습을 보여 줍니다.', d:'`BatteryAnim.mount`. 나라별 좌표(`ICON`/`DOCK`)는 코드에 고정, 일별 stock/production으로 재생.', refs:['anim.js:9-11','anim.js:170-197']},
+ {id:'js_common', l:'ui', f:'common.js', tp:'공용 도구', p:'숫자 표시, 단위 변환, 서버 요청 같은 공용 기능입니다.', d:'`fmt`, `eok`, `COUNTRY_LABEL`, `FACTORY_ORDER`, `postJson`(401 → /login).', refs:['common.js:1-31']},
+
+ {id:'WebConfig', l:'gate', f:'WebConfig', tp:'접근 규칙 등록', p:'어떤 주소를 로그인 없이 열어 줄지 정합니다.', d:'`LoginInterceptor`를 `/**`에 등록, `/login`·`/css|js|images/**`·`/error`·`/favicon.ico` 제외.', refs:['WebConfig.java:10-15']},
+ {id:'LoginInterceptor', l:'gate', f:'LoginInterceptor', tp:'로그인 문지기', p:'로그인하지 않은 요청을 돌려보냅니다.', d:'세션 `loginUser` 없으면 `/api/`는 401, 그 외 `/login` redirect. 세션 키 상수 `SESSION_USER` 보유.', refs:['LoginInterceptor.java:11-26']},
+ {id:'DataInitializer', l:'gate', f:'DataInitializer', tp:'첫 실행 초기값 넣기', p:'프로그램이 켜질 때 기준값이 비어 있으면 기본값을 채웁니다.', d:'`ApplicationRunner`가 `initDefaults()` 호출(이미 있으면 아무것도 안 함).', refs:['DataInitializer.java:17-20','BatteryService.java:64-67']},
+ {id:'JpaConfig', l:'gate', f:'JpaConfig', tp:'저장소 연결 설정', p:'데이터 보관함들을 찾아 연결합니다.', d:'`@EnableJpaRepositories(basePackages=repository, considerNestedRepositories=true)` — 저장소가 중첩 인터페이스라 필요.', refs:['JpaConfig.java:6-8']},
+
+ {id:'AppController', l:'ctl', f:'AppController', tp:'요청 접수 창구', p:'모든 화면과 데이터 요청이 이곳으로 들어와 업무 담당자에게 전달됩니다.', d:'컨트롤러 1개에 화면(MVC)과 `/api/*`(JSON) 모두. `BusinessException`을 flash 또는 400/409로 변환.', refs:['AppController.java:27-198']},
+
+ {id:'BatteryService', l:'svc', f:'BatteryService', tp:'업무 담당자', p:'검증, 기준값 관리, 시뮬레이션, 주문 확정과 상태 변경을 모두 맡는 중심입니다.', d:'단일 `@Service`(약 300줄). 마스터 CRUD·시뮬레이션·주문 확정/조회/상태 변경과 트랜잭션 경계를 한 곳에서 처리.', refs:['BatteryService.java:32-303']},
+ {id:'BusinessException', l:'svc', f:'BusinessException', tp:'업무 오류 알림', p:'사용자에게 이유를 그대로 보여 줄 오류입니다. “충돌” 표시가 붙을 수 있습니다.', d:'`conflict` 플래그와 `messages` 목록 보유 → 컨트롤러가 400/409 또는 flash로 변환.', refs:['BusinessException.java:6-33']},
+
+ {id:'Planner', l:'calc', f:'Planner', tp:'경로 계산기', p:'화면·저장소와 무관하게 숫자만 받아 계획을 만드는 순수 계산 코드입니다.', d:'`final` 정적 유틸. `Master` + 주문량 → `List<Plan>`. Spring 없이 `PlannerTest`로 단독 검증.', refs:['Planner.java:27-79']},
+ {id:'Master', l:'calc', f:'Master', tp:'기준값 묶음', p:'계산에 쓰는 기준값을 한 덩어리로 묶은 사본입니다.', d:'불변 `record`(version, shipCount, shipDailyCostWon, factories, routes) + `factory()`/`days()` 조회. 확정 시 주문에 그대로 저장.', refs:['Master.java:7-30']},
+ {id:'Plan', l:'calc', f:'Plan', tp:'계획 결과 모양', p:'계산 결과의 모양입니다: 며칠, 얼마, 어느 배가 어디를 돌고 얼마를 싣는지.', d:'`record Plan` + `ShipPlan/Trip/Stop`. 시각은 주문일(0일차) 기준 일수.', refs:['Plan.java:13-24']},
+ {id:'StoredPlan', l:'calc', f:'StoredPlan', tp:'주문 저장용 계획 사본', p:'주문을 확정하는 순간의 기준값·수량·고른 계획을 한 묶음으로 보관하는 모양입니다.', d:'`record StoredPlan(master, orders, visits, plan)` → JSON으로 `Order.planJson`에 저장, 상세/애니메이션이 재사용.', refs:['StoredPlan.java:7']},
+
+ {id:'MasterRepositories', l:'db', f:'MasterRepositories', tp:'기준값 보관함', p:'기준값을 읽고 쓰는 창구입니다.', d:'`SettingRepository`, `FactoryRepository`(ID=Country), `RouteRepository` 중첩 인터페이스.', refs:['MasterRepositories.java:14-20']},
+ {id:'OrderRepositories', l:'db', f:'OrderRepositories', tp:'주문 보관함', p:'주문과 상태 기록을 읽고 쓰는 창구입니다.', d:'`OrderRepository`(상태별 목록·개수), `OrderStatusHistoryRepository`.', refs:['OrderRepositories.java:14-26']},
+ {id:'Setting', l:'db', f:'Setting', tp:'배 설정·버전', p:'배 척수와 운항비, 그리고 “기준값이 바뀐 횟수”를 담은 한 줄짜리 정보입니다.', d:'싱글턴 행(id=1). `masterVersion`은 저장마다 +1, `@Version lockVersion`은 별도.', refs:['Setting.java:9-26']},
+ {id:'Factory', l:'db', f:'Factory', tp:'공장 정보', p:'나라별 하루 최대 생산량, 창고 한도, 셀 하나 원가입니다.', d:'`@Id Country`. `maxDaily`, `stockLimit`, `unitCost`(원).', refs:['Factory.java:10-28']},
+ {id:'Route', l:'db', f:'Route', tp:'뱃길 정보', p:'두 나라 사이 항해 일수입니다. 양방향이 같아서 한 방향만 저장합니다.', d:'from < to(ordinal)인 한 건만 저장, `(from_country, to_country)` 유니크.', refs:['Route.java:13-15']},
+ {id:'Order', l:'db', f:'Order', tp:'주문 기록', p:'확정된 주문 한 건의 요약과 상태, 그리고 당시 계획 전체입니다.', d:'`orders` 테이블. `status`, `@Version version`, `@Lob planJson`. 금액은 원 단위 long, 화면용 억원 getter.', refs:['Order.java:15-57']},
+ {id:'OrderStatusHistory', l:'db', f:'OrderStatusHistory', tp:'상태 변경 이력', p:'누가 언제 상태를 바꿨는지 쌓아 두는 기록입니다.', d:'`orderId`는 단순 Long(외래키 없음). from=null이면 최초 확정.', refs:['OrderStatusHistory.java:21-33']},
+ {id:'OrderStatus', l:'db', f:'OrderStatus', tp:'주문 상태 규칙', p:'확정→진행→완료, 확정/진행→취소만 허용하는 순서표입니다.', d:'`next()` switch가 전이를 정의, `canChangeTo`로 검사.', refs:['OrderStatus.java:21-31']},
+ {id:'Country', l:'db', f:'Country', tp:'나라 목록', p:'한국과 공장이 있는 4개 나라의 고정 목록입니다.', d:'`enum`(KOREA 포함, `factories()`는 KOREA 제외). 나라를 늘리려면 여러 곳을 고쳐야 한다.', refs:['Country.java:6-29']}
+];
+var EDGES = [
+ ['tpl_new','js_new'],['tpl_new','js_plan'],['tpl_new','js_anim'],['tpl_new','js_common'],
+ ['tpl_detail','js_plan'],['tpl_detail','js_anim'],['tpl_detail','js_common'],
+ ['js_new','js_plan'],['js_new','js_anim'],['js_new','js_common'],['js_plan','js_common'],['js_anim','js_common'],
+ ['js_new','AppController'],['tpl_login','AppController'],['tpl_orders','AppController'],['tpl_detail','AppController'],['tpl_master','AppController'],
+ ['WebConfig','LoginInterceptor'],['AppController','LoginInterceptor'],['DataInitializer','BatteryService'],
+ ['JpaConfig','MasterRepositories'],['JpaConfig','OrderRepositories'],
+ ['AppController','BatteryService'],['AppController','BusinessException'],['AppController','Master'],['AppController','Order'],['AppController','OrderStatus'],['AppController','Country'],
+ ['BatteryService','Planner'],['BatteryService','Master'],['BatteryService','Plan'],['BatteryService','StoredPlan'],['BatteryService','BusinessException'],
+ ['BatteryService','MasterRepositories'],['BatteryService','OrderRepositories'],
+ ['BatteryService','Setting'],['BatteryService','Factory'],['BatteryService','Route'],['BatteryService','Order'],['BatteryService','OrderStatusHistory'],['BatteryService','OrderStatus'],['BatteryService','Country'],
+ ['Planner','Master'],['Planner','Plan'],['Planner','Country'],
+ ['Master','Country'],['Plan','Country'],['StoredPlan','Master'],['StoredPlan','Plan'],['StoredPlan','Country'],
+ ['MasterRepositories','Setting'],['MasterRepositories','Factory'],['MasterRepositories','Route'],['MasterRepositories','Country'],
+ ['OrderRepositories','Order'],['OrderRepositories','OrderStatusHistory'],['OrderRepositories','OrderStatus'],
+ ['Order','OrderStatus'],['OrderStatusHistory','OrderStatus'],['Factory','Country'],['Route','Country']
+];
+
+/* ---------- 데이터: 4. 핵심 규칙 ---------- */
+// test: 't1' 테스트 있음 / 't2' 일부만 / 't3' 테스트 없음
+var RULES = [
+ {id:'r1', k:'rule', tp:'공장은 하루에 낼 수 있는 양까지만 만든다', t:'하루 생산 한도', test:'t1',
+  s:'하루 생산은 공장의 하루 최대치를 넘지 않는다.',
+  p:'모든 공장은 주문을 받은 날부터 동시에 만들기 시작하지만, 하루에 낼 수 있는 양보다 많이 만들지는 못합니다.',
+  d:'0일차에 모든 공장이 동시 시작. 일 생산 = `min(maxDaily, stockLimit − 재고, 남은 주문)`.',
+  refs:['Planner.java:402','PlannerTest.java:82-91']},
+ {id:'r2', k:'rule', tp:'창고가 가득 차면 만들기를 멈춘다', t:'재고 상한', test:'t1',
+  s:'재고가 상한에 닿으면 배가 가져갈 때까지 생산이 멈춘다.',
+  p:'공장 창고에는 한도가 있어서 가득 차면 더 만들지 않고 기다립니다. 배가 싣고 가면 다시 만들기 시작합니다.',
+  d:'`stockLimit − inStock` 항이 0이 되면 생산 0. 테스트가 모든 날의 재고 ≤ 상한을 확인.',
+  refs:['Planner.java:402','PlannerTest.java:113-120']},
+ {id:'r3', k:'rule', tp:'배는 도착한 순간 쌓인 것을 전부 싣는다', t:'수거량 = 도착 시점 재고', test:'t1',
+  s:'배는 도착 시점 재고 전체를 싣고, 주문량과 정확히 맞아야 한다.',
+  p:'배는 도착했을 때 공장에 쌓여 있는 것을 몽땅 싣습니다. 모든 나라에서 싣은 양을 합치면 주문한 양과 정확히 같아야 합니다.',
+  d:'`simulateFactory`가 수거량 ≠ 재고면 예외. 테스트가 3가지 계획 모두 나라별 적재 합 = 주문량임을 확인.',
+  refs:['Planner.java:391-399','PlannerTest.java:53-63']},
+ {id:'r4', k:'rule', tp:'한 나라는 배 한 척만 방문한다', t:'나라당 한 척', test:'t1',
+  s:'같은 나라를 두 척이 방문하지 않는다.',
+  p:'한 나라는 정해진 배 한 척만 들릅니다. 두 척이 같은 나라로 가는 일은 없습니다.',
+  d:'`partitions`가 나라를 배 묶음으로 분할(중복 없음), `nearest`도 `i % ships`로 한 묶음에만 배정.',
+  refs:['Planner.java:101-127','Planner.java:265-267','PlannerTest.java:65-74']},
+ {id:'r5', k:'rule', tp:'창고 한도보다 많이 주문하면 여러 번 나눠 간다', t:'방문 횟수 = 올림(주문 / 재고 상한)', test:'t1',
+  s:'방문 횟수는 주문 ÷ 재고 상한을 올림한 값이다.',
+  p:'창고 한도보다 많이 주문하면 한 번에 다 못 싣기 때문에 여러 번 나눠 가야 합니다. 예: 4,500을 주문하고 한도가 2,000이면 3번(2,000 · 2,000 · 500) 갑니다.',
+  d:'`visits = ceil(q / stockLimit)`, 마지막 방문 전까지는 상한만큼, 마지막은 나머지를 적재.',
+  refs:['Planner.java:39-47','Planner.java:84-98','PlannerTest.java:44-51','PlannerTest.java:104-111']},
+ {id:'r6', k:'rule', tp:'여러 번 갈 때는 한국에 내려놓고 다시 출발한다', t:'왕복 분할', test:'t1',
+  s:'여러 번 수거할 때는 한국에 돌아와 내려놓고 재출항한다.',
+  p:'여러 번 나눠 갈 때는 한 번 다녀올 때마다 한국에 짐을 내려놓고, 다시 출발합니다.',
+  d:'`schedule`이 배별 trip 목록을 순차 처리, 각 trip은 한국 출발→방문→한국 도착.',
+  refs:['Planner.java:301-338','PlannerTest.java:104-111']},
+ {id:'r7', k:'rule', tp:'배는 일부러 늦게 출발해 기다리지 않는다', t:'늦은 출항 · 한국 대기 무료', test:'t1',
+  s:'재고가 찰 때에 맞춰 출항하고, 한국에서의 대기는 비용이 없다.',
+  p:'먼 나라는 물건이 쌓이는 데 시간이 걸립니다. 배는 도착할 때쯤 딱 맞게 일부러 늦게 출발하며, 한국 항구에서 기다리는 동안은 운항비가 들지 않습니다.',
+  d:'`depart = max(free, ready − offset)`. 운항비는 항해 일수(`sail`)에만 부과. 베트남 2,000K 사례로 검증(5일차 출항, 10일차 도착).',
+  refs:['Planner.java:318-324','Planner.java:341','PlannerTest.java:93-102']},
+ {id:'r8', k:'rule', tp:'세 가지 계획의 선택 기준', t:'COST / FAST / NEAR', test:'t1',
+  s:'비용 최소·기간 최소·가까운 곳부터 세 계획을 항상 만든다.',
+  p:'가장 싼 계획, 가장 빨리 끝나는 계획, 가까운 나라부터 도는 계획을 늘 세 개 보여 줍니다. 가장 싼 계획이 다른 둘보다 비싸지 않고, 가장 빠른 계획이 더 느리지 않다는 것도 확인됩니다.',
+  d:'COST = 운항비 최소(동률 시 일수), FAST = 일수 최소(동률 시 운항비), NEAR = 별도 휴리스틱. 테스트가 COST ≤ FAST ≤ NEAR(운항비), FAST ≤ COST ≤ NEAR(일수)를 확인.',
+  refs:['Planner.java:63-72','PlannerTest.java:122-130']},
+ {id:'r9', k:'rule', tp:'배는 설정한 척수를 넘지 못한다', t:'배 척수 상한', test:'t1',
+  s:'사용 가능한 배는 설정 척수(1~4) 이내다.',
+  p:'기준값에서 정한 배 척수(최대 4척)를 넘겨서 배를 쓰지 않습니다. 척수를 9처럼 넣으면 저장되지 않습니다.',
+  d:'`maxShips = min(shipCount, 활성 나라 수)`. 척수 입력은 1~4 검증(`MAX_SHIPS`).',
+  refs:['Planner.java:58','BatteryService.java:116','PlannerTest.java:132-137','OrderFlowTests.java:165-171']},
+ {id:'r10', k:'rule', tp:'주문 수량은 0 이상, 합계는 1 이상 100,000 이하', t:'주문 입력 범위', test:'t2',
+  s:'음수 불가, 합계 1K~100,000K.',
+  p:'수량은 마이너스가 될 수 없고, 전체 합계는 최소 1, 최대 100,000(K)까지만 받습니다.',
+  d:'`validateOrders`: 음수 → 오류, 합계 ≤ 0 → 오류, 합계 > `Planner.MAX_TOTAL_K` → 오류. 테스트는 “전부 0” 경우만 있음.',
+  refs:['BatteryService.java:197-216','Planner.java:33','OrderFlowTests.java:80-86']},
+ {id:'r11', k:'rule', tp:'기준값 저장은 “전부 저장” 아니면 “아무것도 저장 안 함”', t:'마스터 all-or-nothing', test:'t2',
+  s:'오류가 하나라도 있으면 아무것도 저장하지 않는다.',
+  p:'기준값을 고칠 때 틀린 칸이 하나라도 있으면 일부만 저장하지 않고 전부 저장하지 않습니다. 틀린 이유는 한꺼번에 목록으로 보여 줍니다.',
+  d:'오류를 `List<String>`에 모은 뒤 비어 있지 않으면 `BusinessException(errors)`. 테스트는 배 척수 9 + 잘못된 운항비 조합만 확인.',
+  refs:['BatteryService.java:113-170','OrderFlowTests.java:165-171']},
+ {id:'r12', k:'rule', tp:'확정할 때 서버가 다시 계산하고, 기준값이 바뀌었으면 거절', t:'서버 재계산 · 마스터 버전 검사', test:'t1',
+  s:'확정은 서버 재계산 결과로 하고, 기준값 번호가 다르면 거절한다.',
+  p:'확정 버튼을 누르면 화면의 계산 결과를 믿지 않고 서버가 다시 계산합니다. 시뮬레이션한 뒤 기준값이 바뀌었다면 확정할 수 없고 다시 시뮬레이션해야 합니다.',
+  d:'`confirm`이 `simulate`를 재실행, `master().version() != masterVersion`이면 conflict. 테스트는 `masterVersion=-1`로 409 확인.',
+  refs:['BatteryService.java:224-232','OrderFlowTests.java:131-138']},
+ {id:'r13', k:'rule', tp:'확정된 주문은 확정 당시 값 그대로 남는다', t:'계획 스냅샷 보존', test:'t1',
+  s:'기준값을 나중에 바꿔도 확정 주문의 계획은 변하지 않는다.',
+  p:'기준값을 나중에 고쳐도 이미 확정한 주문의 계획은 그대로입니다. 주문을 만든 날의 값이 주문에 같이 저장되기 때문입니다.',
+  d:'`StoredPlan` JSON을 `planJson`에 저장. 테스트가 마스터 변경 전후 `planJson` 동일성과 `masterVersion` 증가를 확인.',
+  refs:['BatteryService.java:241-245','OrderFlowTests.java:140-163']},
+ {id:'r14', k:'rule', tp:'주문 상태는 정해진 순서로만 바뀐다', t:'상태 전이', test:'t2',
+  s:'확정→진행→완료, 확정/진행→취소만 가능, 완료·취소는 끝.',
+  p:'주문은 “확정 → 진행 → 완료” 순서로만 넘어갑니다. 확정이나 진행에서는 취소도 할 수 있고, 완료·취소 뒤에는 더 바꿀 수 없습니다.',
+  d:'`OrderStatus.next()`와 `canChangeTo`. 테스트는 확정→완료 거부, 진행/완료 정상 전이, 완료 후 취소 거부를 확인(→취소 허용 경로는 미검증).',
+  refs:['OrderStatus.java:21-31','BatteryService.java:283-286','OrderFlowTests.java:100-129']},
+ {id:'r15', k:'rule', tp:'동시에 바꾸면 늦게 누른 쪽이 거절된다', t:'낙관적 락', test:'t1',
+  s:'화면을 연 뒤 다른 사람이 먼저 바꾸면 거절된다.',
+  p:'두 사람이 같은 주문을 동시에 바꾸려 하면 먼저 누른 사람만 성공합니다. 늦은 사람은 “다른 사용자가 먼저 변경했습니다”라는 안내를 받습니다.',
+  d:'`Order.version` 비교 + `@Version` + `saveAndFlush`의 락 예외를 conflict로 변환. 테스트가 오래된 version 사용 시 거절 확인.',
+  refs:['BatteryService.java:279-282','BatteryService.java:289-293','Order.java:56-57','OrderFlowTests.java:118-120']},
+ {id:'r16', k:'rule', tp:'취소하면 주문이 지워지고 기록만 남는다', t:'취소 = 주문 삭제', test:'t3',
+  s:'취소 시 주문은 삭제되고 상태 이력만 남는다.',
+  p:'주문을 취소하면 주문 자체가 목록에서 사라지고, “취소됐다”는 상태 기록만 남습니다. 이것이 의도된 동작인지는 확인이 필요합니다.',
+  d:'`target == CANCELED`이면 이력 저장 후 `orders.delete(order)`. 이력은 `orderId` 단순 참조(FK 없음). 이 경로를 검증하는 테스트가 없다.',
+  refs:['BatteryService.java:294-297','OrderStatusHistory.java:21-22']},
+ {id:'r17', k:'rule', tp:'메모는 1000자까지', t:'메모 길이', test:'t3',
+  s:'메모는 1000자 이하.',
+  p:'주문 메모는 1000자까지만 적을 수 있습니다.',
+  d:'서비스에서 `strip()` 후 길이 검사, 화면은 `maxlength=1000`. 서버 검사에 대한 테스트 없음.',
+  refs:['BatteryService.java:233-239','order-new.html:40']},
+ {id:'r18', k:'rule', tp:'로그인해야만 쓸 수 있다', t:'접근 제한', test:'t1',
+  s:'로그인 화면 외에는 로그인이 필요하다.',
+  p:'로그인한 사람만 화면과 기능을 쓸 수 있습니다. 로그인 화면과 이미지·스타일 파일만 누구나 열 수 있습니다.',
+  d:'`LoginInterceptor`(`/**`, 일부 제외). 페이지는 `/login` redirect, `/api/`는 401. 테스트가 둘 다 확인.',
+  refs:['WebConfig.java:12-14','LoginInterceptor.java:16-25','OrderFlowTests.java:44-50']},
+ {id:'r19', k:'rule', tp:'계정은 하나뿐이다 (admin)', t:'하드코딩 계정', test:'t1',
+  s:'계정은 admin/admin 하나.',
+  p:'지금은 정해진 계정 하나만 있고, 모두가 같은 계정으로 들어갑니다. 그래서 “누가” 주문했는지 사람별로 구분되지 않습니다.',
+  d:'`ACCOUNT="admin"`, 아이디·비밀번호 모두 평문 비교. `createdBy`/`changedBy`에는 항상 `admin`이 기록된다.',
+  refs:['AppController.java:30','AppController.java:65-74','OrderFlowTests.java:52-58']},
+
+ {id:'e1', k:'exc', tp:'업무상 잘못은 이유를 알려 준다', t:'BusinessException 처리', test:'t2',
+  s:'업무 오류는 화면 메시지 또는 400/409 JSON으로 이유를 준다.',
+  p:'입력이 잘못됐거나 규칙에 어긋나면 이유를 문장으로 알려 줍니다. 다른 사람과 충돌한 경우는 “다시 시도해 주세요”처럼 구분해서 알립니다.',
+  d:'API: 400(일반) / 409(conflict) + `{error, conflict}`. 화면: flash `error` 또는 마스터 폼 `errors`. 테스트는 API 400/409만 확인, 화면 flash 경로는 미검증.',
+  refs:['AppController.java:114-116','AppController.java:135-141','AppController.java:194-197','OrderFlowTests.java:80-86']},
+ {id:'e2', k:'exc', tp:'로그인이 풀리면 로그인 화면으로 돌아간다', t:'postJson 401 처리', test:'t2',
+  s:'API가 401이면 브라우저가 /login 으로 이동한다.',
+  p:'작업 중에 로그인이 풀리면 “로그인이 필요합니다”와 함께 로그인 화면으로 돌아갑니다.',
+  d:'서버 401은 테스트로 확인. 브라우저 쪽 이동(`common.js:21-24`)은 JS 테스트가 없어 미검증.',
+  refs:['common.js:21-24','LoginInterceptor.java:20-21','OrderFlowTests.java:44-50']},
+ {id:'e3', k:'exc', tp:'계산 결과가 어긋나면 서버 오류가 된다', t:'IllegalStateException (내부 검증 실패)', test:'t3',
+  s:'내부 검증 실패는 안내 없이 서버 오류(500)가 된다.',
+  p:'계산 결과를 하루씩 다시 맞춰 볼 때 어긋나면 프로그램이 멈춥니다. 정상 입력에서는 나오면 안 되는 상황이라, 사용자에게 보여 줄 안내 문구는 없습니다.',
+  d:'`simulateFactory`가 `IllegalStateException`을 던지고, 컨트롤러는 `BusinessException`만 처리하므로 그대로 전파된다.',
+  refs:['Planner.java:395-397','Planner.java:408-410','AppController.java:177-179'], guess:true},
+ {id:'e4', k:'exc', tp:'총 수량 칸에 1 미만을 넣으면 조용히 되돌아간다', t:'총 수량 입력 롤백', test:'t3',
+  s:'총 수량을 1 미만으로 바꾸면 안내 없이 이전 값으로 돌아간다.',
+  p:'총 수량 칸에 0이나 빈칸을 넣고 나가면 아무 말 없이 이전 숫자로 되돌아갑니다.',
+  d:'`change` 핸들러가 `!(v >= 1)`이면 `totalInput.value = total`로 되돌리고 메시지 없음.',
+  refs:['order-new.js:75-79']},
+ {id:'e5', k:'exc', tp:'취소한 직후에는 화면이 정상으로 돌아가지 못할 수 있다', t:'취소 후 redirect 대상 소멸', test:'t3',
+  s:'취소 직후 삭제된 주문 상세로 이동한다.',
+  p:'주문을 취소하면 그 주문이 지워지는데, 곧바로 그 주문 화면으로 되돌아가려 하기 때문에 오류 화면이 뜰 수 있어 보입니다.',
+  d:'`changeStatus`가 항상 `redirect:/orders/{id}`, `detail`은 `getOrder`의 `BusinessException`을 처리하지 않음. 실행해서 확인하지는 않았다.',
+  refs:['AppController.java:117','AppController.java:100-106','BatteryService.java:265-267'], guess:true},
+ {id:'e6', k:'exc', tp:'기준값을 동시에 저장하면 충돌 안내가 없을 수 있다', t:'Setting 낙관적 락 예외 미처리', test:'t3',
+  s:'기준값 동시 저장 충돌은 처리되지 않는다.',
+  p:'두 사람이 거의 동시에 기준값을 저장하면 한쪽은 안내 없이 오류가 날 수 있어 보입니다.',
+  d:'`Setting.lockVersion`(@Version)이 있으나 `updateMaster`는 락 예외를 잡지 않는다(주문 쪽과 달리). 실행 검증 없음.',
+  refs:['Setting.java:26','BatteryService.java:167-170'], guess:true}
+];
+
+/* ---------- 데이터: 5. 리뷰 포인트 ---------- */
+var REVIEW = [
+ {id:'v1', lv:'r', tp:'취소하면 주문이 지워지고, 곧바로 지워진 주문 화면으로 이동한다', t:'취소 경로: 삭제 + 이동 + 고아 이력',
+  s:'취소 후 이동할 화면이 사라지고, 이력은 주문 없이 남는다.',
+  p:'주문을 취소하면 주문 기록이 지워집니다. 그런데 화면은 방금 지운 주문의 상세 화면으로 되돌아가려 해서 오류가 날 수 있어 보입니다. 게다가 남은 “상태 기록”은 어느 화면에서도 볼 수 없습니다. 취소 경로를 확인하는 자동 테스트도 없습니다.',
+  d:'`changeStatus`가 CANCELED면 `orders.delete`(BatteryService:295-297) 후 컨트롤러가 `redirect:/orders/{id}`(AppController:117). `detail`→`getOrder`는 `BusinessException`을 던지는데 처리하는 `@ExceptionHandler`/`ControllerAdvice`가 저장소에 없다. 이력은 FK 없는 `orderId`만 보유해 고아가 되고 조회 화면도 없다. `OrderFlowTests`에는 취소 정상 경로가 없다.',
+  refs:['BatteryService.java:295-297','AppController.java:117','AppController.java:100-106','OrderStatusHistory.java:21-22'], guess:true, note:'코드로 확인, 실행 검증 전'},
+ {id:'v2', lv:'r', tp:'로그인 계정이 코드에 박혀 있다', t:'하드코딩된 admin/admin',
+  s:'계정이 코드에 평문으로 고정돼 있다.',
+  p:'로그인 아이디와 비밀번호가 프로그램 안에 그대로 적혀 있고 모두가 같은 계정을 씁니다. 외부에서 쓰는 순간 누구나 들어올 수 있고, 주문한 사람도 구분되지 않습니다.',
+  d:'`ACCOUNT="admin"`과 평문 비교(AppController:30,68). 모든 `createdBy`/`changedBy`가 `admin`. 비밀번호 해시·사용자 테이블 없음.',
+  refs:['AppController.java:30','AppController.java:65-74']},
+
+ {id:'v3', lv:'y', tp:'취소로 가는 정상 경로를 검사하는 테스트가 없다', t:'취소 경로 테스트 공백',
+  s:'→취소 전이와 삭제 동작이 테스트되지 않는다.',
+  p:'“확정 또는 진행 → 취소”가 제대로 되는지 확인하는 자동 점검이 없습니다. 위의 Red 항목과 같은 원인입니다.',
+  d:'`OrderFlowTests`는 완료 후 취소 거부(:127)만 확인하고 CANCELED 성공 경로는 없다.',
+  refs:['OrderFlowTests.java:100-129']},
+ {id:'v4', lv:'y', tp:'기준값이 특이하면 계산이 매우 오래 걸릴 수 있다', t:'계산량 폭증 가능성(전수 탐색)',
+  s:'재고 상한이 매우 작으면 방문 횟수가 수만 번이 될 수 있다.',
+  p:'창고 한도를 아주 작게 고치고 주문을 아주 크게 넣으면 계산해야 할 경우의 수가 폭발해서 화면이 오래 멈출 수 있어 보입니다. 직접 재 보지는 않았습니다.',
+  d:'재고 상한은 최소 1 허용(BatteryService:138), 합계는 최대 100,000K(Planner:33) → 방문 횟수 최대 수만 회. 후보마다 `schedule`·순열 탐색(Planner:59-72)을 요청 스레드에서 동기 실행. 측정하지 않은 추정.',
+  refs:['BatteryService.java:138','Planner.java:33','Planner.java:59-72'], guess:true},
+ {id:'v5', lv:'y', tp:'계산이 어긋나면 사용자에게 알리지 못한다', t:'내부 불변식 위반의 처리',
+  s:'검증 실패(IllegalStateException)가 안내 없이 500이 된다.',
+  p:'계산 결과 확인에서 어긋나면 안내 문구 없이 오류 화면이 뜹니다. 평소엔 일어나지 않아야 하지만 일어나면 원인을 알기 어렵습니다.',
+  d:'`simulateFactory`의 `IllegalStateException`(Planner:395,409)은 컨트롤러가 잡지 않는다(AppController:177-179,189-191은 `BusinessException`만).',
+  refs:['Planner.java:395-397','Planner.java:408-410','AppController.java:177-179']},
+ {id:'v6', lv:'y', tp:'기준값을 동시에 저장할 때의 충돌이 처리되지 않을 수 있다', t:'updateMaster 락 예외 미처리',
+  s:'Setting 낙관적 락 예외를 잡지 않는다.',
+  p:'두 사람이 비슷한 시간에 기준값을 저장하면 한 사람에게 이유 없는 오류가 날 수 있어 보입니다.',
+  d:'`Setting.lockVersion`(@Version)이 있으나(Setting:26) `updateMaster`는 `ObjectOptimisticLockingFailureException`을 변환하지 않는다(BatteryService:167-170). 실행 검증 없음.',
+  refs:['Setting.java:26','BatteryService.java:167-170'], guess:true},
+ {id:'v7', lv:'y', tp:'주문이 늘면 목록이 느려질 수 있다', t:'목록 전체 로딩 · 중복 조회',
+  s:'페이지 없이 전체를 읽고, 계획 JSON까지 함께 읽는다.',
+  p:'주문 목록은 모든 주문을 한꺼번에 불러옵니다. 각 주문에 큰 계획 데이터가 붙어 있어서 주문이 많아지면 느려질 수 있습니다.',
+  d:'`findAllByOrderByIdDesc` 페이지네이션 없음, `planJson`(@Lob)도 함께 로딩(Order:51-54). `list()`는 `listOrders`를 두 번 호출(AppController:86,90).',
+  refs:['BatteryService.java:250-253','Order.java:51-54','AppController.java:86','AppController.java:90']},
+ {id:'v8', lv:'y', tp:'주문 수량 범위와 메모 길이를 점검하는 테스트가 부족하다', t:'입력 검증 테스트 공백',
+  s:'합계 상한·음수·메모 1000자는 테스트가 없다.',
+  p:'수량이 너무 크거나 음수일 때, 메모가 너무 길 때 제대로 거절하는지 확인하는 자동 점검이 없습니다(“전부 0”만 있음).',
+  d:'`validateOrders`(BatteryService:197-216)와 메모 검사(:233-239)는 `emptyOrderIsRejectedWithReason`(0 입력)만 간접 확인.',
+  refs:['BatteryService.java:197-216','BatteryService.java:233-239','OrderFlowTests.java:80-86']},
+ {id:'v9', lv:'y', tp:'로그인 보안 보강 여지가 있다', t:'세션 고정·CSRF 방어 없음',
+  s:'로그인 시 세션 ID를 갱신하지 않고, CSRF 방어가 없다.',
+  p:'로그인할 때 “출입증 번호”를 새로 만들지 않고, 다른 사이트가 사용자 몰래 요청을 보내는 것을 막는 장치도 없습니다. 외부 공개 전에는 보강이 필요해 보입니다.',
+  d:'`login`이 `session.setAttribute`만 호출(AppController:65-70, `changeSessionId` 없음). `build.gradle.kts` 의존성에 spring-security가 없어 CSRF 토큰도 없다. 배포 환경에 따라 위험도는 달라지는 추정.',
+  refs:['AppController.java:65-70','build.gradle.kts:21-27'], guess:true},
+ {id:'v10', lv:'y', tp:'화면(브라우저) 동작을 점검하는 자동 테스트가 없다', t:'JS·E2E 테스트 공백',
+  s:'슬라이더·애니메이션·결과 표는 어떤 테스트도 없다.',
+  p:'수량 막대, 결과 표, 지도 애니메이션은 사람이 눈으로 보는 것 외에 자동으로 확인하는 장치가 없습니다.',
+  d:'`order-new.js`·`planview.js`·`anim.js`는 테스트 대상 아님. `pagesRender`는 서버가 200을 주는지만 확인(OrderFlowTests:60-66).',
+  refs:['OrderFlowTests.java:60-66','order-new.js:50-60','anim.js:170-197']},
+ {id:'v11', lv:'y', tp:'계산 결과 출력용 테스트는 아무것도 검증하지 않는다', t:'defaultOrderSummary는 출력만',
+  s:'assert 없이 콘솔 출력만 하는 테스트.',
+  p:'기본 주문으로 계산 결과를 화면에 찍어 보기만 하는 점검이라, 결과가 틀려도 통과합니다.',
+  d:'`defaultOrderSummary`는 `System.out.printf`만 호출하고 단언이 없다.',
+  refs:['PlannerTest.java:145-156']},
+ {id:'v12', lv:'y', tp:'총 수량을 잘못 넣어도 아무 말이 없다', t:'조용한 입력 롤백',
+  s:'총 수량이 1 미만이면 안내 없이 이전 값으로 되돌린다.',
+  p:'총 수량 칸에 잘못된 값을 넣으면 이유를 알려 주지 않고 이전 값으로 돌아갑니다. 사용자가 입력이 무시됐다는 것을 알기 어렵습니다.',
+  d:'`change` 핸들러에서 `!(v >= 1)`이면 값만 되돌린다(메시지 없음).',
+  refs:['order-new.js:75-79']},
+ {id:'v13', lv:'y', tp:'데이터 보관 방식이 운영에는 가벼운 설정이다', t:'DB 설정 (파일 H2 · ddl-auto=update)',
+  s:'DB 위치가 실행 위치에 따르고 스키마 변경 이력이 없다.',
+  p:'데이터가 프로그램을 실행한 폴더 안의 파일에 저장되고, 구조가 바뀌어도 변경 기록 없이 자동으로 맞춰집니다. 개발·시연용으로는 편하지만 여러 사람이 함께 쓰기엔 가벼운 설정입니다.',
+  d:'`jdbc:h2:file:./data/battery`(작업 디렉토리 상대 경로), `ddl-auto=update`로 마이그레이션 도구 없음.',
+  refs:['application.properties:2','application.properties:5']},
+ {id:'v14', lv:'y', tp:'나라를 늘리거나 바꾸려면 여러 곳을 고쳐야 한다', t:'나라 4개 고정 구조',
+  s:'나라 목록·좌표가 여러 파일에 고정돼 있다.',
+  p:'공장이 있는 나라가 코드 곳곳에 고정돼 있어서, 나라를 추가하려면 계산·화면·지도 위치를 모두 손봐야 합니다. 앞으로 기능을 넣을 때 영향 범위가 큰 곳입니다.',
+  d:'`Country` enum, `FACTORY_ORDER`/`COUNTRY_LABEL`(common.js:1-2), 지도 좌표 `ICON`/`DOCK`(anim.js:9-10), 기본값 `initDefaults`가 각각 나라를 하드코딩.',
+  refs:['Country.java:6-11','common.js:1-2','anim.js:9-10','BatteryService.java:69-83']},
+
+ {id:'v15', lv:'g', tp:'계산 규칙은 테스트와 자체 검증이 받쳐 준다', t:'Planner 규칙 + 일별 재현 검증',
+  s:'계산 결과를 하루씩 재현해 검증하고, 규칙별 테스트가 있다.',
+  p:'계산 결과를 하루씩 다시 맞춰 보며 틀리면 멈추도록 되어 있고, 수거량·한 나라 한 척·창고 한도 같은 규칙마다 자동 점검이 있습니다. 믿고 쓸 수 있는 영역입니다.',
+  d:'`simulateFactory`가 수거량≠재고를 예외로 막고, `PlannerTest`가 적재 합, 나라당 한 척, 재고 상한, 척수 상한, COST/FAST 비교 등을 단언한다. 순수 정적 코드라 단독 실행 가능.',
+  refs:['Planner.java:386-411','PlannerTest.java:53-137']},
+ {id:'v16', lv:'g', tp:'확정은 서버가 다시 계산해서 안전하다', t:'confirm 서버 재계산 + 버전 검사',
+  s:'화면 값을 믿지 않고 재계산하며, 기준값 변경은 거절한다.',
+  p:'확정할 때 화면에서 온 계산을 믿지 않고 서버가 다시 계산합니다. 그 사이 기준값이 바뀌었으면 거절하며, 이 동작도 자동 점검이 있습니다.',
+  d:'`simulate` 재호출 후 `masterVersion` 비교(BatteryService:224-232). `confirmFailsWhenMasterChangedAfterSimulation`이 409를 확인.',
+  refs:['BatteryService.java:224-232','OrderFlowTests.java:131-138']},
+ {id:'v17', lv:'g', tp:'동시에 바꿔도 안전하게 막는다', t:'주문 낙관적 락 + 상태 전이 표',
+  s:'오래된 화면의 변경은 거절하고, 허용 순서만 통과시킨다.',
+  p:'두 사람이 같은 주문을 동시에 바꿔도 먼저 한 쪽만 반영되고, 정해진 순서가 아닌 변경은 막힙니다. 이 흐름은 자동 점검이 있습니다(취소 경로 제외).',
+  d:'`Order.version` 비교 + `@Version` + 락 예외 변환(BatteryService:279-293), 전이 표는 `OrderStatus.next()`. `confirmThenDetailAndStatusFlow`가 거부·충돌·이력 3건을 확인.',
+  refs:['BatteryService.java:278-298','OrderStatus.java:21-31','OrderFlowTests.java:100-129']},
+ {id:'v18', lv:'g', tp:'확정 주문은 당시 값 그대로 보존된다', t:'StoredPlan 스냅샷',
+  s:'기준값이 바뀌어도 확정 주문의 계획은 그대로다.',
+  p:'기준값을 고쳐도 이미 확정한 주문의 계획이 달라지지 않습니다. 이것도 자동 점검으로 확인됩니다.',
+  d:'`StoredPlan` JSON 저장(BatteryService:241-245). `masterUpdateBumpsVersionAndKeepsConfirmedPlans`가 `planJson` 불변을 확인.',
+  refs:['BatteryService.java:241-245','OrderFlowTests.java:140-163']},
+ {id:'v19', lv:'g', tp:'기준값 저장은 오류가 있으면 하나도 저장하지 않는다', t:'updateMaster 선검증',
+  s:'모든 오류를 모아 보여 주고 저장하지 않는다.',
+  p:'기준값에 틀린 칸이 있으면 전부 모아서 이유를 보여 주고 아무것도 저장하지 않아 데이터가 어중간해지지 않습니다. (일부 조합만 점검됩니다.)',
+  d:'오류 수집 후 `BusinessException(errors)`, 엔티티 변경은 검증 이후에만 수행(BatteryService:154-170). `invalidMasterIsNotSaved`가 일부 조합을 확인.',
+  refs:['BatteryService.java:154-170','OrderFlowTests.java:165-171']},
+ {id:'v20', lv:'g', tp:'로그인하지 않으면 막히고, 만료는 안내된다', t:'LoginInterceptor + postJson 401',
+  s:'로그인 없이는 화면·API 모두 차단된다.',
+  p:'로그인하지 않으면 화면은 로그인으로 보내지고, 데이터 요청은 거절됩니다. 서버 쪽 동작은 자동 점검이 있습니다.',
+  d:'`preHandle`이 페이지는 redirect, `/api/`는 401. `anonymousUserIsSentToLogin`이 확인. 브라우저 쪽 이동(`common.js:21-24`)은 미검증.',
+  refs:['LoginInterceptor.java:16-25','common.js:21-24','OrderFlowTests.java:44-50']}
+];
+
+/* ---------- 상태 ---------- */
+var TABS = [
+  {id:'t1', name:'한눈에 보기', sub:'이 코드가 하는 일'},
+  {id:'t2', name:'사용자 흐름', sub:'요청이 흘러가는 길'},
+  {id:'t3', name:'구조', sub:'모듈 관계와 의존성'},
+  {id:'t4', name:'핵심 규칙', sub:'도메인 규칙·예외 처리'},
+  {id:'t5', name:'리뷰 포인트', sub:'Green · Yellow · Red'}
+];
+var S = {tab:'t1', mode:{t1:'s',t2:'s',t3:'s',t4:'s',t5:'s'}, flow:'sim', step:0, node:null, rf:'all', vf:'all', open:{}};
+try {
+  var saved = JSON.parse(localStorage.getItem('code-explain-mission1') || 'null');
+  if (saved) { S.tab = saved.tab || S.tab; Object.assign(S.mode, saved.mode || {}); }
+} catch (e) { /* 저장소를 못 쓰면 기본값 */ }
+function persist() { try { localStorage.setItem('code-explain-mission1', JSON.stringify({tab:S.tab, mode:S.mode})); } catch (e) { /* 무시 */ } }
+
+var byId = function (arr, id) { return arr.filter(function (x) { return x.id === id; })[0]; };
+
+/* ---------- 공통 렌더 조각 ---------- */
+function modebar(tab) {
+  var m = S.mode[tab];
+  return '<div class="modebar"><span class="lbl">설명 모드</span><div class="seg" role="group" aria-label="설명 모드">' +
+    MODES.map(function (x) { return '<button type="button" data-act="mode" data-v="' + x[0] + '" aria-pressed="' + (m === x[0]) + '">' + x[1] + '</button>'; }).join('') +
+    '</div></div>';
+}
+function summaryBox(tab, lines, m) {
+  if (m !== 's') return '';
+  return '<div class="card sum"><ol>' + lines.map(function (l) { return '<li>' + rich(l) + '</li>'; }).join('') + '</ol></div>';
+}
+function itemHtml(it, m, key, cls, badges) {
+  var open = S.open[key] ? ' open' : '';
+  return '<div class="item ' + (cls || '') + open + '" data-key="' + key + '">' +
+    '<button type="button" class="hd" data-act="toggle" aria-expanded="' + !!S.open[key] + '"><span class="l"><span>' + rich(ttl(it, m)) + '</span>' + (badges || '') + '</span><span class="chev">›</span></button>' +
+    '<div class="bd">' + rich(txt(it, m)) + refsHtml(it, m) + '</div></div>';
+}
+
+/* ---------- 탭 렌더 ---------- */
+var SUM = {
+  t1: ['한국에서 출발한 배가 4개 나라 공장을 돌며 배터리를 실어 오는 계획을 짜 주는 웹 프로그램입니다.',
+       '나라별 필요 수량을 넣으면 비용 최소·가장 빠르게·가까운 곳부터, 3가지 계획을 계산해 보여 줍니다.',
+       '마음에 드는 계획을 주문으로 확정하면 확정 → 진행 → 완료(또는 취소)로 관리합니다.'],
+  t2: ['모든 요청은 로그인 확인을 거쳐 컨트롤러 한 곳으로 들어옵니다.',
+       '화면 스크립트가 시뮬레이션·확정을 요청하면 서비스가 검증하고 계산기가 계획을 만듭니다.',
+       '확정된 주문은 당시 기준값과 계획을 통째로 저장해 두고, 상세 화면은 그것을 다시 그립니다.'],
+  t3: ['화면 → 컨트롤러 → 서비스 → 계산·저장의 위에서 아래로 흐르는 구조입니다.',
+       '계산기(Planner)는 DB·Spring과 무관한 순수 코드라 혼자서도 테스트됩니다.',
+       '서비스(BatteryService)가 거의 모든 업무 로직과 저장소를 한곳에서 엮는 중심입니다.'],
+  t4: ['생산·수거 규칙은 계산기에, 입력·상태 규칙은 서비스에 모여 있습니다.',
+       '확정은 서버가 다시 계산하고, 기준값이 바뀌었거나 다른 사람이 먼저 바꾸면 거절합니다.',
+       '업무 오류는 이유를 안내하지만, 내부 검증 실패는 안내 없이 서버 오류가 됩니다.']
+};
+function reviewSummary() {
+  var c = {g:0, y:0, r:0};
+  REVIEW.forEach(function (v) { c[v.lv]++; });
+  return ['Green ' + c.g + '건: 테스트가 받쳐 주는 계산·확정·상태 규칙·접근 제한입니다.',
+          'Red ' + c.r + '건: 취소 직후 사라진 주문으로 이동하는 문제와 하드코딩된 로그인 계정입니다.',
+          'Yellow ' + c.y + '건: 테스트 공백, 확인하지 못한 추정(성능·동시성·보안), 변경 시 영향이 큰 구조입니다.'];
+}
+
+function renderT1() {
+  var m = S.mode.t1;
+  return modebar('t1') + summaryBox('t1', SUM.t1, m) +
+    '<p class="hint">카드를 눌러 펼쳐 보세요.</p><div class="grid">' +
+    OVERVIEW.map(function (o) { return itemHtml(o, m, 't1:' + o.id, ''); }).join('') + '</div>';
+}
+
+function renderT2() {
+  var m = S.mode.t2;
+  var flow = byId(FLOWS, S.flow);
+  if (S.step >= flow.steps.length) S.step = 0;
+  var st = flow.steps[S.step];
+  var sel = '<select id="flowSel" aria-label="흐름 선택">' + FLOWS.map(function (f) {
+    return '<option value="' + f.id + '"' + (f.id === S.flow ? ' selected' : '') + '>' + esc(f.name) + '</option>'; }).join('') + '</select>';
+  var layers = '<div class="layers" aria-label="현재 위치">' + LAYERS.map(function (l) {
+    return '<span class="layer-pill' + (l === st.layer ? ' on' : '') + '">' + l + '</span>'; }).join('') + '</div>';
+  var dots = '<div class="dots">' + flow.steps.map(function (s, i) {
+    return '<button type="button" class="dot' + (i === S.step ? ' on' : (i < S.step ? ' done' : '')) + '" data-act="step" data-v="' + i + '" aria-label="' + (i + 1) + '단계">' + (i + 1) + '</button>'; }).join('') + '</div>';
+  var card = '<div class="card step"><div class="lyr">' + (S.step + 1) + ' / ' + flow.steps.length + ' · ' + st.layer + '</div>' +
+    '<h3>' + rich(ttl(st, m)) + guess(st, m) + '</h3><p>' + rich(txt(st, m)) + '</p>' + refsHtml(st, m) +
+    '<div class="nav"><button type="button" class="btn" data-act="prev"' + (S.step === 0 ? ' disabled' : '') + '>← 이전</button>' +
+    '<button type="button" class="btn pri" data-act="next"' + (S.step === flow.steps.length - 1 ? ' disabled' : '') + '>다음 →</button></div></div>';
+  return modebar('t2') + summaryBox('t2', SUM.t2, m) +
+    '<div class="toolbar"><label>흐름 선택 ' + sel + '</label><span class="hint" style="margin:0">← → 방향키로도 이동할 수 있습니다.</span></div>' +
+    layers + dots + card;
+}
+
+function renderT3() {
+  var m = S.mode.t3;
+  var rows = GLAYERS.map(function (g) {
+    return '<div class="lrow"><div class="lname">' + g.name + '</div><div class="nodes">' +
+      NODES.filter(function (n) { return n.l === g.id; }).map(function (n) {
+        return '<button type="button" class="node" data-act="node" data-v="' + n.id + '" id="n-' + n.id + '">' + esc(m === 'd' ? n.f : n.tp) + '</button>'; }).join('') +
+      '</div></div>';
+  }).join('');
+  return modebar('t3') + summaryBox('t3', SUM.t3, m) +
+    '<p class="hint">노드를 누르면 직접 연결된 것만 강조됩니다. 화살표는 “A가 B를 쓴다(호출·참조)”는 뜻입니다.</p>' +
+    '<div class="card"><div class="graph" id="graph"><svg id="gsvg" aria-hidden="true"><defs>' +
+    '<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker></defs></svg>' +
+    rows + '</div></div><div id="ndetail" style="margin-top:12px"></div>';
+}
+
+function renderT4() {
+  var m = S.mode.t4;
+  var nRule = RULES.filter(function (r) { return r.k === 'rule'; }).length;
+  var nExc = RULES.length - nRule;
+  var list = RULES.filter(function (r) { return S.rf === 'all' || r.k === S.rf; });
+  var tb = {t1:'테스트 있음', t2:'일부만 검증', t3:'테스트 없음'};
+  var filters = '<div class="filters" role="group" aria-label="필터">' +
+    [['all','전체',RULES.length],['rule','규칙',nRule],['exc','예외·에러',nExc]].map(function (f) {
+      return '<button type="button" class="fbtn" data-act="rf" data-v="' + f[0] + '" aria-pressed="' + (S.rf === f[0]) + '">' + f[1] + '<span class="n">' + f[2] + '</span></button>'; }).join('') + '</div>';
+  var items = list.map(function (r) {
+    var badges = '<span class="badge b-' + r.test + '">' + tb[r.test] + '</span>' + (r.guess ? '<span class="badge b-guess">추정</span>' : '');
+    return itemHtml(r, m, 't4:' + r.id, 'k-' + r.k, badges);
+  }).join('');
+  return modebar('t4') + summaryBox('t4', SUM.t4, m) + filters +
+    '<p class="legend">배지: <span class="badge b-t1">테스트 있음</span> 규칙을 직접 검증 · <span class="badge b-t2">일부만 검증</span> · <span class="badge b-t3">테스트 없음</span></p>' +
+    '<div class="list">' + items + '</div>';
+}
+
+function renderT5() {
+  var m = S.mode.t5;
+  var c = {g:0, y:0, r:0};
+  REVIEW.forEach(function (v) { c[v.lv]++; });
+  var total = REVIEW.length;
+  var list = REVIEW.filter(function (v) { return S.vf === 'all' || v.lv === S.vf; });
+  var lvName = {g:'Green', y:'Yellow', r:'Red'};
+  var bar = '<div class="bar" aria-hidden="true"><span style="width:' + (c.r / total * 100) + '%;background:var(--r)"></span><span style="width:' + (c.y / total * 100) + '%;background:var(--y)"></span><span style="width:' + (c.g / total * 100) + '%;background:var(--g)"></span></div>';
+  var filters = '<div class="filters" role="group" aria-label="필터">' +
+    [['all','전체',total],['r','Red',c.r],['y','Yellow',c.y],['g','Green',c.g]].map(function (f) {
+      return '<button type="button" class="fbtn" data-act="vf" data-v="' + f[0] + '" aria-pressed="' + (S.vf === f[0]) + '">' + f[1] + '<span class="n">' + f[2] + '</span></button>'; }).join('') + '</div>';
+  var items = list.map(function (v) {
+    var badges = '<span class="badge b-' + v.lv + '">' + lvName[v.lv] + '</span>' + (v.guess ? '<span class="badge b-guess">추정</span>' : '');
+    var it = itemHtml(v, m, 't5:' + v.id, 'lv-' + v.lv, badges);
+    return it;
+  }).join('');
+  return modebar('t5') + summaryBox('t5', reviewSummary(), m) + bar + filters +
+    '<p class="legend"><b style="color:var(--g)">Green</b> 테스트가 있고 단순·의도가 분명 · <b style="color:var(--y)">Yellow</b> 테스트 부족·의도 불분명·영향 범위 큼 · <b style="color:var(--r)">Red</b> 오류·데이터 불일치·보안 위험이 코드에서 확인됨. 모든 항목은 개발자용 모드에서 <code>파일:줄</code> 근거를 봅니다.</p>' +
+    '<div class="list">' + (items || '<div class="empty">해당 항목이 없습니다.</div>') + '</div>';
+}
+
+var RENDER = {t1: renderT1, t2: renderT2, t3: renderT3, t4: renderT4, t5: renderT5};
+
+/* ---------- 구조 그래프 ---------- */
+function related(id) {
+  var out = [], inn = [];
+  EDGES.forEach(function (e) { if (e[0] === id) out.push(e[1]); if (e[1] === id) inn.push(e[0]); });
+  return {out: out, inn: inn};
+}
+function drawEdges() {
+  var g = document.getElementById('graph'), svg = document.getElementById('gsvg');
+  if (!g || !svg || !g.offsetParent) return;
+  var gr = g.getBoundingClientRect();
+  var rect = function (id) {
+    var n = document.getElementById('n-' + id); if (!n) return null;
+    var r = n.getBoundingClientRect();
+    return {x: r.left - gr.left, y: r.top - gr.top, w: r.width, h: r.height};
+  };
+  var clip = function (a, b) { // a 중심에서 b 방향으로 a 사각형 경계까지
+    var cx = a.x + a.w / 2, cy = a.y + a.h / 2, dx = b.x + b.w / 2 - cx, dy = b.y + b.h / 2 - cy;
+    var tx = dx === 0 ? Infinity : (a.w / 2) / Math.abs(dx), ty = dy === 0 ? Infinity : (a.h / 2) / Math.abs(dy);
+    var t = Math.min(tx, ty);
+    return [cx + dx * t, cy + dy * t];
+  };
+  var html = '';
+  EDGES.forEach(function (e) {
+    var a = rect(e[0]), b = rect(e[1]); if (!a || !b) return;
+    var p = clip(a, b), q = clip(b, a);
+    var cls = 'edge';
+    if (S.node) cls += (e[0] === S.node || e[1] === S.node) ? ' on' : ' off';
+    html += '<line class="' + cls + '" x1="' + p[0].toFixed(1) + '" y1="' + p[1].toFixed(1) + '" x2="' + q[0].toFixed(1) + '" y2="' + q[1].toFixed(1) + '" marker-end="url(#ah)" style="color:' + (cls.indexOf('on') > -1 ? 'var(--acc)' : 'var(--mut)') + '"/>';
+  });
+  var defs = svg.querySelector('defs').outerHTML;
+  svg.innerHTML = defs + html;
+}
+function applyGraph() {
+  var rel = S.node ? related(S.node) : null;
+  NODES.forEach(function (n) {
+    var el = document.getElementById('n-' + n.id); if (!el) return;
+    el.classList.remove('sel', 'rel', 'dim');
+    if (S.node) {
+      if (n.id === S.node) el.classList.add('sel');
+      else if (rel.out.indexOf(n.id) > -1 || rel.inn.indexOf(n.id) > -1) el.classList.add('rel');
+      else el.classList.add('dim');
+    }
+  });
+  drawEdges();
+  var box = document.getElementById('ndetail'); if (!box) return;
+  if (!S.node) { box.innerHTML = '<div class="card detail"><span class="hint" style="margin:0">노드를 선택하면 설명과 연결 관계가 여기에 표시됩니다.</span></div>'; return; }
+  var m = S.mode.t3, n = byId(NODES, S.node);
+  var lab = function (id) { var x = byId(NODES, id); return esc(m === 'd' ? x.f : x.tp); };
+  var chips = function (arr) { return arr.length ? arr.map(function (id) { return '<button type="button" class="mini" data-act="node" data-v="' + id + '">' + lab(id) + '</button>'; }).join('') : '<span class="hint" style="margin:0">없음</span>'; };
+  box.innerHTML = '<div class="card detail"><h3>' + esc(m === 'd' ? n.f : n.tp) + '</h3><div>' + rich(txt(n, m)) + '</div>' + refsHtml(n, m) +
+    '<div class="rel-list"><b>이것이 쓰는 것 →</b>' + chips(rel.out) + '</div>' +
+    '<div class="rel-list"><b>이것을 쓰는 곳 ←</b>' + chips(rel.inn) + '</div></div>';
+}
+
+/* ---------- 화면 조립 ---------- */
+function buildShell() {
+  document.getElementById('tabs').innerHTML = TABS.map(function (t, i) {
+    return '<button type="button" class="tab" role="tab" id="tab-' + t.id + '" data-act="tab" data-v="' + t.id + '" aria-selected="false" aria-controls="p-' + t.id + '"><span class="no">' + (i + 1) + '</span>' + t.name + '<small>' + t.sub + '</small></button>';
+  }).join('');
+  document.getElementById('panels').innerHTML = TABS.map(function (t) {
+    return '<section class="panel" role="tabpanel" id="p-' + t.id + '" aria-labelledby="tab-' + t.id + '" hidden></section>';
+  }).join('');
+}
+function show(tab) {
+  S.tab = tab;
+  TABS.forEach(function (t) {
+    var on = t.id === tab;
+    document.getElementById('tab-' + t.id).setAttribute('aria-selected', on);
+    document.getElementById('p-' + t.id).hidden = !on;
+  });
+  renderCurrent();
+  persist();
+}
+function renderCurrent() {
+  var p = document.getElementById('p-' + S.tab);
+  p.innerHTML = RENDER[S.tab]();
+  if (S.tab === 't3') requestAnimationFrame(applyGraph);
+}
+
+/* ---------- 이벤트 ---------- */
+document.addEventListener('click', function (e) {
+  var b = e.target.closest('[data-act]'); if (!b) return;
+  var a = b.dataset.act, v = b.dataset.v;
+  if (a === 'tab') { show(v); return; }
+  if (a === 'mode') { S.mode[S.tab] = v; persist(); renderCurrent(); return; }
+  if (a === 'toggle') {
+    var item = b.closest('.item'), key = item.dataset.key;
+    var open = !item.classList.contains('open');
+    item.classList.toggle('open', open); b.setAttribute('aria-expanded', open);
+    if (open) S.open[key] = true; else delete S.open[key];
+    return;
+  }
+  if (a === 'step') { S.step = +v; renderCurrent(); return; }
+  if (a === 'prev') { S.step = Math.max(0, S.step - 1); renderCurrent(); return; }
+  if (a === 'next') { S.step = Math.min(byId(FLOWS, S.flow).steps.length - 1, S.step + 1); renderCurrent(); return; }
+  if (a === 'node') { S.node = (S.node === v && b.id === 'n-' + v) ? null : v; applyGraph(); return; }
+  if (a === 'rf') { S.rf = v; renderCurrent(); return; }
+  if (a === 'vf') { S.vf = v; renderCurrent(); return; }
+});
+document.addEventListener('change', function (e) {
+  if (e.target.id === 'flowSel') { S.flow = e.target.value; S.step = 0; renderCurrent(); }
+});
+document.addEventListener('keydown', function (e) {
+  if (S.tab !== 't2') return;
+  var tag = (e.target.tagName || '').toLowerCase();
+  if (tag === 'select' || tag === 'input' || tag === 'textarea') return;
+  var n = byId(FLOWS, S.flow).steps.length;
+  if (e.key === 'ArrowRight' && S.step < n - 1) { S.step++; renderCurrent(); }
+  if (e.key === 'ArrowLeft' && S.step > 0) { S.step--; renderCurrent(); }
+});
+var rz;
+window.addEventListener('resize', function () { clearTimeout(rz); rz = setTimeout(function () { if (S.tab === 't3') drawEdges(); }, 80); });
+
+buildShell();
+show(S.tab);
+})();
+</script>
+</body>
+</html>
