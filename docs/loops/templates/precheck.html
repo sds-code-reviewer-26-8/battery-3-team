@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>사전 검토 (precheck)</title>
+<style>
+:root{
+  --bg:#f6f7f9; --card:#fff; --text:#1c2430; --muted:#5d6b7c; --line:#d8dee6;
+  --accent:#1f4e78; --ph:#fff4c2; --ph-line:#e6c84a;
+  --ok:#17803d; --ok-bg:#e3f4ea; --warn:#9a6700; --warn-bg:#fdf1d6; --bad:#b42318; --bad-bg:#fde7e4;
+  --guide-bg:#eaf1fa; --guide-line:#9db8d8; --code:#eef1f5;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#10151c; --card:#18202a; --text:#e6ebf2; --muted:#9aa8ba; --line:#2d3947;
+    --accent:#7db3e8; --ph:#4a3f12; --ph-line:#a88a1c;
+    --ok:#4cc27a; --ok-bg:#16301f; --warn:#f0b24b; --warn-bg:#35290f; --bad:#ff8a80; --bad-bg:#3a1a17;
+    --guide-bg:#1b2a3d; --guide-line:#3d5a80; --code:#212c39;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.7 -apple-system,"Segoe UI","Malgun Gothic",sans-serif}
+.wrap{max-width:960px;margin:0 auto;padding:24px 16px 80px}
+h1{font-size:26px;margin:4px 0 2px}
+h2{font-size:18px;margin:0 0 10px;color:var(--accent)}
+h2 .no{display:inline-block;background:var(--accent);color:#fff;border-radius:6px;padding:0 8px;margin-right:6px;font-size:14px}
+section{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:16px 0}
+.sub{color:var(--muted);margin:0 0 12px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+th{background:var(--bg);color:var(--muted);font-weight:600}
+.tablewrap{overflow-x:auto}
+.ph{background:var(--ph);border-bottom:1px dashed var(--ph-line);padding:0 3px;border-radius:3px}
+.guide{background:var(--guide-bg);border-left:4px solid var(--guide-line);padding:9px 13px;border-radius:6px;margin:0 0 12px;font-size:13.5px}
+.guide b{color:var(--accent)}
+.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px 16px}
+.meta div{border:1px solid var(--line);border-radius:8px;padding:6px 10px;background:var(--card)}
+.meta span{display:block;font-size:12px;color:var(--muted)}
+.badge{display:inline-block;border-radius:999px;padding:1px 10px;font-size:12.5px;font-weight:600}
+.b-ok{background:var(--ok-bg);color:var(--ok)} .b-warn{background:var(--warn-bg);color:var(--warn)} .b-bad{background:var(--bad-bg);color:var(--bad)}
+.check{list-style:none;padding:0;margin:0}
+.check li{display:flex;gap:10px;padding:6px 0;border-bottom:1px solid var(--line)}
+.check li:last-child{border-bottom:0}
+.check input{margin-top:5px}
+pre{background:var(--code);padding:10px 12px;border-radius:8px;overflow-x:auto;font:13px/1.55 Consolas,"D2Coding",monospace;margin:6px 0}
+.rules{font-size:13px;color:var(--muted)}
+.rules li{margin:2px 0}
+@media print{ body{background:#fff} .guide{display:none} section{break-inside:avoid} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="sub">Inner Loop · 사전 검토·세팅 단계의 증거(Evidence)</p>
+  <h1>사전 검토: <span class="ph">[기능 이름]</span></h1>
+  <div class="guide">
+    <b>이 문서의 용도</b> — 구현을 시작하기 <b>전에</b> 무엇을 점검했는지 남기는 증거입니다. 사람(HITL)이 이 문서를 보고 구현 착수를 승인합니다.<br>
+    <b>작성 규칙</b>
+    <ul class="rules">
+      <li>노란색 <span class="ph">[대괄호]</span> 는 채워 넣는 칸입니다. 다 채운 뒤 노란 배경(<code>class="ph"</code>)을 지웁니다.</li>
+      <li>점검한 내용은 <b>실제로 확인한 것만</b> 적습니다. 확인하지 못한 것은 지어내지 말고 "미확인"으로 적습니다.</li>
+      <li>"확인했다"는 말만 쓰지 말고 <b>확인 근거</b>(명령과 결과, 파일 위치, 문서 링크)를 함께 남깁니다.</li>
+      <li>파란색 안내 상자는 작성 후 지워도 됩니다(인쇄할 때는 자동으로 숨겨집니다).</li>
+    </ul>
+  </div>
+  <div class="meta">
+    <div><span>작성자</span><span class="ph">[이름]</span></div>
+    <div><span>작성일</span><span class="ph">[YYYY-MM-DD]</span></div>
+    <div><span>브랜치</span><span class="ph">[브랜치 이름]</span></div>
+    <div><span>검토 상태</span><span class="badge b-warn">승인 대기</span> <small class="sub">(승인 대기 / 승인 / 보완 필요)</small></div>
+  </div>
+</header>
+
+<section>
+  <h2><span class="no">1</span>목표와 범위</h2>
+  <div class="guide"><b>무엇을 만들고, 무엇은 만들지 않는지</b> 한눈에 보이게 적습니다. 범위 밖을 적어 두면 구현 중 범위가 번지는 것을 막을 수 있습니다.</div>
+  <table>
+    <tr><th style="width:150px">만들 기능</th><td><span class="ph">[한 문장으로: 사용자가 무엇을 할 수 있게 되는가]</span></td></tr>
+    <tr><th>선택한 이유</th><td><span class="ph">[왜 이 기능인가 / 어떤 점이 도전적인가]</span></td></tr>
+    <tr><th>이번에 포함</th><td><span class="ph">[항목 1]</span><br><span class="ph">[항목 2]</span></td></tr>
+    <tr><th>이번에 포함하지 않음</th><td><span class="ph">[항목 1]</span></td></tr>
+  </table>
+</section>
+
+<section>
+  <h2><span class="no">2</span>근거 자료 점검</h2>
+  <div class="guide"><b>무엇을 읽고 이 기능을 정했는지</b>. 요구사항 문서, 설계 의도, 관련 코드를 실제로 확인했다는 기록입니다.</div>
+  <div class="tablewrap"><table>
+    <thead><tr><th>구분</th><th>자료 / 위치</th><th>확인한 내용</th><th>확인 방법</th></tr></thead>
+    <tbody>
+      <tr><td>요구사항</td><td><span class="ph">[예: docs/PRD.md FR-16]</span></td><td><span class="ph">[무엇이 적혀 있는가]</span></td><td><span class="ph">[읽음 / 실행해 확인]</span></td></tr>
+      <tr><td>설계 의도</td><td><span class="ph">[예: docs/INTENT.md 의도 6]</span></td><td><span class="ph">[…]</span></td><td><span class="ph">[…]</span></td></tr>
+      <tr><td>관련 코드</td><td><span class="ph">[예: 클래스 / 화면 이름]</span></td><td><span class="ph">[현재 어떻게 동작하는가]</span></td><td><span class="ph">[…]</span></td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2><span class="no">3</span>현재 상태 확인</h2>
+  <div class="guide"><b>바꾸기 전의 모습</b>을 기록합니다. 결함을 고치는 기능이면 <b>문제를 먼저 재현</b>하고, 새 기능이면 지금은 없다는 것을 확인합니다. 나중에 "고쳐졌다"를 비교할 기준이 됩니다.</div>
+  <table>
+    <tr><th style="width:150px">확인한 방법</th><td><span class="ph">[실행한 명령 또는 조작]</span></td></tr>
+    <tr><th>확인 결과</th><td><span class="ph">[실제로 나온 결과]</span></td></tr>
+  </table>
+<pre class="ph">[명령 출력, 오류 메시지, 화면 캡처 파일 경로 등을 그대로 붙여 넣기]</pre>
+</section>
+
+<section>
+  <h2><span class="no">4</span>영향 범위와 위험</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>영향받는 곳</th><th>어떻게 영향받는가</th><th>위험</th><th>대응 / 확인 방법</th></tr></thead>
+    <tbody>
+      <tr><td><span class="ph">[파일 / 화면 / 기능]</span></td><td><span class="ph">[…]</span></td><td><span class="badge b-warn">중</span> <span class="ph">[…]</span></td><td><span class="ph">[…]</span></td></tr>
+    </tbody>
+  </table></div>
+  <p class="sub" style="margin-top:10px">되돌릴 수 없는 작업(데이터 삭제, push, 배포)이 포함되는가? <span class="ph">[있음 / 없음 — 있으면 무엇이고 누가 승인하는가]</span></p>
+</section>
+
+<section>
+  <h2><span class="no">5</span>환경·세팅 점검</h2>
+  <div class="guide"><b>구현을 시작할 준비가 되었는지</b>. 체크한 항목은 <b>확인 근거</b> 칸에 실제로 확인한 방법을 적습니다.</div>
+  <ul class="check">
+    <li><input type="checkbox"><div><b>앱을 실행할 수 있다</b><br><small class="sub">확인 근거: </small><span class="ph">[명령과 결과]</span></div></li>
+    <li><input type="checkbox"><div><b>기존 테스트가 통과한다 (기준선)</b><br><small class="sub">확인 근거: </small><span class="ph">[명령과 통과·실패 수]</span></div></li>
+    <li><input type="checkbox"><div><b>작업 브랜치를 만들었다</b><br><small class="sub">확인 근거: </small><span class="ph">[브랜치 이름]</span></div></li>
+    <li><input type="checkbox"><div><b>테스트 데이터·DB 상태를 알고 있다</b><br><small class="sub">확인 근거: </small><span class="ph">[어떤 데이터로 시작하는가 / 정리 방법]</span></div></li>
+    <li><input type="checkbox"><div><b>필요한 도구·설정이 갖춰졌다</b><br><small class="sub">확인 근거: </small><span class="ph">[버전, 설정 파일]</span></div></li>
+  </ul>
+</section>
+
+<section>
+  <h2><span class="no">6</span>통과 기준 (수용 기준)</h2>
+  <div class="guide"><b>"끝났다"를 무엇으로 판정할지</b> 구현 <b>전에</b> 정합니다. 검증 리포트(report.html)는 이 기준을 하나씩 대조합니다. 기계가 판정할 수 있는 기준일수록 좋습니다.</div>
+  <div class="tablewrap"><table>
+    <thead><tr><th style="width:60px">ID</th><th>Given / When / Then</th><th>검증 방법</th></tr></thead>
+    <tbody>
+      <tr><td>AC-1</td><td>Given <span class="ph">[상황]</span>, When <span class="ph">[행동]</span>, Then <span class="ph">[결과]</span></td><td><span class="ph">[예: Playwright 테스트 이름 / 수동 확인]</span></td></tr>
+      <tr><td>AC-2</td><td>Given <span class="ph">[…]</span>, When <span class="ph">[…]</span>, Then <span class="ph">[…]</span></td><td><span class="ph">[…]</span></td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2><span class="no">7</span>반복 한도와 중단 조건</h2>
+  <div class="guide">루프가 끝없이 돌지 않도록 <b>멈추는 규칙</b>을 미리 정합니다.</div>
+  <table>
+    <tr><th style="width:180px">최대 반복 횟수</th><td><span class="ph">[예: 3회]</span></td></tr>
+    <tr><th>성공으로 끝내는 조건</th><td><span class="ph">[예: 6장의 기준이 모두 충족]</span></td></tr>
+    <tr><th>중단하고 사람에게 넘기는 조건</th><td><span class="ph">[예: 같은 원인으로 2회 연속 실패 / 범위 밖 수정이 필요해짐]</span></td></tr>
+  </table>
+</section>
+
+<section>
+  <h2><span class="no">8</span>미확인 사항과 열린 질문</h2>
+  <ul>
+    <li><span class="ph">[확인하지 못한 것 / 사람에게 물어볼 것]</span></li>
+  </ul>
+</section>
+
+<section>
+  <h2><span class="no">9</span>사람 확인 (HITL)</h2>
+  <div class="guide"><b>구현에 들어가도 되는지</b> 사람이 판단하는 자리입니다. AI는 이 칸을 임의로 채우지 않습니다.</div>
+  <ul class="check">
+    <li><input type="checkbox"><div>목표와 범위가 적절하다</div></li>
+    <li><input type="checkbox"><div>통과 기준이 구체적이고 검증할 수 있다</div></li>
+    <li><input type="checkbox"><div>위험과 되돌릴 수 없는 작업을 확인했다</div></li>
+  </ul>
+  <table style="margin-top:10px">
+    <tr><th style="width:150px">결정</th><td><span class="ph">[승인 / 보완 필요 / 보류]</span></td></tr>
+    <tr><th>확인한 사람</th><td><span class="ph">[이름]</span> · <span class="ph">[YYYY-MM-DD]</span></td></tr>
+    <tr><th>의견</th><td><span class="ph">[보완할 점]</span></td></tr>
+  </table>
+</section>
+
+</div>
+</body>
+</html>
