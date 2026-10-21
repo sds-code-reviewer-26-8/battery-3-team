@@ -1,0 +1,678 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>배터리 시뮬레이터 코드 가이드</title>
+<style>
+  :root {
+    --bg: #f5f7fb; --panel: #ffffff; --panel2: #eef2f9; --text: #1b2433; --muted: #5d6b82;
+    --line: #d5dcea; --accent: #2f6df6; --accent2: #12b886; --warn: #f08c00; --danger: #e03131;
+    --c-view: #7950f2; --c-ctrl: #2f6df6; --c-svc: #12b886; --c-sim: #f08c00; --c-data: #e64980; --c-cfg: #868e96;
+    --shadow: 0 6px 24px rgba(30, 50, 100, .10);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0e1320; --panel: #171e2f; --panel2: #1f2840; --text: #e6ebf5; --muted: #93a0ba;
+      --line: #2b3652; --accent: #6b9bff; --accent2: #38d9a9; --warn: #ffa94d; --danger: #ff6b6b;
+      --c-view: #9775fa; --c-ctrl: #6b9bff; --c-svc: #38d9a9; --c-sim: #ffa94d; --c-data: #f783ac; --c-cfg: #adb5bd;
+      --shadow: 0 6px 24px rgba(0, 0, 0, .35);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0e1320; --panel: #171e2f; --panel2: #1f2840; --text: #e6ebf5; --muted: #93a0ba;
+    --line: #2b3652; --accent: #6b9bff; --accent2: #38d9a9; --warn: #ffa94d; --danger: #ff6b6b;
+    --c-view: #9775fa; --c-ctrl: #6b9bff; --c-svc: #38d9a9; --c-sim: #ffa94d; --c-data: #f783ac; --c-cfg: #adb5bd;
+    --shadow: 0 6px 24px rgba(0, 0, 0, .35);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.6 system-ui, "Malgun Gothic", "Apple SD Gothic Neo", sans-serif; }
+  header { padding: 28px 24px 0; max-width: 1180px; margin: 0 auto; display: flex; gap: 16px; align-items: flex-start; justify-content: space-between; }
+  header h1 { margin: 0 0 4px; font-size: 26px; letter-spacing: -.5px; }
+  header p { margin: 0; color: var(--muted); }
+  .badges { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+  .badge { font-size: 12px; padding: 2px 10px; border-radius: 99px; background: var(--panel2); border: 1px solid var(--line); color: var(--muted); }
+  #themeBtn { cursor: pointer; border: 1px solid var(--line); background: var(--panel); color: var(--text); border-radius: 10px; padding: 6px 12px; font: inherit; }
+  nav { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); margin-top: 18px; }
+  .tabs { max-width: 1180px; margin: 0 auto; padding: 0 24px; display: flex; gap: 4px; overflow-x: auto; }
+  .tab { cursor: pointer; border: 0; background: none; color: var(--muted); font: inherit; padding: 12px 16px; border-bottom: 3px solid transparent; white-space: nowrap; }
+  .tab .n { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--panel2); font-size: 12px; margin-right: 6px; }
+  .tab:hover { color: var(--text); }
+  .tab[aria-selected="true"] { color: var(--accent); border-color: var(--accent); font-weight: 600; }
+  .tab[aria-selected="true"] .n { background: var(--accent); color: #fff; }
+  main { max-width: 1180px; margin: 0 auto; padding: 24px; }
+  section.pane { display: none; animation: fade .25s ease; }
+  section.pane.on { display: block; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  h2 { margin: 0 0 4px; font-size: 21px; }
+  .lead { color: var(--muted); margin: 0 0 18px; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 18px; box-shadow: var(--shadow); }
+  .grid2 { display: grid; grid-template-columns: 1.5fr 1fr; gap: 16px; }
+  @media (max-width: 880px) { .grid2 { grid-template-columns: 1fr; } header { flex-direction: column; } }
+  .seg { display: inline-flex; background: var(--panel2); border-radius: 12px; padding: 3px; gap: 2px; flex-wrap: wrap; }
+  .seg button { border: 0; background: none; color: var(--muted); padding: 6px 14px; border-radius: 9px; cursor: pointer; font: inherit; }
+  .seg button[aria-pressed="true"] { background: var(--panel); color: var(--accent); font-weight: 600; box-shadow: 0 1px 4px rgba(0,0,0,.12); }
+  .btn { border: 1px solid var(--line); background: var(--panel); color: var(--text); padding: 7px 14px; border-radius: 10px; cursor: pointer; font: inherit; }
+  .btn:hover { border-color: var(--accent); color: var(--accent); }
+  .btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .btn.primary:hover { color: #fff; filter: brightness(1.1); }
+  .btn:disabled { opacity: .4; cursor: default; }
+  code, .mono { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: .92em; }
+  code { background: var(--panel2); padding: 1px 6px; border-radius: 6px; }
+  svg text { font-family: inherit; fill: var(--text); }
+  svg .muted { fill: var(--muted); }
+  .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .space { height: 14px; }
+
+  /* flow */
+  .nodebox { fill: var(--panel2); stroke: var(--line); stroke-width: 1.5; transition: all .3s; }
+  .node.active .nodebox { fill: color-mix(in srgb, var(--accent) 18%, var(--panel)); stroke: var(--accent); stroke-width: 3; }
+  .node.done .nodebox { stroke: var(--accent2); }
+  #packet { transition: cx .6s ease; fill: var(--warn); }
+  .stepcard h3 { margin: 0 0 6px; font-size: 16px; }
+  .steplist { list-style: none; padding: 0; margin: 12px 0 0; display: grid; gap: 4px; }
+  .steplist li { display: flex; gap: 8px; padding: 6px 10px; border-radius: 10px; cursor: pointer; color: var(--muted); }
+  .steplist li:hover { background: var(--panel2); }
+  .steplist li.on { background: color-mix(in srgb, var(--accent) 14%, transparent); color: var(--text); font-weight: 600; }
+  .steplist li b { color: var(--accent); min-width: 18px; }
+
+  /* map */
+  .layer { margin-bottom: 14px; }
+  .layer h3 { margin: 0 0 8px; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+  .dot { width: 12px; height: 12px; border-radius: 4px; display: inline-block; }
+  .files { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 8px; }
+  .file { text-align: left; cursor: pointer; background: var(--panel); border: 1px solid var(--line); border-left: 5px solid var(--lc); border-radius: 12px; padding: 8px 10px; font: inherit; color: var(--text); transition: transform .15s, box-shadow .15s; }
+  .file:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+  .file.sel { outline: 2px solid var(--lc); background: color-mix(in srgb, var(--lc) 10%, var(--panel)); }
+  .file small { display: block; color: var(--muted); font-size: 12px; }
+  .file.dim { opacity: .25; }
+  .detail h3 { margin: 0; }
+  .detail .path { color: var(--muted); font-size: 12px; word-break: break-all; }
+  .detail ul { margin: 8px 0 0; padding-left: 18px; }
+  .linebar { height: 8px; border-radius: 6px; background: var(--panel2); overflow: hidden; margin: 8px 0; }
+  .linebar i { display: block; height: 100%; background: var(--lc); transition: width .3s; }
+
+  /* planner */
+  .sl { display: grid; grid-template-columns: 90px 1fr 80px; gap: 10px; align-items: center; margin: 6px 0; }
+  .sl input { width: 100%; accent-color: var(--accent); }
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-top: 10px; }
+  .kpi { background: var(--panel2); border-radius: 12px; padding: 10px 12px; }
+  .kpi b { display: block; font-size: 20px; }
+  .kpi span { font-size: 12px; color: var(--muted); }
+  .opt { border-left: 5px solid var(--lc); background: var(--panel2); border-radius: 10px; padding: 10px 12px; margin-top: 8px; }
+  .opt b { color: var(--lc); }
+  table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+  th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); }
+  th { color: var(--muted); font-weight: 600; }
+
+  /* data */
+  .ent rect.box { fill: var(--panel); stroke: var(--line); stroke-width: 1.5; transition: all .2s; cursor: pointer; }
+  .ent:hover rect.box, .ent.sel rect.box { stroke: var(--c-data); stroke-width: 3; }
+  .state circle { fill: var(--panel2); stroke: var(--line); stroke-width: 2; cursor: pointer; transition: all .2s; }
+  .state.sel circle { stroke: var(--accent); stroke-width: 4; fill: color-mix(in srgb, var(--accent) 16%, var(--panel)); }
+  .state.next circle { stroke: var(--accent2); stroke-width: 4; stroke-dasharray: 6 4; }
+  .edge { stroke: var(--muted); stroke-width: 2; fill: none; transition: all .2s; }
+  .edge.hot { stroke: var(--accent2); stroke-width: 4; }
+
+  /* front */
+  .fcol { display: grid; gap: 8px; align-content: start; }
+  .fitem { border: 1px solid var(--line); background: var(--panel); border-radius: 10px; padding: 8px 10px; transition: all .2s; font-size: 13.5px; }
+  .fitem.hot { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, var(--panel)); box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 30%, transparent); }
+  .fitem.cold { opacity: .35; }
+  .fitem b { display: block; }
+  .fgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 14px; }
+  @media (max-width: 880px) { .fgrid { grid-template-columns: 1fr; } }
+  .fgrid h4 { margin: 0 0 8px; color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+
+  /* design */
+  .dgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+  .dcard { cursor: pointer; }
+  .dcard h3 { margin: 0 0 6px; font-size: 16px; }
+  .dcard .more { display: none; margin-top: 8px; color: var(--muted); font-size: 14px; }
+  .dcard.open .more { display: block; }
+  .dcard .tag { font-size: 12px; color: var(--accent); }
+  .log { background: #0b1020; color: #cfe3ff; border-radius: 12px; padding: 12px; min-height: 120px; font-size: 13px; white-space: pre-wrap; }
+  .log .ok { color: #69db7c; } .log .bad { color: #ff8787; } .log .info { color: #74c0fc; }
+  footer { max-width: 1180px; margin: 0 auto; padding: 0 24px 40px; color: var(--muted); font-size: 12px; }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>🔋 배터리 셀 생산·운송 시뮬레이터 — 코드 가이드</h1>
+    <p>한국이 4개 공장에 셀을 주문하면 배로 수거하는 일정을 계산하고, 경로를 골라 주문을 확정하는 Spring Boot 앱입니다.</p>
+    <div class="badges">
+      <span class="badge">Spring Boot 4.1.1</span><span class="badge">Java 17</span><span class="badge">Thymeleaf</span>
+      <span class="badge">JPA + H2(file)</span><span class="badge">Vanilla JS</span><span class="badge">src 약 2,600줄 (Java 1,630 · 프론트 970)</span>
+    </div>
+  </div>
+  <button id="themeBtn" title="테마 전환">🌓 테마</button>
+</header>
+
+<nav><div class="tabs" role="tablist" id="tabs"></div></nav>
+
+<main>
+<!-- 1. FLOW -->
+<section class="pane" id="flow" data-title="전체 흐름">
+  <h2>① 요청 하나가 지나가는 길</h2>
+  <p class="lead">시나리오를 고르고 <b>다음 ▶</b>(또는 자동 재생)으로 한 단계씩 따라가 보세요. 주황 점이 현재 처리 중인 계층입니다.</p>
+  <div class="row" style="margin-bottom:12px">
+    <div class="seg" id="scenSeg"></div>
+    <button class="btn" id="prevBtn">◀ 이전</button>
+    <button class="btn primary" id="nextBtn">다음 ▶</button>
+    <button class="btn" id="playBtn">▶ 자동 재생</button>
+  </div>
+  <div class="card">
+    <svg viewBox="0 0 1100 190" width="100%" id="flowSvg" role="img" aria-label="요청 흐름 다이어그램"></svg>
+  </div>
+  <div class="space"></div>
+  <div class="grid2">
+    <div class="card stepcard" id="stepCard"></div>
+    <div class="card"><b>단계 목록</b> <span class="muted" style="color:var(--muted);font-size:12px">(클릭하여 이동)</span><ul class="steplist" id="stepList"></ul></div>
+  </div>
+</section>
+
+<!-- 2. MAP -->
+<section class="pane" id="map" data-title="코드 지도">
+  <h2>② 어떤 파일이 무슨 일을 하나</h2>
+  <p class="lead">파일 카드를 클릭하면 역할과 핵심 메서드가 오른쪽에 나옵니다. 위 범례로 레이어를 필터링할 수 있어요.</p>
+  <div class="row" style="margin-bottom:12px"><div class="seg" id="layerSeg"></div></div>
+  <div class="grid2">
+    <div class="card" id="mapCard"></div>
+    <div class="card detail" id="detailCard" style="--lc: var(--accent); align-self:start; position:sticky; top:70px"></div>
+  </div>
+</section>
+
+<!-- 3. PLANNER -->
+<section class="pane" id="planner" data-title="Planner 알고리즘">
+  <h2>③ Planner — 경로를 어떻게 계산할까</h2>
+  <p class="lead">슬라이더로 주문량을 바꾸면 공장 하나가 “수거 가능 시점”까지 재고를 쌓는 모습을 볼 수 있습니다. (배 이동 일수는 제외한 공장 측 단순 모형)</p>
+  <div class="grid2">
+    <div class="card">
+      <div class="seg" id="fSeg" style="margin-bottom:10px"></div>
+      <div id="sliders"></div>
+      <div class="kpis" id="kpis"></div>
+      <svg viewBox="0 0 640 260" width="100%" id="stockSvg" style="margin-top:12px" role="img" aria-label="재고 그래프"></svg>
+      <div style="color:var(--muted);font-size:12.5px">선: 재고(K), 점선: 재고 상한, 세로선: 수거. 재고가 상한에 닿으면 생산이 멈추고 수거를 기다립니다.</div>
+    </div>
+    <div>
+      <div class="card">
+        <b>핵심 규칙</b>
+        <ul style="margin:8px 0 0;padding-left:18px">
+          <li>0일차에 모든 공장이 동시에 생산 시작</li>
+          <li>하루 생산 = <code>min(하루 최대, 재고 상한−재고, 남은 주문)</code></li>
+          <li>방문 횟수 = <code>ceil(주문 / 재고 상한)</code></li>
+          <li>한 나라는 <b>한 척</b>의 배만 방문, 도착 시 재고 전부 적재</li>
+          <li>여러 번 수거 → 한국에 내려놓고 재출항</li>
+          <li>배는 재고가 찰 날에 맞춰 <b>늦게 출항</b> (한국 대기 무료)</li>
+        </ul>
+      </div>
+      <div class="card" style="margin-top:14px">
+        <b>3가지 결과 옵션</b>
+        <div class="opt" style="--lc:var(--c-svc)"><b>COST 운항비 최소</b><br>나라 분할 × 왕복 패턴(FRONT/BACK/SPREAD) × 방문 순열을 완전 탐색해 운항비 최소(동률이면 짧은 일수).</div>
+        <div class="opt" style="--lc:var(--c-sim)"><b>FAST 가장 빠르게</b><br>같은 후보 중 총 일수 최소(동률이면 낮은 운항비).</div>
+        <div class="opt" style="--lc:var(--c-ctrl)"><b>NEAR 가까운 곳부터</b><br>한국에서 가까운 나라를 배에 돌려가며 배정, 왕복마다 가까운 곳부터 방문.</div>
+      </div>
+    </div>
+  </div>
+  <div class="space"></div>
+  <div class="card">
+    <b>Planner 내부 파이프라인</b>
+    <svg viewBox="0 0 1100 120" width="100%" id="pipeSvg" role="img" aria-label="Planner 파이프라인"></svg>
+    <div id="pipeText" style="color:var(--muted)">단계를 클릭하세요.</div>
+  </div>
+</section>
+
+<!-- 4. DATA -->
+<section class="pane" id="data" data-title="데이터 모델">
+  <h2>④ 데이터는 어떻게 저장되나</h2>
+  <p class="lead">엔티티를 클릭하면 필드가, 상태 원을 클릭하면 이동 가능한 다음 상태가 강조됩니다.</p>
+  <div class="grid2">
+    <div class="card"><svg viewBox="0 0 640 400" width="100%" id="erSvg" role="img" aria-label="엔티티 관계도"></svg></div>
+    <div class="card" id="entDetail" style="align-self:start"></div>
+  </div>
+  <div class="space"></div>
+  <div class="grid2">
+    <div class="card">
+      <b>주문 상태 전이 (<code>OrderStatus.next()</code>)</b>
+      <svg viewBox="0 0 640 170" width="100%" id="stSvg" role="img" aria-label="상태 전이도"></svg>
+    </div>
+    <div class="card" id="stDetail"></div>
+  </div>
+</section>
+
+<!-- 5. FRONT -->
+<section class="pane" id="front" data-title="화면·프론트">
+  <h2>⑤ 화면, 스크립트, API 연결</h2>
+  <p class="lead">화면(템플릿)을 고르면 함께 쓰이는 JS와 서버 엔드포인트가 강조됩니다.</p>
+  <div class="seg" id="pageSeg"></div>
+  <div class="fgrid">
+    <div><h4>Thymeleaf 템플릿</h4><div class="fcol" id="colT"></div></div>
+    <div><h4>정적 JS</h4><div class="fcol" id="colJ"></div></div>
+    <div><h4>서버 엔드포인트</h4><div class="fcol" id="colE"></div></div>
+  </div>
+  <div class="space"></div>
+  <div class="card" id="pageNote"></div>
+</section>
+
+<!-- 6. DESIGN -->
+<section class="pane" id="design" data-title="설계 포인트">
+  <h2>⑥ 꼭 알아둘 설계 포인트</h2>
+  <p class="lead">카드를 클릭하면 이유와 코드 위치가 펼쳐집니다. 아래에서 충돌 시나리오를 직접 체험할 수 있어요.</p>
+  <div class="dgrid" id="dgrid"></div>
+  <div class="space"></div>
+  <div class="card">
+    <b>🧪 체험: 확정 시 마스터 데이터가 바뀌면?</b>
+    <div class="row" style="margin:10px 0">
+      <button class="btn primary" id="dSim">1. 시뮬레이션 (버전 v1)</button>
+      <button class="btn" id="dMaster">2. 다른 사용자가 마스터 수정 (v+1)</button>
+      <button class="btn" id="dConfirm">3. 주문 확정</button>
+      <button class="btn" id="dReset">초기화</button>
+    </div>
+    <div class="log mono" id="dLog">버튼을 순서대로 눌러 보세요.</div>
+  </div>
+</section>
+</main>
+<footer>이 문서는 <code>/understand</code> 스킬이 관리합니다 (<code>.claude/skills/understand/SKILL.md</code>). 코드가 바뀌면 해당 탭 데이터를 함께 갱신하세요.</footer>
+
+<script>
+(function () {
+  'use strict';
+  const $ = (s, r = document) => r.querySelector(s);
+  const el = (tag, attrs = {}, html = '') => { const e = document.createElement(tag); for (const k in attrs) e.setAttribute(k, attrs[k]); e.innerHTML = html; return e; };
+  const NS = 'http://www.w3.org/2000/svg';
+  const sv = (tag, attrs = {}, text) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (text != null) e.textContent = text; return e; };
+  const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+  /* ---------------- 테마 ---------------- */
+  $('#themeBtn').onclick = () => {
+    const root = document.documentElement;
+    const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+    root.dataset.theme = dark ? 'light' : 'dark';
+    drawStock();
+  };
+
+  /* ---------------- 탭 ---------------- */
+  const panes = [...document.querySelectorAll('section.pane')];
+  const tabsEl = $('#tabs');
+  panes.forEach((p, i) => {
+    const b = el('button', { class: 'tab', role: 'tab', 'data-id': p.id, 'aria-selected': 'false' }, `<span class="n">${i + 1}</span>${p.dataset.title}`);
+    b.onclick = () => openTab(p.id);
+    tabsEl.appendChild(b);
+  });
+  function openTab(id, noHash) {
+    if (!panes.some(p => p.id === id)) id = panes[0].id;
+    panes.forEach(p => p.classList.toggle('on', p.id === id));
+    [...tabsEl.children].forEach(b => b.setAttribute('aria-selected', b.dataset.id === id));
+    if (!noHash) { try { history.replaceState(null, '', '#' + id); } catch (e) { location.hash = id; } }
+    if (id === 'planner') drawStock();
+  }
+  addEventListener('keydown', e => {
+    if (/INPUT|TEXTAREA/.test(e.target.tagName)) return;
+    const cur = panes.findIndex(p => p.classList.contains('on'));
+    if (e.key === 'ArrowRight') openTab(panes[Math.min(cur + 1, panes.length - 1)].id);
+    if (e.key === 'ArrowLeft') openTab(panes[Math.max(cur - 1, 0)].id);
+  });
+  addEventListener('hashchange', () => openTab(location.hash.slice(1), true));
+
+  /* ================= 1. FLOW ================= */
+  const NODES = [
+    { k: 'browser', t: '브라우저', s: 'order-new.js 외', c: '--c-view' },
+    { k: 'intc', t: 'LoginInterceptor', s: '세션 확인', c: '--c-cfg' },
+    { k: 'ctrl', t: 'AppController', s: 'HTTP ↔ 서비스', c: '--c-ctrl' },
+    { k: 'svc', t: 'BatteryService', s: '업무 규칙·트랜잭션', c: '--c-svc' },
+    { k: 'plan', t: 'Planner', s: '순수 계산', c: '--c-sim' },
+    { k: 'db', t: 'H2 / JPA', s: 'Repository', c: '--c-data' }
+  ];
+  const SCEN = {
+    sim: { label: '시뮬레이션', steps: [
+      [0, '주문 수량 입력 → 시뮬레이션', '<code>order-new.js</code>가 나라별 수량을 모아 <code>postJson("/api/simulate", {orders})</code> 호출. 입력이 바뀌면 이전 결과는 무효화(<code>invalidate()</code>).'],
+      [1, '로그인 확인', '<code>WebConfig</code>가 등록한 <code>LoginInterceptor</code>가 세션의 <code>loginUser</code>를 확인. 없으면 <code>/api/**</code>는 401, 그 외는 <code>/login</code> 리다이렉트.'],
+      [2, '컨트롤러 진입', '<code>AppController.simulate(SimulateRequest)</code>가 <code>service.simulate()</code>를 호출하고, <code>BusinessException</code>은 400/409 JSON으로 변환.'],
+      [3, '입력 검증', '<code>validateOrders</code>: 음수 금지, 총량 1K 이상 <code>Planner.MAX_TOTAL_K</code>(100,000K) 이하. 실패 시 <code>BusinessException</code>.'],
+      [5, '마스터 데이터 읽기', '<code>currentMaster()</code>가 Factory·Route·Setting을 읽어 불변 스냅샷 <code>Master</code>(버전 포함)로 만든다.'],
+      [4, '경로 계산', '<code>Planner.visits()</code>와 <code>Planner.plan()</code>이 COST / FAST / NEAR 3가지 <code>Plan</code>을 반환. DB·Spring에 의존하지 않는다.'],
+      [0, '결과 렌더링', '<code>SimulationResult(master, orders, visits, options)</code> JSON을 받아 <code>planview.js</code>가 표를, <code>anim.js</code>가 지도 애니메이션을 그린다.']
+    ] },
+    confirm: { label: '주문 확정', steps: [
+      [0, '경로 선택 후 확정', '<code>postJson("/api/orders", {orders, routeType, masterVersion, memo})</code>. 화면이 가진 <b>마스터 버전</b>을 함께 보낸다.'],
+      [1, '로그인 확인', '인터셉터 통과. 세션의 사용자 ID는 이후 <code>createdBy</code>로 저장된다.'],
+      [2, '컨트롤러 진입', '<code>AppController.confirm</code> → <code>service.confirm(...)</code>. 성공 시 <code>{id}</code> 반환.'],
+      [4, '서버가 다시 계산', '<code>confirm()</code>은 클라이언트가 보낸 계산값을 믿지 않고 같은 입력으로 <code>simulate()</code>를 다시 실행한다.'],
+      [3, '버전 비교', '<code>result.master().version() != masterVersion</code> 이면 <code>BusinessException(conflict=true)</code> → <b>409</b>. 다시 시뮬레이션하도록 안내.'],
+      [3, '선택 경로 찾기·메모 정리', '<code>routeType</code>과 일치하는 Plan을 고르고, 메모는 strip 후 1,000자 제한.'],
+      [5, '저장', '<code>Order</code>(+ <code>planJson</code> = <code>StoredPlan</code> 스냅샷)와 최초 <code>OrderStatusHistory(null→CONFIRMED)</code>를 저장.'],
+      [0, '상세 화면으로 이동', '응답의 id로 <code>/orders/{id}</code> 이동. 이후 <code>planview.js</code>가 저장된 JSON으로 같은 화면을 재현.']
+    ] },
+    status: { label: '상태 변경', steps: [
+      [0, '상세 화면에서 상태 버튼', '<code>POST /orders/{id}/status</code> 폼. <code>status</code>와 화면에서 본 시점의 <code>version</code>을 hidden으로 전송.'],
+      [1, '로그인 확인', '인터셉터 통과.'],
+      [2, '컨트롤러 진입', '<code>AppController.changeStatus</code> → 서비스 호출. 예외는 flash <code>error</code>로 담아 상세로 리다이렉트.'],
+      [3, '버전 확인', '<code>order.getVersion() != expectedVersion</code> 이면 “다른 사용자가 먼저 변경” 충돌.'],
+      [3, '전이 규칙 확인', '<code>OrderStatus.canChangeTo(target)</code>: 확정→진행/취소, 진행→완료/취소, 완료·취소는 종료.'],
+      [5, '저장 + 이력', '<code>saveAndFlush</code>(<code>@Version</code> 낙관적 잠금) 후 <code>OrderStatusHistory</code> 기록. flush 중 충돌도 같은 오류로 처리.'],
+      [5, '취소는 행 삭제', '<code>CANCELED</code>이면 이력은 남기고 주문 행(<code>orders.delete</code>)을 삭제한다.'],
+      [0, '메시지와 함께 새로고침', '<code>redirect:/orders/{id}</code> + flash 메시지. (취소된 주문은 이후 목록에서 사라짐)']
+    ] }
+  };
+  let scen = 'sim', stepIdx = 0, timer = null;
+  const flowSvg = $('#flowSvg');
+  const NX = i => 90 + i * 184;
+  function buildFlow() {
+    flowSvg.innerHTML = '';
+    const defs = sv('defs'); defs.innerHTML = '<marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--muted)"/></marker>';
+    flowSvg.appendChild(defs);
+    NODES.forEach((n, i) => {
+      if (i < NODES.length - 1) flowSvg.appendChild(sv('line', { x1: NX(i) + 78, y1: 80, x2: NX(i + 1) - 78, y2: 80, stroke: 'var(--muted)', 'stroke-width': 2, 'marker-end': 'url(#arr)' }));
+      const g = sv('g', { class: 'node', 'data-i': i });
+      g.appendChild(sv('rect', { class: 'nodebox', x: NX(i) - 78, y: 45, width: 156, height: 70, rx: 14 }));
+      g.appendChild(sv('rect', { x: NX(i) - 78, y: 45, width: 8, height: 70, rx: 4, fill: `var(${n.c})` }));
+      g.appendChild(sv('text', { x: NX(i) + 4, y: 77, 'text-anchor': 'middle', 'font-weight': 700, 'font-size': 14 }, n.t));
+      g.appendChild(sv('text', { x: NX(i) + 4, y: 98, 'text-anchor': 'middle', 'font-size': 12, class: 'muted' }, n.s));
+      flowSvg.appendChild(g);
+    });
+    flowSvg.appendChild(sv('circle', { id: 'packet', cx: NX(0), cy: 24, r: 9 }));
+    flowSvg.appendChild(sv('text', { id: 'pktLabel', x: NX(0), y: 160, 'text-anchor': 'middle', 'font-size': 13, 'font-weight': 600 }, ''));
+  }
+  function renderFlow() {
+    const steps = SCEN[scen].steps, [ni, title, body] = steps[stepIdx];
+    flowSvg.querySelectorAll('.node').forEach((g, i) => {
+      g.classList.toggle('active', i === ni);
+      g.classList.toggle('done', steps.slice(0, stepIdx).some(s => s[0] === i) && i !== ni);
+    });
+    $('#packet').setAttribute('cx', NX(ni));
+    const lab = $('#pktLabel'); lab.setAttribute('x', Math.min(Math.max(NX(ni), 150), 950)); lab.textContent = `${stepIdx + 1}/${steps.length} ${title}`;
+    $('#stepCard').innerHTML = `<h3>${stepIdx + 1}. ${title}</h3><div>${body}</div><div style="margin-top:10px;color:var(--muted);font-size:13px">담당: <b>${NODES[ni].t}</b></div>`;
+    $('#stepList').innerHTML = steps.map((s, i) => `<li class="${i === stepIdx ? 'on' : ''}" data-i="${i}"><b>${i + 1}</b><span>${s[1]}</span></li>`).join('');
+    $('#stepList').querySelectorAll('li').forEach(li => li.onclick = () => { stepIdx = +li.dataset.i; renderFlow(); });
+    $('#prevBtn').disabled = stepIdx === 0;
+    $('#nextBtn').disabled = stepIdx === steps.length - 1;
+  }
+  function stopPlay() { clearInterval(timer); timer = null; $('#playBtn').textContent = '▶ 자동 재생'; }
+  $('#scenSeg').append(...Object.entries(SCEN).map(([k, v]) => {
+    const b = el('button', { 'aria-pressed': k === scen }, v.label);
+    b.onclick = () => { scen = k; stepIdx = 0; stopPlay(); $('#scenSeg').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b)); renderFlow(); };
+    return b;
+  }));
+  $('#prevBtn').onclick = () => { stepIdx = Math.max(0, stepIdx - 1); renderFlow(); };
+  $('#nextBtn').onclick = () => { stepIdx = Math.min(SCEN[scen].steps.length - 1, stepIdx + 1); renderFlow(); };
+  $('#playBtn').onclick = () => {
+    if (timer) return stopPlay();
+    if (stepIdx === SCEN[scen].steps.length - 1) stepIdx = 0;
+    $('#playBtn').textContent = '⏸ 멈춤'; renderFlow();
+    timer = setInterval(() => {
+      if (stepIdx >= SCEN[scen].steps.length - 1) return stopPlay();
+      stepIdx++; renderFlow();
+    }, 2200);
+  };
+  buildFlow(); renderFlow();
+
+  /* ================= 2. MAP ================= */
+  const LAYERS = [
+    { k: 'view', t: '화면 (templates · static)', c: '--c-view' },
+    { k: 'ctrl', t: '컨트롤러', c: '--c-ctrl' },
+    { k: 'svc', t: '서비스', c: '--c-svc' },
+    { k: 'sim', t: '시뮬레이션 (순수 로직)', c: '--c-sim' },
+    { k: 'data', t: '엔티티 · 리포지토리', c: '--c-data' },
+    { k: 'cfg', t: '설정', c: '--c-cfg' }
+  ];
+  const J = 'src/main/java/com/example/demo/', R = 'src/main/resources/';
+  const FILES = [
+    ['ctrl', 'AppController', J + 'controller/AppController.java', 198, '화면(Thymeleaf)과 JSON API 엔드포인트를 모두 담당하는 단일 컨트롤러. 서비스 호출 결과를 모델/JSON으로 변환한다.', ['login/logout, /orders, /orders/new, /orders/{id}', 'POST /orders/{id}/status', 'GET·POST /master (폼 값은 Map으로 받음)', '/api/master, /api/simulate, /api/orders', 'apiError(): conflict면 409, 아니면 400']],
+    ['svc', 'BatteryService', J + 'service/BatteryService.java', 303, '업무 규칙의 중심. 마스터 데이터 검증·저장, 시뮬레이션, 주문 확정, 상태 변경을 트랜잭션으로 처리한다.', ['initDefaults(): 기본 마스터 값 주입', 'currentMaster(): DB → Master 스냅샷', 'updateMaster(): 전체 검증 후 저장, 버전 +1', 'simulate() / confirm()', 'changeStatus(): 낙관적 잠금 + 이력']],
+    ['svc', 'BusinessException', J + 'service/BusinessException.java', 34, '사용자에게 보여줄 오류. 복수 메시지와 conflict(409) 여부를 가진다.', ['getMessages()', 'isConflict()']],
+    ['sim', 'Planner', J + 'simulation/Planner.java', 419, '경로 계산 알고리즘. 나라 분할·왕복 구성·방문 순열을 완전 탐색해 COST/FAST를 고르고 NEAR는 규칙으로 만든다.', ['visits(), plan()', 'partitions(), tripStructures()', 'schedule(): 늦게 출항하도록 출항일 계산', 'toPlan()/simulateFactory(): 일별 재고·생산, 불일치 시 예외', '상수 MAX_TOTAL_K = 100,000']],
+    ['sim', 'Master', J + 'simulation/Master.java', 31, '시뮬레이션에 쓰는 마스터 데이터 스냅샷 record(버전, 배, 공장, 항로).', ['factory(country)', 'days(a, b): 양방향 항해 일수']],
+    ['sim', 'Plan', J + 'simulation/Plan.java', 25, '경로 하나의 계산 결과 record. ShipPlan → Trip → Stop 계층과 일별 재고·생산 배열.', ['ShipPlan / Trip / Stop', 'stock[], production[]']],
+    ['sim', 'StoredPlan', J + 'simulation/StoredPlan.java', 8, '주문에 JSON으로 저장되는 스냅샷(당시 마스터 + 주문 + 선택 경로).', ['Order.planJson 으로 직렬화']],
+    ['data', 'Order', J + 'entity/Order.java', 154, '확정된 주문. 비용·일수 요약과 planJson을 가지며 @Version으로 낙관적 잠금.', ['status, version, memo', 'planJson (StoredPlan)']],
+    ['data', 'OrderStatus', J + 'entity/OrderStatus.java', 32, '주문 상태 enum과 허용 전이 규칙.', ['next(), canChangeTo()']],
+    ['data', 'OrderStatusHistory', J + 'entity/OrderStatusHistory.java', 73, '상태 변경 이력(이전/이후 상태, 사용자, 시각).', ['취소로 주문이 삭제돼도 이력은 남는다']],
+    ['data', 'Factory · Route · Setting', J + 'entity/{Factory,Route,Setting}.java', 189, '마스터 데이터 엔티티. Setting은 싱글톤 행(배 척수, 일 운항비, masterVersion).', ['Factory: 하루 최대/재고 상한/셀당 원가', 'Route: 두 나라 간 항해 일수', 'Setting.bumpMasterVersion()']],
+    ['data', 'Country', J + 'entity/Country.java', 30, '국가 enum. KOREA는 본사, 나머지 4개가 공장.', ['factories(), isFactory()']],
+    ['data', 'Repositories', J + 'repository/{Master,Order}Repositories.java', 49, '여러 Spring Data 리포지토리를 중첩 인터페이스로 묶은 파일.', ['JpaConfig의 considerNestedRepositories 필요']],
+    ['cfg', 'WebConfig · LoginInterceptor', J + 'config/{WebConfig,LoginInterceptor}.java', 43, '로그인 보호. /login과 정적 리소스를 제외한 모든 경로를 인터셉터가 검사.', ['SESSION_USER = "loginUser"']],
+    ['cfg', 'DataInitializer · JpaConfig', J + 'config/{DataInitializer,JpaConfig}.java', 30, '기동 시 마스터 기본값 주입 / 리포지토리 스캔 설정.', ['ApplicationRunner → initDefaults()']],
+    ['view', 'orders · order-detail', R + 'templates/{orders,order-detail}.html', 122, '주문 목록(상태 필터)과 상세(계획 표, 이력, 상태 변경 버튼).', ['order-detail은 planview.js 로 저장된 계획 렌더']],
+    ['view', 'order-new + order-new.js', R + 'templates/order-new.html · static/js/order-new.js', 231, '신규 주문 화면. 나라별 게이지로 수량을 조절하고 시뮬레이션·확정을 호출.', ['even/move: 합계 유지하며 분배', 'renderResult: 옵션 탭 표시']],
+    ['view', 'planview.js · anim.js', R + 'static/js/{planview,anim}.js', 331, '계획 표 렌더링(planview)과 지도 위 배 애니메이션(anim).', ['PlanView.renderSummary/Details', 'BatteryAnim.mount']],
+    ['view', 'master · login · common', R + 'templates/{master,login,fragments}.html · static/js/common.js', 136, '마스터 입력 폼, 로그인 화면, 공통 조각, postJson(401이면 로그인 이동).', ['postJson(), fmt(), eok()']]
+  ].map(([layer, name, path, lines, role, points]) => ({ layer, name, path, lines, role, points }));
+  const maxLines = Math.max(...FILES.map(f => f.lines));
+  let layerFilter = 'all', selFile = null;
+  function renderMap() {
+    const card = $('#mapCard'); card.innerHTML = '';
+    LAYERS.forEach(L => {
+      const wrap = el('div', { class: 'layer' }, `<h3><span class="dot" style="background:var(${L.c})"></span>${L.t}</h3>`);
+      const grid = el('div', { class: 'files' });
+      FILES.filter(f => f.layer === L.k).forEach(f => {
+        const b = el('button', { class: 'file' + (selFile === f ? ' sel' : '') + (layerFilter !== 'all' && layerFilter !== L.k ? ' dim' : ''), style: `--lc:var(${L.c})` }, `<b>${f.name}</b><small>${f.lines}줄</small>`);
+        b.onclick = () => { selFile = f; renderMap(); };
+        grid.appendChild(b);
+      });
+      wrap.appendChild(grid); card.appendChild(wrap);
+    });
+    const d = $('#detailCard');
+    if (!selFile) { d.innerHTML = '<span style="color:var(--muted)">← 파일을 선택하세요.</span>'; return; }
+    const L = LAYERS.find(l => l.k === selFile.layer);
+    d.style.setProperty('--lc', `var(${L.c})`);
+    d.innerHTML = `<h3>${selFile.name}</h3><div class="path mono">${selFile.path}</div>
+      <div class="linebar"><i style="width:${selFile.lines / maxLines * 100}%"></i></div>
+      <div style="font-size:12px;color:var(--muted)">${selFile.lines}줄 · ${L.t}</div>
+      <p>${selFile.role}</p><b>핵심 포인트</b><ul>${selFile.points.map(p => `<li>${p}</li>`).join('')}</ul>`;
+  }
+  $('#layerSeg').append(...[{ k: 'all', t: '전체' }, ...LAYERS].map(L => {
+    const b = el('button', { 'aria-pressed': L.k === 'all' }, L.t.replace(/ \(.*\)/, ''));
+    b.onclick = () => { layerFilter = L.k; $('#layerSeg').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b)); renderMap(); };
+    return b;
+  }));
+  selFile = FILES[0]; renderMap();
+
+  /* ================= 3. PLANNER ================= */
+  const FAC = {
+    CHINA: { label: '중국', maxDaily: 400, limit: 4000, cost: 700, q: 5000 },
+    JAPAN: { label: '일본', maxDaily: 800, limit: 2000, cost: 900, q: 3000 },
+    VIETNAM: { label: '베트남', maxDaily: 200, limit: 10000, cost: 550, q: 4000 },
+    INDONESIA: { label: '인도네시아', maxDaily: 300, limit: 7000, cost: 450, q: 2000 }
+  };
+  let curF = 'CHINA';
+  const fSeg = $('#fSeg');
+  Object.keys(FAC).forEach(k => {
+    const b = el('button', { 'aria-pressed': k === curF }, FAC[k].label);
+    b.onclick = () => { curF = k; fSeg.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b)); drawStock(); };
+    fSeg.appendChild(b);
+  });
+  const slWrap = $('#sliders');
+  Object.keys(FAC).forEach(k => {
+    const f = FAC[k];
+    const row = el('div', { class: 'sl' }, `<span>${f.label}</span><input type="range" min="0" max="20000" step="100" value="${f.q}" data-k="${k}"><span class="mono" id="v_${k}"></span>`);
+    slWrap.appendChild(row);
+    row.querySelector('input').oninput = e => { f.q = +e.target.value; curF = k; fSeg.querySelectorAll('button').forEach((x, i) => x.setAttribute('aria-pressed', Object.keys(FAC)[i] === k)); drawStock(); };
+  });
+  const ceilDiv = (a, b) => Math.floor((a + b - 1) / b);
+  function factorySim(f) {
+    // 수거 가능 시점마다 즉시 수거하는 단순 모형: 방문 j 의 적재량 a_j 가 찰 때까지 생산
+    const q = f.q, v = q <= 0 ? 0 : ceilDiv(q, f.limit), amounts = [];
+    for (let j = 0; j < v; j++) amounts.push(j < v - 1 ? f.limit : q - (v - 1) * f.limit);
+    const stock = [0], pickups = []; let inStock = 0, remaining = q, t = 0, j = 0;
+    while (j < v && t < 5000) {
+      const made = Math.max(0, Math.min(f.maxDaily, f.limit - inStock, remaining));
+      inStock += made; remaining -= made; t++;
+      if (inStock >= amounts[j]) { stock.push(inStock); pickups.push({ t, k: inStock }); inStock = 0; j++; stock.push(0); continue; }
+      stock.push(inStock);
+    }
+    return { v, amounts, stock, pickups, days: t };
+  }
+  function drawStock() {
+    Object.keys(FAC).forEach(k => { const e = $('#v_' + k); if (e) e.textContent = FAC[k].q.toLocaleString('ko-KR') + 'K'; });
+    const f = FAC[curF], r = factorySim(f);
+    const eok = f.q * 1000 * f.cost / 1e8;
+    $('#kpis').innerHTML = `
+      <div class="kpi"><b>${r.v}회</b><span>필요 방문 = ceil(${f.q.toLocaleString()} / ${f.limit.toLocaleString()})</span></div>
+      <div class="kpi"><b>${r.days}일</b><span>마지막 수거 가능일 (생산만)</span></div>
+      <div class="kpi"><b>${eok.toFixed(2)}억</b><span>생산비 = ${f.q.toLocaleString()}K × 1000 × ${f.cost}원</span></div>
+      <div class="kpi"><b>${f.maxDaily}K/일</b><span>하루 최대 생산</span></div>`;
+    const svg = $('#stockSvg'); svg.innerHTML = '';
+    const W = 640, H = 260, m = { l: 52, r: 14, t: 14, b: 30 };
+    const xs = Math.max(r.days, 1), ys = f.limit * 1.1;
+    const X = d => m.l + d / xs * (W - m.l - m.r), Y = s => H - m.b - s / ys * (H - m.t - m.b);
+    for (let i = 0; i <= 4; i++) {
+      const s = ys / 1.1 * i / 4;
+      svg.appendChild(sv('line', { x1: m.l, x2: W - m.r, y1: Y(s), y2: Y(s), stroke: 'var(--line)' }));
+      svg.appendChild(sv('text', { x: m.l - 6, y: Y(s) + 4, 'text-anchor': 'end', 'font-size': 11, class: 'muted' }, Math.round(s).toLocaleString()));
+    }
+    svg.appendChild(sv('line', { x1: m.l, x2: W - m.r, y1: Y(f.limit), y2: Y(f.limit), stroke: 'var(--danger)', 'stroke-dasharray': '6 4' }));
+    svg.appendChild(sv('text', { x: W - m.r, y: Y(f.limit) - 4, 'text-anchor': 'end', 'font-size': 11, fill: 'var(--danger)' }, '재고 상한'));
+    if (f.q > 0) {
+      const pts = []; let day = 0; // stock 배열은 수거 직전/직후 값을 같은 일자에 두 번 담는다
+      let inStock = 0, remaining = f.q, j = 0, t = 0; pts.push([0, 0]);
+      const amounts = r.amounts;
+      while (j < r.v && t < 5000) {
+        const made = Math.max(0, Math.min(f.maxDaily, f.limit - inStock, remaining));
+        inStock += made; remaining -= made; t++; pts.push([t, inStock]);
+        if (inStock >= amounts[j]) { svg.appendChild(sv('line', { x1: X(t), x2: X(t), y1: Y(0), y2: Y(inStock), stroke: 'var(--accent2)', 'stroke-width': 2 })); pts.push([t, 0]); inStock = 0; j++; }
+      }
+      svg.appendChild(sv('polyline', { points: pts.map(p => X(p[0]) + ',' + Y(p[1])).join(' '), fill: 'none', stroke: 'var(--c-sim)', 'stroke-width': 3, 'stroke-linejoin': 'round' }));
+    }
+    svg.appendChild(sv('text', { x: m.l, y: H - 8, 'font-size': 11, class: 'muted' }, '0일'));
+    svg.appendChild(sv('text', { x: W - m.r, y: H - 8, 'text-anchor': 'end', 'font-size': 11, class: 'muted' }, `${xs}일`));
+  }
+  const PIPE = [
+    ['active 추출', '주문량 > 0 인 공장만 대상. 하나도 없으면 IllegalArgumentException.'],
+    ['amounts()', '나라별 방문마다 싣는 양: 마지막 방문 전까지는 재고 상한, 마지막은 나머지.'],
+    ['partitions()', '나라들을 최대 min(배 수, 나라 수)개 묶음(= 배 한 척 담당)으로 나누는 모든 방법.'],
+    ['tripStructures()', '묶음별 왕복 구성. 방문이 적은 나라는 FRONT/BACK/SPREAD 패턴을 바꿔 가며 배치, 왕복 내 순서는 최단 항해(순열 탐색).'],
+    ['schedule()', '출항일 계산: 각 방문지의 재고가 찰 날에서 도착 오프셋을 빼 가능한 한 늦게 출항. 운항비 = 항해 일수 × 일 운항비.'],
+    ['toPlan()', '후보를 Plan으로 변환하며 일별 재고·생산을 재현(simulateFactory). 수거량≠재고면 예외로 자체 검증.']
+  ];
+  const pipe = $('#pipeSvg');
+  PIPE.forEach((p, i) => {
+    const x = 10 + i * 180, g = sv('g', { style: 'cursor:pointer' });
+    g.appendChild(sv('rect', { x, y: 25, width: 160, height: 60, rx: 14, fill: 'var(--panel2)', stroke: 'var(--c-sim)', 'stroke-width': 2, class: 'pb' }));
+    g.appendChild(sv('text', { x: x + 80, y: 61, 'text-anchor': 'middle', 'font-size': 14, 'font-weight': 700 }, p[0]));
+    if (i < PIPE.length - 1) g.appendChild(sv('path', { d: `M${x + 162} 55 l14 0`, stroke: 'var(--muted)', 'stroke-width': 2, 'marker-end': 'url(#arr)' }));
+    g.onclick = () => { pipe.querySelectorAll('.pb').forEach(r => r.setAttribute('fill', 'var(--panel2)')); g.querySelector('.pb').setAttribute('fill', 'color-mix(in srgb, var(--c-sim) 25%, var(--panel))'); $('#pipeText').innerHTML = `<b>${i + 1}. ${p[0]}</b> — ${p[1]}`; };
+    pipe.appendChild(g);
+  });
+  pipe.insertBefore(sv('defs'), pipe.firstChild).innerHTML = '<marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--muted)"/></marker>';
+
+  /* ================= 4. DATA ================= */
+  const ENT = {
+    Setting: { x: 20, y: 20, f: ['id (싱글톤)', 'shipCount (1~4)', 'shipDailyCostWon', 'masterVersion'], d: '배 척수·일 운항비·마스터 버전. 마스터를 저장할 때마다 버전이 오른다.' },
+    Factory: { x: 240, y: 20, f: ['country (PK)', 'maxDaily', 'stockLimit', 'unitCost'], d: '4개 공장(중국·일본·베트남·인도네시아)의 생산 능력과 셀당 원가.' },
+    Route: { x: 450, y: 20, f: ['fromCountry', 'toCountry', 'days'], d: '5개 나라 사이 10개 항로의 항해 일수(양방향 공통).' },
+    Order: { x: 130, y: 210, f: ['id', 'confirmedAt / createdBy', 'totalK, totalDays', 'productionCost / shippingCost / totalCost', 'routeType / routeLabel', 'status, memo', 'planJson (StoredPlan)', '@Version version'], d: '확정된 주문. 계획 전체가 planJson 스냅샷으로 들어 있어 마스터가 바뀌어도 불변.' },
+    OrderStatusHistory: { x: 400, y: 250, f: ['id', 'orderId', 'from → to', 'user, at'], d: '상태 변경 로그. orderId는 FK 객체 연결 없이 값으로만 보관(주문 삭제 후에도 남음).' }
+  };
+  const BW = 170;
+  const er = $('#erSvg');
+  const edges = [['Setting', 'Factory', ''], ['Factory', 'Route', ''], ['Order', 'OrderStatusHistory', '1 : N']];
+  er.innerHTML = '<defs><marker id="arr2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--muted)"/></marker></defs>';
+  er.appendChild(sv('path', { d: 'M390 138 L260 214', class: 'edge', 'stroke-dasharray': '5 4', 'marker-end': 'url(#arr2)' }));
+  er.appendChild(sv('text', { x: 300, y: 168, 'font-size': 11, class: 'muted' }, 'confirm 시 마스터 스냅샷 복사'));
+  er.appendChild(sv('path', { d: 'M300 280 L400 280', class: 'edge', 'marker-end': 'url(#arr2)' }));
+  er.appendChild(sv('text', { x: 328, y: 272, 'font-size': 11, class: 'muted' }, '1:N'));
+  Object.entries(ENT).forEach(([name, e]) => {
+    const h = 34 + e.f.length * 19, w = name === 'Order' ? 190 : BW;
+    const g = sv('g', { class: 'ent', style: 'cursor:pointer' });
+    g.appendChild(sv('rect', { class: 'box', x: e.x, y: e.y, width: w, height: h, rx: 12 }));
+    g.appendChild(sv('rect', { x: e.x, y: e.y, width: w, height: 28, rx: 12, fill: 'var(--c-data)', opacity: .9 }));
+    g.appendChild(sv('text', { x: e.x + 10, y: e.y + 19, 'font-weight': 700, 'font-size': 13, style: 'fill:#fff' }, name));
+    e.f.forEach((t, i) => g.appendChild(sv('text', { x: e.x + 10, y: e.y + 48 + i * 19, 'font-size': 11.5 }, t)));
+    g.onclick = () => { er.querySelectorAll('.ent').forEach(x => x.classList.remove('sel')); g.classList.add('sel'); $('#entDetail').innerHTML = `<h3 style="margin:0">${name}</h3><p>${e.d}</p><b>필드</b><ul>${e.f.map(x => `<li><code>${x}</code></li>`).join('')}</ul>`; };
+    er.appendChild(g);
+  });
+  $('#entDetail').innerHTML = '<span style="color:var(--muted)">← 엔티티를 클릭하세요. 점선 화살표는 주문 확정 시 마스터 값이 <code>planJson</code>에 복사됨을 뜻합니다.</span>';
+
+  const ST = {
+    CONFIRMED: { x: 80, l: '확정', n: ['IN_PROGRESS', 'CANCELED'] },
+    IN_PROGRESS: { x: 260, l: '진행', n: ['COMPLETED', 'CANCELED'] },
+    COMPLETED: { x: 440, l: '완료', n: [] },
+    CANCELED: { x: 570, l: '취소', n: [] }
+  };
+  const stSvg = $('#stSvg');
+  stSvg.innerHTML = '<defs><marker id="arr3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--muted)"/></marker></defs>';
+  const edgeEls = {};
+  const path = (a, b) => {
+    if (a === 'CONFIRMED' && b === 'CANCELED') return 'M80 120 Q 320 195 546 120';
+    if (a === 'IN_PROGRESS' && b === 'CANCELED') return 'M284 62 Q 420 10 560 56';
+    return `M${ST[a].x + 32} 85 L${ST[b].x - 34} 85`;
+  };
+  Object.entries(ST).forEach(([k, s]) => s.n.forEach(t => { const p = sv('path', { d: path(k, t), class: 'edge', 'marker-end': 'url(#arr3)' }); stSvg.appendChild(p); edgeEls[k + '>' + t] = p; }));
+  Object.entries(ST).forEach(([k, s]) => {
+    const g = sv('g', { class: 'state', 'data-k': k });
+    g.appendChild(sv('circle', { cx: s.x, cy: 85, r: 30 }));
+    g.appendChild(sv('text', { x: s.x, y: 90, 'text-anchor': 'middle', 'font-weight': 700 }, s.l));
+    g.onclick = () => selState(k);
+    stSvg.appendChild(g);
+  });
+  function selState(k) {
+    stSvg.querySelectorAll('.state').forEach(g => { g.classList.toggle('sel', g.dataset.k === k); g.classList.toggle('next', ST[k].n.includes(g.dataset.k)); });
+    Object.entries(edgeEls).forEach(([e, p]) => p.classList.toggle('hot', e.startsWith(k + '>')));
+    const n = ST[k].n;
+    $('#stDetail').innerHTML = `<h3 style="margin:0">${ST[k].l} <code>${k}</code></h3><p>${n.length ? '다음으로 바꿀 수 있는 상태: ' + n.map(x => `<b>${ST[x].l}</b>`).join(', ') : '<b>종료 상태</b>입니다. 더 이상 바꿀 수 없습니다.'}</p>
+      <p style="color:var(--muted)">${k === 'CANCELED' ? '취소하면 이력은 남기고 주문 행이 삭제됩니다.' : k === 'CONFIRMED' ? '주문 확정 시 최초 상태. 이력에는 null → CONFIRMED 로 기록됩니다.' : '변경 시 화면의 version 이 최신인지 확인(낙관적 잠금)합니다.'}</p>`;
+  }
+  selState('CONFIRMED');
+
+  /* ================= 5. FRONT ================= */
+  const PAGES = {
+    orders: { l: '주문 목록', t: ['orders.html'], j: ['common.js'], e: ['GET /orders[?status=]'], n: '상태별 건수 탭과 목록. <code>service.listOrders / countByStatus</code>. 서버 렌더링만 사용.' },
+    'order-new': { l: '신규 주문', t: ['order-new.html'], j: ['order-new.js', 'planview.js', 'anim.js', 'common.js'], e: ['GET /orders/new', 'POST /api/simulate', 'POST /api/orders'], n: '나라별 게이지로 수량 입력 → 시뮬레이션 → 옵션 3개 비교(표 + 애니메이션) → 메모 입력 후 확정.' },
+    'order-detail': { l: '주문 상세', t: ['order-detail.html'], j: ['planview.js', 'anim.js', 'common.js'], e: ['GET /orders/{id}', 'POST /orders/{id}/status'], n: '저장된 <code>planJson</code>으로 확정 당시 계획을 그대로 재현. 상태 변경 폼은 version 을 hidden 으로 전송.' },
+    master: { l: '마스터 데이터', t: ['master.html'], j: ['common.js'], e: ['GET /master', 'POST /master', 'GET /api/master'], n: '공장·항로·배 설정을 한 폼에서 저장. 오류가 하나라도 있으면 아무것도 저장하지 않고 모든 사유를 모아 보여준다.' },
+    login: { l: '로그인', t: ['login.html'], j: [], e: ['GET /login', 'POST /login', 'POST /logout'], n: '하드코딩 계정 admin/admin. 성공 시 세션에 loginUser 저장.' }
+  };
+  const ALL_T = ['orders.html', 'order-new.html', 'order-detail.html', 'master.html', 'login.html', 'fragments.html'];
+  const ALL_J = ['common.js', 'order-new.js', 'planview.js', 'anim.js'];
+  const ALL_E = ['GET /orders[?status=]', 'GET /orders/new', 'GET /orders/{id}', 'POST /orders/{id}/status', 'GET /master', 'POST /master', 'GET /api/master', 'POST /api/simulate', 'POST /api/orders', 'GET /login', 'POST /login', 'POST /logout'];
+  let curPage = 'order-new';
+  function renderFront() {
+    const p = PAGES[curPage];
+    const fill = (id, all, hot, desc) => { $(id).innerHTML = all.map(x => `<div class="fitem ${hot.includes(x) ? 'hot' : 'cold'}"><b class="mono">${x}</b>${desc && desc[x] ? desc[x] : ''}</div>`).join(''); };
+    fill('#colT', ALL_T, p.t.concat(['fragments.html']), { 'fragments.html': '<small style="color:var(--muted)">공통 헤더(로그인 사용자 표시)</small>' });
+    fill('#colJ', ALL_J, p.j, { 'common.js': '<small style="color:var(--muted)">postJson, fmt, eok</small>', 'planview.js': '<small style="color:var(--muted)">계획 표 렌더</small>', 'anim.js': '<small style="color:var(--muted)">지도 애니메이션</small>', 'order-new.js': '<small style="color:var(--muted)">게이지·시뮬레이션·확정</small>' });
+    fill('#colE', ALL_E, p.e);
+    $('#pageNote').innerHTML = `<b>${p.l}</b> — ${p.n}`;
+  }
+  $('#pageSeg').append(...Object.entries(PAGES).map(([k, v]) => {
+    const b = el('button', { 'aria-pressed': k === curPage }, v.l);
+    b.onclick = () => { curPage = k; $('#pageSeg').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b)); renderFront(); };
+    return b;
+  }));
+  renderFront();
+
+  /* ================= 6. DESIGN ================= */
+  const DESIGN = [
+    ['서버 재계산', '신뢰 경계', '확정 시 클라이언트가 보낸 계산 결과를 쓰지 않는다.', '<code>BatteryService.confirm</code>이 같은 입력으로 <code>simulate()</code>를 다시 돌려 Plan을 만든다. 클라이언트는 <code>routeType</code>(어느 옵션인지)만 알려준다.'],
+    ['마스터 버전 충돌', '409 Conflict', '시뮬레이션과 확정 사이에 마스터가 바뀌면 확정을 거부한다.', '<code>Setting.masterVersion</code>은 마스터 저장 때마다 +1. 화면이 들고 있던 버전과 다르면 <code>BusinessException(conflict=true)</code> → HTTP 409.'],
+    ['스냅샷 저장', '불변성', '주문은 확정 당시의 마스터와 계획을 통째로 JSON에 저장한다.', '<code>Order.planJson</code> = <code>StoredPlan</code>(Master + orders + visits + Plan). 이후 원가·항로가 바뀌어도 과거 주문 화면은 그대로 재현된다.'],
+    ['낙관적 잠금', '동시성', '두 사용자가 같은 주문 상태를 동시에 바꾸는 경우를 막는다.', '<code>Order.@Version</code> + 화면의 version 파라미터 비교. flush 시 <code>ObjectOptimisticLockingFailureException</code>도 같은 충돌 오류로 변환한다.'],
+    ['순수 계산 분리', '테스트 용이성', 'Planner는 Spring/JPA에 의존하지 않는다.', '<code>simulation/</code> 패키지는 record와 정적 메서드뿐. <code>PlannerTest</code>가 DB 없이 불변식(수거량=주문량, 나라당 1척 등)을 검증한다.'],
+    ['전체 검증 후 저장', '사용성', '마스터 폼은 오류를 모아서 한 번에 보여준다.', '<code>updateMaster</code>가 모든 필드를 검증해 <code>errors</code>에 모은 뒤 하나라도 있으면 저장 없이 예외. 입력값은 폼에 그대로 유지된다.']
+  ];
+  const dg = $('#dgrid');
+  DESIGN.forEach(([t, tag, s, more]) => {
+    const c = el('div', { class: 'card dcard' }, `<span class="tag">${tag}</span><h3>${t}</h3><div>${s}</div><div class="more">${more}</div>`);
+    c.onclick = () => c.classList.toggle('open');
+    dg.appendChild(c);
+  });
+  let dMaster = 1, dSimVer = null;
+  const log = $('#dLog');
+  const say = (cls, m) => { if (log.dataset.init !== '1') { log.innerHTML = ''; log.dataset.init = '1'; } log.insertAdjacentHTML('beforeend', `<div class="${cls}">${m}</div>`); };
+  $('#dSim').onclick = () => { dSimVer = dMaster; say('info', `POST /api/simulate → 200 (masterVersion=${dSimVer}) — 화면이 이 버전을 기억`); };
+  $('#dMaster').onclick = () => { dMaster++; say('info', `POST /master (다른 사용자) → 저장됨, masterVersion=${dMaster}`); };
+  $('#dConfirm').onclick = () => {
+    if (dSimVer == null) return say('bad', '먼저 시뮬레이션을 실행하세요.');
+    say('info', `POST /api/orders {masterVersion:${dSimVer}} → 서버가 simulate() 재실행 (현재 버전 ${dMaster})`);
+    if (dSimVer !== dMaster) say('bad', `409 Conflict — "시뮬레이션 이후 마스터 데이터가 바뀌었습니다. 다시 시뮬레이션해 주세요"`);
+    else say('ok', '200 OK — Order 저장 + 이력(null→CONFIRMED) 기록, {id} 반환');
+  };
+  $('#dReset').onclick = () => { dMaster = 1; dSimVer = null; log.dataset.init = ''; log.textContent = '버튼을 순서대로 눌러 보세요.'; };
+
+  openTab(location.hash.slice(1) || 'flow', true);
+  drawStock();
+})();
+</script>
+</body>
+</html>
