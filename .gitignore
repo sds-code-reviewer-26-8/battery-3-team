@@ -38,3 +38,6 @@ out/
 
 ### H2 file database ###
 data/
+
+### Claude Code (personal settings/skills) ###
+.claude/
