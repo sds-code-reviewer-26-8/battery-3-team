@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('주문 추가')}"></head>
+<body>
+<header th:replace="~{fragments :: header('new')}"></header>
+<main>
+	<div class="page-head"><h1>주문 추가</h1></div>
+
+	<section class="card">
+		<h2>1. 주문 수량</h2>
+		<div class="row">
+			<label>총 생산 필요 수(K)
+				<input type="number" id="total" min="1" max="100000" step="1" value="12000"></label>
+			<p class="muted hint">게이지를 움직이면 바로 오른쪽 나라가 반대로 조정되고, 맨 오른쪽은 맨 왼쪽이 조정됩니다.
+				합계는 항상 총 생산 필요 수와 같습니다.</p>
+		</div>
+		<div id="gauges" class="gauges"></div>
+		<p id="inputError" class="alert error" hidden></p>
+		<button type="button" id="runBtn" class="primary">시뮬레이션 실행</button>
+	</section>
+
+	<div id="result" hidden>
+		<section class="card">
+			<h2>2. 시뮬레이션 결과</h2>
+			<p class="muted">시뮬레이션은 지금 시점의 마스터 데이터를 사용합니다.</p>
+			<div id="options" class="options"></div>
+			<div id="summary"></div>
+		</section>
+
+		<section class="card">
+			<h2>지도 애니메이션</h2>
+			<div id="anim"></div>
+		</section>
+
+		<section class="card" id="details"></section>
+
+		<section class="card">
+			<h2>3. 주문 확정</h2>
+			<label class="stack">메모 (선택)
+				<textarea id="memo" rows="2" maxlength="1000"></textarea></label>
+			<p id="confirmError" class="alert error" hidden></p>
+			<button type="button" id="confirmBtn" class="primary">주문 확정</button>
+		</section>
+	</div>
+</main>
+
+<script th:src="@{/js/common.js}"></script>
+<script th:src="@{/js/anim.js}"></script>
+<script th:src="@{/js/planview.js}"></script>
+<script th:src="@{/js/order-new.js}"></script>
+</body>
+</html>

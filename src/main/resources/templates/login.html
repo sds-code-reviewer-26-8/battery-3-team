@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('로그인')}"></head>
+<body class="login-page">
+<main class="login-box">
+	<h1>배터리 주문 관리</h1>
+	<p class="muted">배터리 생산 / 수거 비용 예측 및 주문 관리</p>
+	<p class="alert error" th:if="${error}" th:text="${error}"></p>
+	<form th:action="@{/login}" method="post" class="stack">
+		<label>아이디 <input type="text" name="username" autofocus required></label>
+		<label>비밀번호 <input type="password" name="password" required></label>
+		<button type="submit" class="primary">로그인</button>
+	</form>
+</main>
+</body>
+</html>
