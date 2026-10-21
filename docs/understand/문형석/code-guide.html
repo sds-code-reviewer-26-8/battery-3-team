@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Battery 코드 가이드</title>
+<style>
+  :root {
+    --bg: #f7f8fa; --panel: #ffffff; --text: #1d2433; --muted: #5d6779; --line: #dfe3ea;
+    --accent: #1f6feb; --accent-soft: #e6f0ff; --ok: #1a7f4b; --warn: #b4540a; --warn-soft: #fff1e3;
+    --code-bg: #eef1f6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #11151c; --panel: #181e28; --text: #e4e8ef; --muted: #98a2b3; --line: #2a3342;
+      --accent: #5aa2ff; --accent-soft: #1b2a44; --ok: #4cc38a; --warn: #f0a15c; --warn-soft: #34261a;
+      --code-bg: #212a38;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font: 15px/1.7 -apple-system, "Segoe UI", "Malgun Gothic", sans-serif;
+  }
+  .layout { display: grid; grid-template-columns: 230px minmax(0, 1fr); max-width: 1180px; margin: 0 auto; }
+  nav {
+    position: sticky; top: 0; align-self: start; height: 100vh; overflow: auto;
+    padding: 28px 16px 28px 20px; border-right: 1px solid var(--line);
+  }
+  nav h2 { font-size: 13px; letter-spacing: .06em; color: var(--muted); margin: 0 0 10px; text-transform: uppercase; }
+  nav a { display: block; padding: 5px 10px; margin: 1px 0; color: var(--text); text-decoration: none; border-radius: 6px; font-size: 14px; }
+  nav a:hover { background: var(--accent-soft); color: var(--accent); }
+  main { padding: 32px 28px 80px; min-width: 0; }
+  h1 { font-size: 28px; margin: 0 0 6px; }
+  .lead { color: var(--muted); margin: 0 0 28px; }
+  section { margin: 0 0 44px; scroll-margin-top: 16px; }
+  h2.sec { font-size: 21px; margin: 0 0 14px; padding-bottom: 8px; border-bottom: 2px solid var(--line); }
+  h3 { font-size: 16px; margin: 22px 0 8px; }
+  p { margin: 8px 0; }
+  code { background: var(--code-bg); padding: 1px 6px; border-radius: 4px; font: 13px Consolas, "D2Coding", monospace; }
+  pre { background: var(--code-bg); padding: 14px 16px; border-radius: 8px; overflow: auto; font: 13px/1.55 Consolas, "D2Coding", monospace; }
+  pre code { background: none; padding: 0; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; margin: 12px 0; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+  .grid .card { margin: 0; }
+  .card h4 { margin: 0 0 6px; font-size: 15px; }
+  .tag { display: inline-block; font-size: 12px; padding: 1px 8px; border-radius: 99px; background: var(--accent-soft); color: var(--accent); margin-right: 4px; }
+  table { border-collapse: collapse; width: 100%; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; font-size: 14px; }
+  th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { background: var(--accent-soft); font-weight: 600; }
+  tr:last-child td { border-bottom: none; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .note { background: var(--warn-soft); border-left: 4px solid var(--warn); padding: 10px 14px; border-radius: 6px; margin: 14px 0; }
+  .note b { color: var(--warn); }
+  ol.steps { counter-reset: s; list-style: none; padding: 0; margin: 12px 0; }
+  ol.steps li { counter-increment: s; position: relative; padding: 8px 0 8px 44px; }
+  ol.steps li::before {
+    content: counter(s); position: absolute; left: 0; top: 8px; width: 28px; height: 28px; border-radius: 50%;
+    background: var(--accent); color: #fff; font-weight: 700; display: grid; place-items: center; font-size: 13px;
+  }
+  svg { max-width: 100%; height: auto; }
+  svg text { fill: var(--text); font: 13px "Segoe UI", "Malgun Gothic", sans-serif; }
+  svg .box { fill: var(--panel); stroke: var(--line); stroke-width: 1.5; }
+  svg .hl { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.5; }
+  svg .arrow { stroke: var(--muted); stroke-width: 1.5; fill: none; marker-end: url(#ah); }
+  svg .sub { fill: var(--muted); font-size: 11.5px; }
+  .flow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 12px 0; }
+  .st { padding: 6px 14px; border-radius: 99px; border: 1.5px solid var(--line); background: var(--panel); font-weight: 600; }
+  .st.end { background: var(--code-bg); color: var(--muted); }
+  .ar { color: var(--muted); }
+  @media (max-width: 800px) {
+    .layout { grid-template-columns: 1fr; }
+    nav { position: static; height: auto; border-right: none; border-bottom: 1px solid var(--line); }
+    main { padding: 24px 16px 60px; }
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+<nav>
+  <h2>목차</h2>
+  <a href="#overview">1. 한눈에 보기</a>
+  <a href="#arch">2. 계층 구조</a>
+  <a href="#files">3. 파일 지도</a>
+  <a href="#flow">4. 요청 흐름</a>
+  <a href="#domain">5. 도메인과 마스터 데이터</a>
+  <a href="#planner">6. Planner 알고리즘</a>
+  <a href="#example">7. 계산 예시</a>
+  <a href="#status">8. 주문 상태</a>
+  <a href="#safety">9. 안전장치</a>
+  <a href="#tests">10. 테스트</a>
+  <a href="#notes">11. 읽다가 눈에 띈 점</a>
+</nav>
+<main>
+
+<h1>Battery 코드 가이드</h1>
+<p class="lead">배터리 해상 운송 주문·경로 시뮬레이션 앱을 처음 읽는 사람을 위한 지도. 기준: <code>feature/dev</code> 브랜치 <code>46d3809</code> (코드는 <code>main</code> 초기 커밋과 동일, 이후 커밋은 문서·설정만).</p>
+
+<section id="overview">
+  <h2 class="sec">1. 한눈에 보기</h2>
+  <p>한국(<code>KOREA</code>)이 목적지이고, 중국·일본·베트남·인도네시아 4개 공장이 배터리 셀을 만든다. 사용자는 나라별 주문 수량(단위 K = 1,000셀)을 입력하고, 앱은 배를 어떻게 보낼지 <b>경로 3가지</b>를 계산해 보여준다. 하나를 고르면 주문이 확정되어 저장된다.</p>
+  <div class="grid">
+    <div class="card"><h4>COST · 운항비 최소</h4>배의 총 항해일수 × 일 운항비가 가장 작은 계획. 같으면 더 빨리 끝나는 쪽.</div>
+    <div class="card"><h4>FAST · 가장 빠르게</h4>모든 배가 한국에 돌아오는 날(<code>totalDays</code>)이 가장 이른 계획. 같으면 운항비가 낮은 쪽.</div>
+    <div class="card"><h4>NEAR · 가까운 곳부터</h4>한국에서 가까운 나라부터 배에 돌려가며 배정하는 단순 휴리스틱. 탐색 없이 한 가지만 만든다.</div>
+  </div>
+  <p><span class="tag">Spring Boot 4.1.1</span><span class="tag">Java 17</span><span class="tag">Thymeleaf</span><span class="tag">JPA + H2(파일)</span><span class="tag">바닐라 JS</span></p>
+</section>
+
+<section id="arch">
+  <h2 class="sec">2. 계층 구조</h2>
+  <svg viewBox="0 0 760 330" role="img" aria-label="계층 구조도">
+    <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="currentColor" style="color:var(--muted)"/></marker></defs>
+    <rect class="box" x="10" y="10" width="740" height="52" rx="8"/>
+    <text x="24" y="32">브라우저</text>
+    <text class="sub" x="24" y="50">Thymeleaf 화면 (orders, order-new, order-detail, master, login) + static/js (order-new, planview, anim, common)</text>
+
+    <rect class="hl" x="10" y="92" width="740" height="52" rx="8"/>
+    <text x="24" y="114">LoginInterceptor → AppController</text>
+    <text class="sub" x="24" y="132">화면 라우트 + JSON API(/api/*). 입력을 받아 서비스에 넘기고 BusinessException 을 화면 메시지/HTTP 상태로 바꾼다</text>
+
+    <rect class="hl" x="10" y="174" width="740" height="52" rx="8"/>
+    <text x="24" y="196">BatteryService  (@Transactional)</text>
+    <text class="sub" x="24" y="214">마스터 데이터 검증·저장, 시뮬레이션 호출, 주문 확정, 상태 변경. 유일한 비즈니스 계층</text>
+
+    <rect class="box" x="10" y="256" width="360" height="62" rx="8"/>
+    <text x="24" y="278">simulation.Planner</text>
+    <text class="sub" x="24" y="296">순수 Java. DB·Spring 모르는 경로 계산기</text>
+    <text class="sub" x="24" y="310">입력: Master 스냅샷 + 나라별 주문 → Plan 3개</text>
+
+    <rect class="box" x="390" y="256" width="360" height="62" rx="8"/>
+    <text x="404" y="278">repository + entity → H2 (./data/battery)</text>
+    <text class="sub" x="404" y="296">Factory, Route, Setting, Order, OrderStatusHistory</text>
+    <text class="sub" x="404" y="310">주문은 계획 전체를 JSON 문자열(planJson)로 저장</text>
+
+    <path class="arrow" d="M380 62V90"/><path class="arrow" d="M380 144V172"/>
+    <path class="arrow" d="M190 226V254"/><path class="arrow" d="M570 226V254"/>
+  </svg>
+  <p>핵심 설계: <b>계산(<code>Planner</code>)은 DB에서 분리</b>되어 있다. 서비스가 DB의 마스터 값을 <code>Master</code> record 로 복사해 넘기므로, <code>Planner</code>는 단위 테스트에서 DB 없이 돌 수 있다.</p>
+</section>
+
+<section id="files">
+  <h2 class="sec">3. 파일 지도</h2>
+  <table>
+    <tr><th>경로 (<code>src/main/java/com/example/demo</code>)</th><th>역할</th></tr>
+    <tr><td><code>DemoApplication</code></td><td>Spring Boot 진입점</td></tr>
+    <tr><td><code>controller/AppController</code> (198줄)</td><td>로그인/로그아웃, 주문 목록·상세·상태 변경, 마스터 화면, <code>/api/master</code> · <code>/api/simulate</code> · <code>/api/orders</code></td></tr>
+    <tr><td><code>service/BatteryService</code> (303줄)</td><td><code>initDefaults</code>, <code>currentMaster</code>, <code>updateMaster</code>, <code>simulate</code>, <code>confirm</code>, <code>changeStatus</code> 등</td></tr>
+    <tr><td><code>service/BusinessException</code></td><td>사용자에게 그대로 보여줄 업무 오류. <code>conflict=true</code> 면 HTTP 409</td></tr>
+    <tr><td><code>simulation/Planner</code> (419줄)</td><td>경로 후보 생성·일정 계산·일별 생산 시뮬레이션</td></tr>
+    <tr><td><code>simulation/Master</code>, <code>Plan</code>, <code>StoredPlan</code></td><td>입력/출력/저장용 불변 record. <code>StoredPlan</code> = 확정 시점의 마스터 + 주문 + 선택한 Plan</td></tr>
+    <tr><td><code>entity/*</code></td><td><code>Country</code>·<code>OrderStatus</code> enum, <code>Factory</code>, <code>Route</code>, <code>Setting</code>(1행 고정), <code>Order</code>, <code>OrderStatusHistory</code></td></tr>
+    <tr><td><code>repository/*</code></td><td>Spring Data 리포지토리 인터페이스 (파일 2개에 모아둠)</td></tr>
+    <tr><td><code>config/*</code></td><td><code>LoginInterceptor</code>, <code>WebConfig</code>(경로 등록), <code>DataInitializer</code>(기동 시 기본 마스터 입력), <code>JpaConfig</code></td></tr>
+  </table>
+  <h3>화면과 스크립트 (<code>src/main/resources</code>)</h3>
+  <table>
+    <tr><th>파일</th><th>역할</th></tr>
+    <tr><td><code>templates/order-new.html</code> (52줄) + <code>js/order-new.js</code> (179줄)</td><td>주문 입력 → <code>/api/simulate</code> 호출 → 3경로 비교 → <code>/api/orders</code> 로 확정</td></tr>
+    <tr><td><code>js/planview.js</code> (88줄), <code>js/anim.js</code> (243줄)</td><td>계획 표시, 지도 위 배 이동 애니메이션 (<code>images/map.png</code>, <code>ship.png</code>)</td></tr>
+    <tr><td><code>templates/orders.html</code>, <code>order-detail.html</code></td><td>상태별 필터 목록 / 상세 + 상태 변경 + 이력</td></tr>
+    <tr><td><code>templates/master.html</code></td><td>공장·항로·배 설정 폼</td></tr>
+    <tr><td><code>templates/fragments.html</code>, <code>js/common.js</code>, <code>css/app.css</code></td><td>공통 레이아웃·유틸·스타일</td></tr>
+  </table>
+</section>
+
+<section id="flow">
+  <h2 class="sec">4. 요청 흐름</h2>
+  <h3>A. 시뮬레이션 → 주문 확정</h3>
+  <ol class="steps">
+    <li><code>GET /orders/new</code> — 컨트롤러가 현재 <code>Master</code>(버전 포함)를 모델에 넣어 화면을 그린다.</li>
+    <li>사용자가 수량을 넣으면 <code>order-new.js</code> 가 <code>POST /api/simulate</code> 호출 → <code>BatteryService.simulate</code> 가 수량 검증(음수 불가, 합계 1 이상 100,000K 이하) 후 <code>Planner.plan</code> 실행.</li>
+    <li>응답은 <code>SimulationResult(master, orders, visits, options[3])</code>. 화면이 3경로를 비교해 보여준다.</li>
+    <li>경로를 고르고 <code>POST /api/orders</code> (<code>orders</code>, <code>routeType</code>, <code>masterVersion</code>, <code>memo</code>) 호출.</li>
+    <li><code>confirm</code> 은 클라이언트가 보낸 계획을 믿지 않고 <b>같은 입력으로 서버에서 다시 계산</b>한다. 그 사이 마스터 버전이 바뀌었으면 409 로 거부.</li>
+    <li><code>Order</code> 저장(계획 전체를 <code>planJson</code> 에 JSON 으로) + 상태 이력 1건(<code>null → CONFIRMED</code>) 저장.</li>
+  </ol>
+  <h3>화면 쪽 동작 (<code>order-new.js</code>)</h3>
+  <ul>
+    <li>공장 4개마다 <b>게이지(슬라이더 + 숫자 입력)</b>가 있고, 아래에 "방문 N회"(= ceil(수량 / 재고 상한))를 바로 보여준다. 재고 상한은 시작 시 <code>GET /api/master</code> 로 받는다.</li>
+    <li>"총 수량"을 바꾸면 <code>even()</code> 이 4개 공장에 <b>균등 분배</b>한다(나머지는 앞쪽 공장부터 1씩).</li>
+    <li>입력이 바뀌면 <code>invalidate()</code> 가 이전 시뮬레이션 결과를 숨긴다 — 현재 입력과 다른 결과로 확정하는 것을 화면에서도 막는다.</li>
+    <li>결과 렌더링은 <code>PlanView</code>(요약·표), 지도 위 배 이동은 <code>BatteryAnim</code>(좌표는 <code>map.png</code> 픽셀 기준, 기본 2일/초)이 맡고, 주문 상세 화면도 같은 코드를 재사용한다.</li>
+  </ul>
+  <h3>B. 인증</h3>
+  <p><code>LoginInterceptor</code> 가 <code>/login</code>, <code>/css</code>, <code>/js</code>, <code>/images</code>, <code>/error</code> 를 제외한 모든 요청에서 세션의 <code>loginUser</code> 를 확인한다. 없으면 화면은 <code>/login</code> 으로 리다이렉트, <code>/api/*</code> 는 401. 계정은 <code>admin / admin</code> 하나가 컨트롤러에 하드코딩되어 있다.</p>
+  <h3>C. 마스터 데이터 수정</h3>
+  <p><code>POST /master</code> → <code>updateMaster</code> 가 모든 입력값을 검증하며 오류를 모은다. 하나라도 틀리면 <b>아무것도 저장하지 않고</b> 오류 목록을 화면에 돌려준다. 성공하면 <code>masterVersion</code> 을 1 올린다(이전 시뮬레이션 무효화 신호).</p>
+</section>
+
+<section id="domain">
+  <h2 class="sec">5. 도메인과 마스터 데이터</h2>
+  <p>처음 기동하면 <code>initDefaults()</code> 가 아래 값을 DB에 넣는다(설정 테이블이 비어 있을 때만).</p>
+  <table>
+    <tr><th>공장</th><th class="num">하루 최대 생산(K)</th><th class="num">재고 상한(K)</th><th class="num">셀당 원가(원)</th></tr>
+    <tr><td>중국</td><td class="num">400</td><td class="num">4,000</td><td class="num">700</td></tr>
+    <tr><td>일본</td><td class="num">800</td><td class="num">2,000</td><td class="num">900</td></tr>
+    <tr><td>베트남</td><td class="num">200</td><td class="num">10,000</td><td class="num">550</td></tr>
+    <tr><td>인도네시아</td><td class="num">300</td><td class="num">7,000</td><td class="num">450</td></tr>
+  </table>
+  <h3>항해 일수 (양방향)</h3>
+  <table>
+    <tr><th></th><th class="num">중국</th><th class="num">일본</th><th class="num">베트남</th><th class="num">인도네시아</th></tr>
+    <tr><th>한국</th><td class="num">1</td><td class="num">2</td><td class="num">5</td><td class="num">7</td></tr>
+    <tr><th>중국</th><td class="num">–</td><td class="num">2</td><td class="num">4</td><td class="num">6</td></tr>
+    <tr><th>일본</th><td class="num"></td><td class="num">–</td><td class="num">5</td><td class="num">7</td></tr>
+    <tr><th>베트남</th><td class="num"></td><td class="num"></td><td class="num">–</td><td class="num">2</td></tr>
+  </table>
+  <p>그 밖의 기본 설정: 배 <b>3척</b>, 척당 일 운항비 <b>1억 원</b>(<code>WON_PER_EOK</code> = 100,000,000). 이 값들은 <code>Setting</code>(항상 1행) · <code>Factory</code> · <code>Route</code> 테이블에 있고 <code>/master</code> 화면에서 바꾼다.</p>
+  <p><code>Planner</code> 는 DB 엔티티가 아니라 이 값을 복사한 <code>Master</code> record 를 받는다. 확정 시 이 스냅샷이 주문에 함께 저장되므로, 나중에 마스터를 바꿔도 <b>과거 주문의 계획은 그대로 보존</b>된다.</p>
+</section>
+
+<section id="planner">
+  <h2 class="sec">6. Planner 알고리즘</h2>
+  <h3>생산·수거 규칙</h3>
+  <ul>
+    <li>0일차에 모든 공장이 동시에 생산을 시작한다. 하루 생산 = <code>min(하루 최대, 재고 상한 − 현재 재고, 남은 주문)</code>.</li>
+    <li>배는 도착 시점의 재고를 <b>전부</b> 가져간다. 재고가 가득 차면 생산이 멈추므로, 주문이 재고 상한보다 크면 여러 번 방문해야 한다.</li>
+    <li>방문 횟수 = <code>ceil(주문 / 재고 상한)</code>. 마지막 방문 전까지는 재고 상한만큼, 마지막은 나머지를 싣는다 (<code>amounts()</code>).</li>
+    <li>여러 번 수거하는 나라가 있으면 배는 한국에 들러 내려놓고 다시 출항한다(왕복을 나눈다). 한국에서의 대기는 무료.</li>
+    <li>배는 재고가 찰 때까지 기다리지 않도록 <b>가능한 한 늦게 출항</b>한다.</li>
+  </ul>
+  <h3><code>plan()</code> 의 단계</h3>
+  <ol class="steps">
+    <li><b>나라 분할</b> — 주문이 있는 나라들을 최대 <code>min(배 수, 나라 수)</code> 개의 묶음으로 나누는 모든 방법을 만든다 (<code>partitions</code>). 묶음 하나 = 배 한 척 담당.</li>
+    <li><b>왕복 구성</b> — 묶음마다 필요한 왕복 수는 그 안에서 방문 횟수가 가장 많은 나라 기준. 방문 횟수가 적은 나라는 어느 왕복에 넣을지 FRONT / BACK / SPREAD 세 패턴을 모두 시도 (<code>groupStructures</code>). 왕복 안의 방문 순서는 항해일수가 가장 짧은 순열 (<code>shortestOrder</code>).</li>
+    <li><b>일정 계산</b> — 후보마다 <code>schedule()</code> 이 출항일을 정한다. 각 방문지에서 <code>이전 수거일 + ceil(싣는 양 / 하루 최대)</code> 이후에 도착하도록 출항일을 맞춘다.</li>
+    <li><b>선택</b> — 모든 후보 중 운항비 최소(COST)와 완료일 최소(FAST)를 뽑는다. NEAR 는 탐색 없이 <code>nearest()</code> 한 가지만 계산.</li>
+    <li><b>일별 시뮬레이션</b> — 뽑힌 3개에 대해 <code>simulateFactory</code> 가 하루씩 생산·재고·수거를 재현해 그래프용 배열을 만들고, 수거량이 그날 재고와 다르면 예외를 던져 <b>일정 계산 버그를 스스로 검출</b>한다.</li>
+  </ol>
+  <h3>비용 공식</h3>
+  <pre><code>생산비 = Σ 나라별 (주문K × 1000 × 셀당 원가)
+운항비 = Σ 배별 (항해일수 합 × 일 운항비)      ← 한국 대기·정박은 무료
+총비용 = 생산비 + 운항비</code></pre>
+  <div class="note"><b>복잡도 주의</b> 탐색은 분할 × 패턴 조합 × 순열을 전부 열거하는 완전 탐색이다. 공장이 4개·배가 3척 수준에선 작지만, 나라 수나 방문 횟수가 늘면 급격히 커진다.</div>
+</section>
+
+<section id="example">
+  <h2 class="sec">7. 계산 예시</h2>
+  <p>기본 마스터에서 <b>중국 5,000K 하나만</b> 주문하면 (손으로 따라간 값):</p>
+  <ol class="steps">
+    <li>방문 횟수 = ceil(5000/4000) = <b>2</b>, 싣는 양 = <code>[4000, 1000]</code>. 나라가 1개라 배도 1척만 쓴다.</li>
+    <li>1차 방문: 4,000K 를 채우려면 4000/400 = 10일. 한국→중국 1일이므로 <b>9일차 출항, 10일차 도착</b>, 11일차 귀환.</li>
+    <li>2차 방문: 10일차 수거 직후부터 다시 생산. 1,000K 는 ceil(1000/400) = 3일 → 13일차 이후 도착. 배는 11일차에 귀환해 있으므로 <b>12일차 출항, 13일차 도착, 14일차 귀환</b>.</li>
+    <li>총 <b>14일</b>. 항해일수 2+2 = 4일 × 1억 = <b>운항비 4억</b>. 생산비 = 5000 × 1000 × 700원 = <b>35억</b>. 합계 <b>39억</b>.</li>
+  </ol>
+  <p>위 숫자는 알고리즘을 읽고 손으로 계산한 값이며, 앱이나 테스트를 실행해 확인한 값은 아니다.</p>
+</section>
+
+<section id="status">
+  <h2 class="sec">8. 주문 상태</h2>
+  <div class="flow">
+    <span class="st">확정</span><span class="ar">→</span><span class="st">진행</span><span class="ar">→</span><span class="st end">완료</span>
+  </div>
+  <div class="flow">
+    <span class="st">확정</span><span class="ar">→</span><span class="st end">취소</span>
+    <span class="ar">·</span>
+    <span class="st">진행</span><span class="ar">→</span><span class="st end">취소</span>
+  </div>
+  <p>전이 규칙은 <code>OrderStatus.next()</code> 한 곳에 있다. 완료·취소는 종료 상태. 모든 전이는 <code>OrderStatusHistory</code> 에 (이전, 이후, 사용자, 시각)으로 남는다.</p>
+</section>
+
+<section id="safety">
+  <h2 class="sec">9. 안전장치</h2>
+  <div class="grid">
+    <div class="card"><h4>서버 재계산</h4><code>confirm</code> 이 클라이언트 계획을 쓰지 않고 다시 계산 → 변조된 비용·일정 방지.</div>
+    <div class="card"><h4>마스터 버전 검사</h4>시뮬레이션 후 마스터가 바뀌면 409. 오래된 화면으로 확정하는 것을 막는다.</div>
+    <div class="card"><h4>낙관적 락</h4><code>Order.@Version</code> + 화면이 가진 <code>version</code> 비교. 동시에 다른 사용자가 상태를 바꾸면 409.</div>
+    <div class="card"><h4>일괄 검증</h4>마스터 폼은 오류를 모두 모아서 한 번에 보여주고, 하나라도 있으면 저장하지 않는다.</div>
+  </div>
+</section>
+
+<section id="tests">
+  <h2 class="sec">10. 테스트</h2>
+  <table>
+    <tr><th>클래스</th><th class="num">개수</th><th>다루는 것</th></tr>
+    <tr><td><code>simulation.PlannerTest</code></td><td class="num">12</td><td>방문 횟수 = 올림(주문/재고 상한), 모든 경로가 주문량을 정확히 수거, 한 나라는 한 배만 방문, 생산비 = 셀 수 × 원가, 늦게 출항, 재고 상한에서 생산 정지, 여러 왕복 수거, COST ≤ 다른 경로 비용 / FAST ≤ 다른 경로 일수, 배 수 상한, 빈 주문 거부, 기본 주문 요약</td></tr>
+    <tr><td><code>OrderFlowTests</code></td><td class="num">9</td><td>비로그인 리다이렉트, 잘못된 비밀번호, 화면 렌더링, 시뮬레이션 3경로 응답, 빈 주문 거부 사유, 확정→진행→완료 흐름과 이력 3건, 오래된 버전 충돌, 시뮬레이션 후 마스터 변경 시 확정 거부, 마스터 수정 시 버전 증가·기존 계획 보존, 잘못된 마스터 미저장</td></tr>
+    <tr><td><code>DemoApplicationTests</code></td><td class="num">1</td><td>컨텍스트 로딩</td></tr>
+  </table>
+  <p>테스트는 <code>src/test/resources/application.properties</code> 로 H2 인메모리 DB(<code>create-drop</code>)를 쓴다. <code>./gradlew test</code> 를 실제로 실행한 결과 22개 모두 통과 (2026-10-21).<br><b>빈 곳:</b> 취소 경로(<code>CANCELED</code> 전이와 주문 삭제)와 상태 필터 목록은 테스트가 없다.</p>
+</section>
+
+<section id="notes">
+  <h2 class="sec">11. 읽다가 눈에 띈 점</h2>
+  <div class="note"><b>취소하면 주문이 삭제된다.</b> <code>changeStatus</code> 는 상태를 <code>CANCELED</code> 로 바꾼 뒤 <code>orders.delete(order)</code> 를 호출한다. 코드상으로는 목록의 "취소" 필터에 주문이 남지 않고 이력 행만 남는다. 의도라면 괜찮지만 <code>CANCELED</code> 상태·필터가 있는 것과 어긋나 보이고, 이 경로를 검증하는 테스트도 없다. <b>확인 필요.</b></div>
+  <div class="note"><b>로그인이 단일 하드코딩 계정</b>이다 (<code>AppController.ACCOUNT</code>). 학습·데모용이 아니라면 교체 대상.</div>
+  <div class="note"><b>탐색이 완전 열거</b>라 입력 규모에 민감하다 (6장 참고).</div>
+  <p>위 세 가지는 코드를 읽으며 본 것이고, 실행해서 재현한 것은 아니다.</p>
+</section>
+
+</main>
+</div>
+</body>
+</html>
