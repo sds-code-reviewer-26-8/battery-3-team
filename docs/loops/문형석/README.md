@@ -119,7 +119,7 @@ docs/
 ├─ loops/templates/                         팀 공통 템플릿 (원본, 수정하지 않음)
 │   ├─ precheck.html
 │   └─ report.html
-├─ evidence/문형석/refactoring/{작업번호+작업명}/          예: TASK-001-refactor-service
+├─ evidence/문형석/{작업번호+작업명}/          예: TASK-001-refactor-service
 │   ├─ precheck.html      구현 전 점검 (필수)
 │   └─ report.html        구현 후 요약·검증 (필수)
 └─ logs/
@@ -127,7 +127,7 @@ docs/
     └─ verify/review_{날짜_시간_초}.log
 ```
 
-- 작업번호는 `docs/evidence/문형석/refactoring/` 아래 기존 번호의 다음 값으로 정하고, 이름은 대상을 알 수 있게 짧게 붙입니다. 반복해도 같은 폴더를 씁니다.
+- 작업번호는 `docs/evidence/문형석/` 아래 기존 번호의 다음 값으로 정하고, 이름은 대상을 알 수 있게 짧게 붙입니다. 반복해도 같은 폴더를 씁니다.
 - 로그 파일은 실행할 때마다 생기는 기록이라 팀에 제출하는 대상이 아닙니다.
 - 두 HTML은 템플릿과 같은 **외부 의존 없는 단일 파일**입니다.
 
