@@ -1,0 +1,840 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\work\\battery\\e2e\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "order-confirm",
+      "order-detail",
+      "--reporter=list,json"
+    ],
+    "configFile": "C:\\work\\battery\\e2e\\playwright.config.ts",
+    "rootDir": "C:/work/battery/e2e/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/work/battery/e2e/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "C:/work/battery/e2e/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\work\\battery\\e2e\\test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "chromium",
+        "testDir": "C:\\work\\battery\\e2e\\tests",
+        "snapshotDir": "C:\\work\\battery\\e2e\\tests",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 30000,
+        "use": {
+          "baseURL": "http://localhost:18080",
+          "trace": "retain-on-failure",
+          "screenshot": "only-on-failure",
+          "launchOptions": {
+            "slowMo": 0
+          },
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Safari/537.36",
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "screen": {
+            "width": 1920,
+            "height": 1080
+          },
+          "deviceScaleFactor": 1,
+          "isMobile": false,
+          "hasTouch": false,
+          "defaultBrowserType": "chromium"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "chromium"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list"
+      ],
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.1",
+    "workers": 1,
+    "webServer": {
+      "command": ".\\gradlew.bat bootRun",
+      "cwd": "..",
+      "url": "http://localhost:18080/login",
+      "reuseExistingServer": true,
+      "timeout": 180000,
+      "env": {
+        "SERVER_PORT": "18080",
+        "SPRING_DATASOURCE_URL": "jdbc:h2:mem:battery-e2e;DB_CLOSE_DELAY=-1"
+      }
+    }
+  },
+  "suites": [
+    {
+      "title": "order-confirm.spec.ts",
+      "file": "order-confirm.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "주문 확정",
+          "file": "order-confirm.spec.ts",
+          "line": 14,
+          "column": 6,
+          "specs": [
+            {
+              "title": "CNF-01 메모 없이 주문 확정",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2046,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-21T05:52:02.652Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "4e2da700ff2f42127dd9-4b3c46116c19d4588838",
+              "file": "order-confirm.spec.ts",
+              "line": 19,
+              "column": 7
+            },
+            {
+              "title": "CNF-02 메모 입력 후 확정",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1334,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-21T05:52:05.023Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "4e2da700ff2f42127dd9-64b029a3b87137cc1697",
+              "file": "order-confirm.spec.ts",
+              "line": 36,
+              "column": 7
+            },
+            {
+              "title": "CNF-03 선택한 경로(가장 빠르게)로 확정",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1378,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-21T05:52:06.379Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "4e2da700ff2f42127dd9-acb48dadfa7b164f75be",
+              "file": "order-confirm.spec.ts",
+              "line": 45,
+              "column": 7
+            },
+            {
+              "title": "CNF-04 시뮬레이션 전에는 확정 영역이 보이지 않음",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 574,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-21T05:52:07.778Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "4e2da700ff2f42127dd9-481bf3dcc19af41874b3",
+              "file": "order-confirm.spec.ts",
+              "line": 64,
+              "column": 7
+            },
+            {
+              "title": "CNF-05 메모는 1000자까지만 입력된다",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 920,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-21T05:52:08.363Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "4e2da700ff2f42127dd9-40301f383b6fb94bf46c",
+              "file": "order-confirm.spec.ts",
+              "line": 70,
+              "column": 7
+            },
+            {
+              "title": "CNF-06 시뮬레이션 후 마스터가 바뀌면 확정이 거부된다(그 뒤 재시뮬레이션하면 확정됨)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3511,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-21T05:52:09.309Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "4e2da700ff2f42127dd9-4d56b9fbde70c9319df9",
+              "file": "order-confirm.spec.ts",
+              "line": 78,
+              "column": 7
+            },
+            {
+              "title": "CNF-07 확정한 주문이 목록 맨 위에 나타나고 건수가 늘어난다",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1391,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-21T05:52:12.858Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "4e2da700ff2f42127dd9-9657f8f9f3fa5619fcbb",
+              "file": "order-confirm.spec.ts",
+              "line": 109,
+              "column": 7
+            },
+            {
+              "title": "CNF-08 확정 버튼을 더블 클릭해도 주문은 1건만 생성된다",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1375,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-21T05:52:14.266Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "4e2da700ff2f42127dd9-2cc891b9eadb6d952878",
+              "file": "order-confirm.spec.ts",
+              "line": 122,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "order-detail.spec.ts",
+      "file": "order-detail.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "주문 상세·상태",
+          "file": "order-detail.spec.ts",
+          "line": 14,
+          "column": 6,
+          "specs": [
+            {
+              "title": "DTL-01 상세 화면 정보와 저장된 계획 표시",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 929,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-21T05:52:15.660Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "48897fda6cdd49b9018f-267d64966fffed8eca95",
+              "file": "order-detail.spec.ts",
+              "line": 19,
+              "column": 7
+            },
+            {
+              "title": "DTL-02 확정 → 진행 변경",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1428,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-21T05:52:16.599Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "48897fda6cdd49b9018f-bfc2e1a1feed098ebe79",
+              "file": "order-detail.spec.ts",
+              "line": 35,
+              "column": 7
+            },
+            {
+              "title": "DTL-03 진행 → 완료 후 최종 상태",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1355,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-21T05:52:18.063Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "48897fda6cdd49b9018f-4f81c9266455179589f9",
+              "file": "order-detail.spec.ts",
+              "line": 52,
+              "column": 7
+            },
+            {
+              "title": "DTL-04 확인 대화상자를 취소하면 상태가 유지된다",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 801,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-21T05:52:19.433Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "48897fda6cdd49b9018f-93bf589bccf1f39e9ab3",
+              "file": "order-detail.spec.ts",
+              "line": 64,
+              "column": 7
+            },
+            {
+              "title": "DTL-05 확정 주문 취소 직후에도 오류 화면이 나오지 않는다",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "fail",
+                      "description": "알려진 결함: 취소 직후 /orders/{id} 가 HTTP 500 (PRD 결함 후보)",
+                      "location": {
+                        "file": "C:\\work\\battery\\e2e\\tests\\order-detail.spec.ts",
+                        "line": 79,
+                        "column": 10
+                      }
+                    }
+                  ],
+                  "expectedStatus": "failed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 921,
+                      "error": {
+                        "message": "Error: 취소 직후 화면이 서버 오류(5xx)면 안 된다\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m500\u001b[39m\nReceived:   \u001b[31m500\u001b[39m",
+                        "stack": "Error: 취소 직후 화면이 서버 오류(5xx)면 안 된다\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m500\u001b[39m\nReceived:   \u001b[31m500\u001b[39m\n    at C:\\work\\battery\\e2e\\tests\\order-detail.spec.ts:90:61",
+                        "location": {
+                          "file": "C:\\work\\battery\\e2e\\tests\\order-detail.spec.ts",
+                          "column": 61,
+                          "line": 90
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 88 |\u001b[39m     \u001b[36mconst\u001b[39m response \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m redirected\u001b[33m;\u001b[39m\n \u001b[90m 89 |\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 90 |\u001b[39m     expect(response\u001b[33m.\u001b[39mstatus()\u001b[33m,\u001b[39m \u001b[32m'취소 직후 화면이 서버 오류(5xx)면 안 된다'\u001b[39m)\u001b[33m.\u001b[39mtoBeLessThan(\u001b[35m500\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                             \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 91 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 92 |\u001b[39m\n \u001b[90m 93 |\u001b[39m   test(\u001b[32m'DTL-06 취소된 주문은 목록에서 사라지고 취소 칩 건수는 0 이다'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\work\\battery\\e2e\\tests\\order-detail.spec.ts",
+                            "column": 61,
+                            "line": 90
+                          },
+                          "message": "Error: 취소 직후 화면이 서버 오류(5xx)면 안 된다\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m500\u001b[39m\nReceived:   \u001b[31m500\u001b[39m\n\n  88 |     const response = await redirected;\n  89 |\n> 90 |     expect(response.status(), '취소 직후 화면이 서버 오류(5xx)면 안 된다').toBeLessThan(500);\n     |                                                             ^\n  91 |   });\n  92 |\n  93 |   test('DTL-06 취소된 주문은 목록에서 사라지고 취소 칩 건수는 0 이다', async ({ page }) => {\n    at C:\\work\\battery\\e2e\\tests\\order-detail.spec.ts:90:61"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-21T05:52:20.243Z",
+                      "annotations": [
+                        {
+                          "type": "fail",
+                          "description": "알려진 결함: 취소 직후 /orders/{id} 가 HTTP 500 (PRD 결함 후보)",
+                          "location": {
+                            "file": "C:\\work\\battery\\e2e\\tests\\order-detail.spec.ts",
+                            "line": 79,
+                            "column": 10
+                          }
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\work\\battery\\e2e\\test-results\\order-detail-주문-상세·상태-DTL-05-확정-주문-취소-직후에도-오류-화면이-나오지-않는다-chromium\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\work\\battery\\e2e\\tests\\order-detail.spec.ts",
+                        "column": 61,
+                        "line": 90
+                      }
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "48897fda6cdd49b9018f-073507b2e3c6e43c1e4e",
+              "file": "order-detail.spec.ts",
+              "line": 76,
+              "column": 7
+            },
+            {
+              "title": "DTL-06 취소된 주문은 목록에서 사라지고 취소 칩 건수는 0 이다",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1106,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-21T05:52:21.187Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "48897fda6cdd49b9018f-79298911995895465ed5",
+              "file": "order-detail.spec.ts",
+              "line": 93,
+              "column": 7
+            },
+            {
+              "title": "DTL-07 다른 사용자가 먼저 바꾸면 옛 화면의 변경은 충돌로 거부된다",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1695,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-21T05:52:22.304Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "48897fda6cdd49b9018f-ed6221ce4c2d7cb250fc",
+              "file": "order-detail.spec.ts",
+              "line": 107,
+              "column": 7
+            },
+            {
+              "title": "DTL-08 존재하지 않는 주문을 열면 안내가 나온다(404 또는 안내 문구)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "fail",
+                      "description": "알려진 결함: 존재하지 않는 주문 조회가 HTTP 500",
+                      "location": {
+                        "file": "C:\\work\\battery\\e2e\\tests\\order-detail.spec.ts",
+                        "line": 131,
+                        "column": 10
+                      }
+                    }
+                  ],
+                  "expectedStatus": "failed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 608,
+                      "error": {
+                        "message": "Error: 존재하지 않는 주문이 서버 오류(5xx)면 안 된다\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m500\u001b[39m\nReceived:   \u001b[31m500\u001b[39m",
+                        "stack": "Error: 존재하지 않는 주문이 서버 오류(5xx)면 안 된다\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m500\u001b[39m\nReceived:   \u001b[31m500\u001b[39m\n    at C:\\work\\battery\\e2e\\tests\\order-detail.spec.ts:133:64",
+                        "location": {
+                          "file": "C:\\work\\battery\\e2e\\tests\\order-detail.spec.ts",
+                          "column": 64,
+                          "line": 133
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 131 |\u001b[39m     test\u001b[33m.\u001b[39mfail(\u001b[36mtrue\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'알려진 결함: 존재하지 않는 주문 조회가 HTTP 500'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 132 |\u001b[39m     \u001b[36mconst\u001b[39m response \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/orders/999999'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 133 |\u001b[39m     expect(response\u001b[33m!\u001b[39m\u001b[33m.\u001b[39mstatus()\u001b[33m,\u001b[39m \u001b[32m'존재하지 않는 주문이 서버 오류(5xx)면 안 된다'\u001b[39m)\u001b[33m.\u001b[39mtoBeLessThan(\u001b[35m500\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                                                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 134 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 135 |\u001b[39m\n \u001b[90m 136 |\u001b[39m   test(\u001b[32m'DTL-09 상태 이력 표(확정 → 진행 → 완료)'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\work\\battery\\e2e\\tests\\order-detail.spec.ts",
+                            "column": 64,
+                            "line": 133
+                          },
+                          "message": "Error: 존재하지 않는 주문이 서버 오류(5xx)면 안 된다\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m500\u001b[39m\nReceived:   \u001b[31m500\u001b[39m\n\n  131 |     test.fail(true, '알려진 결함: 존재하지 않는 주문 조회가 HTTP 500');\n  132 |     const response = await page.goto('/orders/999999');\n> 133 |     expect(response!.status(), '존재하지 않는 주문이 서버 오류(5xx)면 안 된다').toBeLessThan(500);\n      |                                                                ^\n  134 |   });\n  135 |\n  136 |   test('DTL-09 상태 이력 표(확정 → 진행 → 완료)', async ({ page }) => {\n    at C:\\work\\battery\\e2e\\tests\\order-detail.spec.ts:133:64"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-21T05:52:24.011Z",
+                      "annotations": [
+                        {
+                          "type": "fail",
+                          "description": "알려진 결함: 존재하지 않는 주문 조회가 HTTP 500",
+                          "location": {
+                            "file": "C:\\work\\battery\\e2e\\tests\\order-detail.spec.ts",
+                            "line": 131,
+                            "column": 10
+                          }
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\work\\battery\\e2e\\test-results\\order-detail-주문-상세·상태-DTL--e9fe1-문을-열면-안내가-나온다-404-또는-안내-문구--chromium\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\work\\battery\\e2e\\tests\\order-detail.spec.ts",
+                        "column": 64,
+                        "line": 133
+                      }
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "48897fda6cdd49b9018f-aff4f2f79a7939e6bf74",
+              "file": "order-detail.spec.ts",
+              "line": 129,
+              "column": 7
+            },
+            {
+              "title": "DTL-09 상태 이력 표(확정 → 진행 → 완료)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 964,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-21T05:52:24.632Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "48897fda6cdd49b9018f-76213c28d096aac63cc5",
+              "file": "order-detail.spec.ts",
+              "line": 136,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-21T05:51:38.161Z",
+    "duration": 48944.896,
+    "expected": 17,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}
