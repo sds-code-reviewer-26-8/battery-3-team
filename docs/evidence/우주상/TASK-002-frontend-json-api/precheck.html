@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>사전 검토 (precheck)</title>
+<style>
+:root{
+  --bg:#f6f7f9; --card:#fff; --text:#1c2430; --muted:#5d6b7c; --line:#d8dee6;
+  --accent:#1f4e78; --ph:#fff4c2; --ph-line:#e6c84a;
+  --ok:#17803d; --ok-bg:#e3f4ea; --warn:#9a6700; --warn-bg:#fdf1d6; --bad:#b42318; --bad-bg:#fde7e4;
+  --guide-bg:#eaf1fa; --guide-line:#9db8d8; --code:#eef1f5;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#10151c; --card:#18202a; --text:#e6ebf2; --muted:#9aa8ba; --line:#2d3947;
+    --accent:#7db3e8; --ph:#4a3f12; --ph-line:#a88a1c;
+    --ok:#4cc27a; --ok-bg:#16301f; --warn:#f0b24b; --warn-bg:#35290f; --bad:#ff8a80; --bad-bg:#3a1a17;
+    --guide-bg:#1b2a3d; --guide-line:#3d5a80; --code:#212c39;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.7 -apple-system,"Segoe UI","Malgun Gothic",sans-serif}
+.wrap{max-width:960px;margin:0 auto;padding:24px 16px 80px}
+h1{font-size:26px;margin:4px 0 2px}
+h2{font-size:18px;margin:0 0 10px;color:var(--accent)}
+h2 .no{display:inline-block;background:var(--accent);color:#fff;border-radius:6px;padding:0 8px;margin-right:6px;font-size:14px}
+section{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:16px 0}
+.sub{color:var(--muted);margin:0 0 12px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+th{background:var(--bg);color:var(--muted);font-weight:600}
+.tablewrap{overflow-x:auto}
+.ph{background:var(--ph);border-bottom:1px dashed var(--ph-line);padding:0 3px;border-radius:3px}
+.guide{background:var(--guide-bg);border-left:4px solid var(--guide-line);padding:9px 13px;border-radius:6px;margin:0 0 12px;font-size:13.5px}
+.guide b{color:var(--accent)}
+.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px 16px}
+.meta div{border:1px solid var(--line);border-radius:8px;padding:6px 10px;background:var(--card)}
+.meta span{display:block;font-size:12px;color:var(--muted)}
+.badge{display:inline-block;border-radius:999px;padding:1px 10px;font-size:12.5px;font-weight:600}
+.b-ok{background:var(--ok-bg);color:var(--ok)} .b-warn{background:var(--warn-bg);color:var(--warn)} .b-bad{background:var(--bad-bg);color:var(--bad)}
+.check{list-style:none;padding:0;margin:0}
+.check li{display:flex;gap:10px;padding:6px 0;border-bottom:1px solid var(--line)}
+.check li:last-child{border-bottom:0}
+.check input{margin-top:5px}
+pre{background:var(--code);padding:10px 12px;border-radius:8px;overflow-x:auto;font:13px/1.55 Consolas,"D2Coding",monospace;margin:6px 0}
+.rules{font-size:13px;color:var(--muted)}
+.rules li{margin:2px 0}
+@media print{ body{background:#fff} .guide{display:none} section{break-inside:avoid} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="sub">Inner Loop · 사전 검토·세팅 단계의 증거(Evidence)</p>
+  <h1>사전 검토: 프런트엔드를 Thymeleaf에서 정적 HTML + JavaScript(JSON API)로 변경 (리팩토링 2)</h1>
+  <div class="meta">
+    <div><span>작성자</span>joosang425 (AI 초안 작성, 사람 확인 전)</div>
+    <div><span>작성일</span>2026-10-22</div>
+    <div><span>브랜치</span>refactor/frontend-json-api</div>
+    <div><span>검토 상태</span><span class="badge b-warn">승인 대기</span></div>
+  </div>
+</header>
+
+<section>
+  <h2><span class="no">1</span>목표와 범위</h2>
+  <table>
+    <tr><th style="width:150px">만들 기능</th><td>서버가 화면(HTML)을 만들어 주는 Thymeleaf를 제거하고, 정적 HTML과 순수 JavaScript가 JSON API를 호출해 화면을 그리게 한다. 컨트롤러는 <code>Model</code>에 담아 템플릿 이름을 돌려주는 대신 JSON(DTO)을 돌려준다. (예: <code>GET /orders/{id}</code> → <code>GET /api/orders/{id}</code>가 <code>OrderDetail</code>을 JSON으로 반환)</td></tr>
+    <tr><th>선택한 이유</th><td>팀장 지침(리팩토링 2). 이렇게 바꿔 두면 이후 React.js 프런트엔드 도입이 쉬워진다. 리팩토링 1(PR #18)은 병합되어 선행 조건 충족.</td></tr>
+    <tr><th>기능 분류</th><td>Q1 저장 데이터 변경: 아니오 · Q2 되돌리기 어려운 동작: 아니오(코드만 변경, git으로 되돌림 가능) · Q3 기대 동작이 PRD에 정해져 있지 않음: <b>예</b>(새 API 계약, 오류·메시지 표시 방식, 없는 주문 화면 등 PRD에 없음) · Q4 세 곳 이상 영향: <b>예</b>(화면 5개, 컨트롤러, 인터셉터, 테스트) · Q5 금액·권한·보안: <b>예</b>(로그인, 억 원 변환). 예 3개 + Q3 → <b>L3</b>. 사람이 기대 동작과 대안을 정한다.</td></tr>
+    <tr><th>이번에 포함</th><td>
+      ① Thymeleaf 의존성·템플릿(<code>templates/*.html</code>)·<code>spring.thymeleaf.*</code> 설정 제거<br>
+      ② 화면 5개(<code>login</code>, <code>orders</code>, <code>order-detail</code>, <code>order-new</code>, <code>master</code>)를 정적 HTML + JS로 대체. 화면 <b>URL은 그대로 유지</b>(사용자 결정)<br>
+      ③ 화면이 쓰는 데이터를 JSON API로 제공: 주문 목록, 주문 상세, 상태 변경, 마스터 저장, 로그인 사용자 확인 등(8장의 제안 참고)<br>
+      ④ 공통 머리글(fragments)을 JS로 대체, 로그인 사용자 표시<br>
+      ⑤ 새 API를 검증하는 테스트 추가, 옛 계약에 묶여 있는 기존 테스트 일부 수정(사람 승인 필요, 4장)<br>
+      ⑥ 문서 갱신: CLAUDE.md(구조, 규칙), docs/INTENT.md 부록, 필요 시 docs/PRD.md
+    </td></tr>
+    <tr><th>이번에 포함하지 않음</th><td>React.js 도입, 업무 규칙·계산 로직 변경, DB 구조 변경, 화면 디자인(CSS) 변경, 기존 API(<code>/api/master</code>, <code>/api/simulate</code>, <code>POST /api/orders</code>)의 응답 형태 변경, 로그인을 세션 방식에서 토큰 방식으로 바꾸는 것, push·PR(사람이 요청할 때)</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2><span class="no">2</span>근거 자료 점검</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>구분</th><th>자료 / 위치</th><th>확인한 내용</th><th>확인 방법</th></tr></thead>
+    <tbody>
+      <tr><td>지침</td><td>팀장 전달 슬라이드(11쪽 리팩토링 2)</td><td>Thymeleaf 제거 → HTML·JS 기반으로 변경. 컨트롤러는 JSON을 반환하는 API 형태. 리팩토링 1이 끝난 뒤 진행, 모든 팀원의 Comment 확인 후 Merge.</td><td>사용자가 붙여 준 이미지를 읽음</td></tr>
+      <tr><td>요구사항</td><td>docs/PRD.md FR-9, FR-17~20, 취소 직후 화면(Q2), 결함 후보</td><td>확정은 서버 재계산(FR-9), 마스터 저장 검증(FR-18: 틀린 항목을 한꺼번에 알리고 입력값은 화면에 남김), 로그인하지 않으면 로그인 화면 외 접근 불가(FR-20). <b>화면 구현 방식(서버 렌더링 여부)은 PRD에 없음.</b> 존재하지 않는 주문 조회 시 HTTP 500은 알려진 결함 후보.</td><td>읽음, grep</td></tr>
+      <tr><td>설계 의도</td><td>docs/INTENT.md 3장 6원칙, 4장</td><td>원칙 1(서버 재계산)·3(마스터 저장 경로마다 변경 번호 증가)·4(상태 변경 경로마다 동시 수정 확인)·5(전부 맞아야 저장)·6(오류 이유를 그대로 알림)이 새 API에서도 유지되어야 함. 4장: "계획안 항목 변경 시 주문 추가 화면과 상세 화면이 같은 모양으로 보여 줌".</td><td>읽음</td></tr>
+      <tr><td>관련 코드</td><td>templates 6개(약 280줄, th: 86곳), static/js 4개(약 540줄), controller 5개, LoginInterceptor·WebConfig, OrderFlowTests</td><td>화면 5개가 서버 렌더링에 의존: 머리글(로그인 사용자·활성 탭), 목록(필터 칩·건수·행), 상세(상태 버튼·이력·계획 JSON을 스크립트에 주입), 마스터(폼 값 채움·오류 목록·flash 메시지), 로그인(오류 메시지). order-new와 plan 표시 JS는 이미 JSON API 사용.</td><td>전체 읽음</td></tr>
+      <tr><td>기존 테스트</td><td>e2e/tests 8개 파일, JUnit 3개</td><td>4장 영향 범위 참고. 화면 URL·문구·DOM(class, id, 입력칸 이름)을 매우 구체적으로 단언하고, 일부는 서버 HTML이나 옛 엔드포인트에 직접 의존함.</td><td>grep, 읽음</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2><span class="no">3</span>현재 상태 확인</h2>
+  <table>
+    <tr><th style="width:150px">확인한 방법</th><td>main(66e9030)에서 딴 브랜치, 코드 변경 없음. <code>.\gradlew.bat test --rerun-tasks</code> 와 <code>cd e2e; npx playwright test --reporter=json</code></td></tr>
+    <tr><th>확인 결과</th><td>JUnit 22개 통과(Demo 1, OrderFlow 9, Planner 12). E2E 72개 통과, 1개 건너뜀(LST-04, 깨끗한 DB 전제), 실패 0. 증거: results/before-junit/, results/before-e2e.json</td></tr>
+  </table>
+  <p class="sub" style="margin-top:10px">현재 화면 구조(요약): <code>GET /orders</code>, <code>/orders/new</code>, <code>/orders/{id}</code>, <code>/master</code>, <code>/login</code>은 Thymeleaf 뷰를 반환. <code>POST /login</code>(폼, 성공 시 302 /orders, 실패 시 200 + 오류 문구), <code>POST /logout</code>, <code>POST /orders/{id}/status</code>(폼, 302 /orders/{id} + flash 메시지), <code>POST /master</code>(폼, 성공 302 /master, 실패 200 + 오류 목록)가 폼 전송 방식. JSON API는 <code>GET /api/master</code>, <code>POST /api/simulate</code>, <code>POST /api/orders</code> 3개뿐.</p>
+</section>
+
+<section>
+  <h2><span class="no">4</span>영향 범위와 위험</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>영향받는 곳</th><th>어떻게 영향받는가</th><th>위험</th><th>대응 / 확인 방법</th></tr></thead>
+    <tbody>
+      <tr><td>templates/*.html 6개, build.gradle.kts, application.properties</td><td>삭제(templates, thymeleaf 의존성 2개, thymeleaf 설정). 정적 HTML이 대체.</td><td><span class="badge b-warn">중</span> 화면 DOM이 달라지면 E2E가 깨짐</td><td>기존 DOM 구조(class, id, name, 문구, 컬럼 순서)를 그대로 재현한다. 기존 E2E 수정 없이 통과하는 것을 기본 목표로 한다.</td></tr>
+      <tr><td>controller/* (Auth, Order, Master, Api, LoginUserAdvice)</td><td>뷰 반환 메서드를 JSON API로 교체. 화면 URL(<code>/orders</code> 등)은 정적 HTML을 내주는 방식으로 유지(예: 포워드). <code>LoginUserAdvice</code>는 뷰 모델이 없어져 불필요.</td><td><span class="badge b-warn">중</span> 화면 URL 유지와 로그인 보호가 함께 동작해야 함</td><td>JUnit <code>pagesRender</code>, E2E AUTH-01·05·06</td></tr>
+      <tr><td>config/LoginInterceptor, WebConfig</td><td>정적 페이지 경로를 보호/제외하는 규칙 정리. 포워드된 내부 경로가 다시 로그인으로 보내지는 루프를 막아야 함.</td><td><span class="badge b-warn">중</span> 비로그인 접근 차단(FR-20, 원칙 8)이 약해지거나 무한 이동</td><td>E2E AUTH-01·04·05·07·08·09, 직접 URL 접근 시나리오를 precheck AC에 포함</td></tr>
+      <tr><td>static/js 4개 + 새 JS</td><td>머리글·목록·상세·마스터·로그인을 그리는 JS 추가. 상세 화면의 "계획 JSON을 스크립트에 주입"하던 방식이 API 응답으로 바뀜.</td><td><span class="badge b-warn">중</span> 서버 렌더링과 달리 그린 뒤 단언(E2E)하므로 타이밍 차이</td><td>Playwright는 자동 대기. 화면에 보이는 로딩 중 상태가 단언과 충돌하지 않게 함.</td></tr>
+      <tr><td>INTENT 원칙 3·4·5·6 (서버 규칙)</td><td>마스터 저장 경로, 상태 변경 경로가 새 JSON API로 옮겨감.</td><td><span class="badge b-warn">중</span> 옮기다 변경 번호 증가, 동시 수정 확인, 전부-아니면-전무 저장이 빠짐</td><td>서비스(MasterService, OrderService)는 그대로 두고 컨트롤러만 교체. 단위·통합 테스트로 확인.</td></tr>
+      <tr><td><b>기존 JUnit 테스트 수정 필요 후보 (사람 승인 필요)</b><br>OrderFlowTests</td><td><code>wrongPasswordIsRejected</code>: 로그인 실패를 200으로 단언 → 실패 응답 형식이 바뀌면 수정. <code>masterUpdateBumpsVersionAndKeepsConfirmedPlans</code>, <code>invalidMasterIsNotSaved</code>: <code>POST /master</code> 폼과 <code>redirectedUrl("/master")</code> 단언 → 마스터 저장 API가 바뀌면 수정.</td><td><span class="badge b-warn">중</span></td><td>게이트 ①에서 수정 범위를 사람이 승인. 검증 내용(버전 증가, 저장 안 됨)은 유지하고 호출 방식만 바꿈.</td></tr>
+      <tr><td><b>기존 E2E 수정 필요 후보 (사람 승인 필요)</b><br>hg.helpers.ts, mst.spec.ts, order-detail.spec.ts</td>
+        <td>① <code>hg.helpers.ts countOrders</code>: <code>GET /orders</code>의 HTML에서 <code>class="clickable"</code>을 세므로 정적 HTML이 되면 항상 0 → API 호출로 변경 필요 (8곳에서 사용).<br>
+            ② <code>hg.helpers.ts restoreMaster</code>: <code>POST /master</code> 폼 → 저장 API가 바뀌면 호출 변경 (3곳).<br>
+            ③ <code>mst.spec.ts</code> MST 동시 저장: <code>pathname === '/master' &amp;&amp; method === 'POST'</code> 응답을 기다림 → 저장 API 경로로 변경.<br>
+            ④ <code>order-detail.spec.ts</code> DTL-05(취소 직후 500 알려진 결함), DTL-08(없는 주문 500 알려진 결함): <code>test.fail(true)</code>로 "실패하는 것이 정상"이라고 표시되어 있음. 새 구조에서 이 결함이 사라지면 "실패 표시했는데 통과"로 <b>테스트가 실패</b>한다. 테스트 주석이 "고쳐지면 test.fail 줄을 지운다"고 안내하므로 그 줄 제거가 필요. 단 취소 직후 이동 방식에 따라 DTL-05의 단언 방식(응답을 기다림)도 달라질 수 있음.</td>
+        <td><span class="badge b-warn">중</span> E2E를 "하나도 안 고치고 통과"하는 것이 불가능한 지점이 있음</td><td>게이트 ①에서 위 변경만 승인받고, 그 외 기존 E2E는 수정하지 않는다. 수정한 테스트는 report에 별도 표로 남기고 검증 내용이 약해지지 않았는지 적는다.</td></tr>
+      <tr><td>e2e 로그인 도우미 4곳(<code>api.post('/login', {form})</code>)</td><td>폼 전송(<code>application/x-www-form-urlencoded</code>)으로 로그인하고 <code>ok</code>를 확인. 이 계약을 유지하면 수정 불필요.</td><td><span class="badge b-ok">낮</span></td><td>폼 로그인 엔드포인트 유지(7장 대안)</td></tr>
+      <tr><td>docs/*, CLAUDE.md</td><td>구조 설명, "Thymeleaf 서버 렌더링" 기술 스택, 주의사항(전역 ExceptionHandler 없음, 취소 직후 redirect 등), 문서 속 화면·URL 설명이 달라짐.</td><td><span class="badge b-ok">낮</span></td><td>같은 변경에 갱신. 기대 동작을 바꾸는 부분은 사람 승인.</td></tr>
+      <tr><td>docs/understand/*, docs/loops/*, docs/evidence/우주상/TASK-001</td><td>이전 작업의 설명·증거 문서에 옛 구조 설명이 남음.</td><td><span class="badge b-ok">낮</span></td><td>과거 증거이므로 수정하지 않음. 후속 정리 후보로만 기록.</td></tr>
+    </tbody>
+  </table></div>
+  <p class="sub" style="margin-top:10px">되돌릴 수 없는 작업이 포함되는가? 없음. 코드·문서만 바뀌고 DB 구조와 데이터는 건드리지 않는다. 개발 DB(<code>./data/battery</code>)는 지우지 않고, E2E는 인메모리 DB(별도 포트)로 실행한다. 되돌리는 방법: 병합 전이면 브랜치 폐기, 병합 후면 병합 커밋 revert(Thymeleaf 의존성·템플릿이 함께 복구됨).</p>
+</section>
+
+<section>
+  <h2><span class="no">5</span>환경·세팅 점검</h2>
+  <ul class="check">
+    <li><input type="checkbox" checked disabled><div><b>앱을 실행할 수 있다</b><br><small class="sub">확인 근거: </small>E2E가 <code>gradlew bootRun</code>으로 서버를 띄워 72개 통과</div></li>
+    <li><input type="checkbox" checked disabled><div><b>기존 테스트가 통과한다 (기준선)</b><br><small class="sub">확인 근거: </small>JUnit 22/22, E2E 72 통과·1 건너뜀·0 실패 (results/before-*)</div></li>
+    <li><input type="checkbox" checked disabled><div><b>작업 브랜치를 만들었다</b><br><small class="sub">확인 근거: </small>refactor/frontend-json-api (main 66e9030에서 분기)</div></li>
+    <li><input type="checkbox" checked disabled><div><b>테스트 데이터·DB 상태를 알고 있다</b><br><small class="sub">확인 근거: </small>JUnit은 메모리 H2, E2E는 <code>jdbc:h2:mem:battery-e2e</code>. 개발 DB와 분리. 깨끗한 DB가 필요한 LST-04는 별도 포트(18081)로 단독 실행해 보완.</div></li>
+    <li><input type="checkbox" checked disabled><div><b>필요한 도구·설정이 갖춰졌다</b><br><small class="sub">확인 근거: </small>Gradle wrapper 9.8.1, Playwright 설치됨. <b>린트 도구 미설정</b> → 컴파일로 대체. <b>JS 린트·타입 검사 도구도 없음</b> → 새로 쓰는 JS는 "미확인"으로 기록하고 E2E 실행으로 대신 확인(도구 도입은 별도 기능). 컴파일 기준선: 에러 0.</div></li>
+  </ul>
+</section>
+
+<section>
+  <h2><span class="no">6</span>통과 기준 (수용 기준)</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th style="width:60px">ID</th><th>Given / When / Then</th><th>검증 방법</th></tr></thead>
+    <tbody>
+      <tr><td>AC-1</td><td>Given 변경 후, When 프로젝트를 컴파일하면, Then 에러 0이다.</td><td><code>gradlew.bat compileJava compileTestJava</code> 로그</td></tr>
+      <tr><td>AC-2</td><td>Given 변경 후, When 소스·빌드 설정을 검색하면, Then Thymeleaf 관련 의존성·템플릿·설정·<code>th:</code> 속성이 남아 있지 않고, 컨트롤러가 뷰 이름(<code>return "orders"</code> 등)과 <code>Model</code>을 더 이상 쓰지 않는다.</td><td>grep 결과 0건 (docs와 과거 증거 문서 제외)</td></tr>
+      <tr><td>AC-3</td><td>Given 로그인한 상태, When 화면 URL(<code>/orders</code>, <code>/orders/new</code>, <code>/orders/{id}</code>, <code>/master</code>)을 열면, Then 기존과 같은 주소에서 같은 화면(제목, 표 컬럼, 입력칸, 버튼, 문구)이 보인다.</td><td>기존 E2E(lst, order-detail, mst, flow, sim, order-confirm) 통과</td></tr>
+      <tr><td>AC-4</td><td>Given 로그인하지 않은 상태, When 화면 URL이나 <code>/api/*</code>를 요청하면, Then 화면은 로그인으로 이동하고 API는 401이다. 정적 파일(css, js)과 로그인 화면만 로그인 없이 열린다. 상태 변경 요청도 변경되지 않는다.</td><td>기존 E2E AUTH-01~09, FR-20</td></tr>
+      <tr><td>AC-5</td><td>Given 새 API 설계(8장), When 각 API를 호출하면, Then JSON으로 응답하고 오류는 <code>{error, conflict}</code> 형식과 HTTP 상태(400/404/409/401)로 이유를 알려 준다. 존재하지 않는 주문은 500이 아니라 404다.</td><td>새 통합 테스트(MockMvc) + 새 API E2E</td></tr>
+      <tr><td>AC-6</td><td>Given 주문 상세 화면, When 상태를 바꾸면(확인 창 수락), Then 이력이 갱신되고 성공 메시지가 보이고, 그 사이 다른 사용자가 먼저 바꿨다면 충돌 메시지가 보이며 상태는 유지된다.</td><td>기존 E2E DTL-*, LST-*, flow 상태 변경 시나리오</td></tr>
+      <tr><td>AC-7</td><td>Given 마스터 데이터 화면, When 값을 저장하면, Then 성공 메시지가 보이고 변경 번호가 오른다. 틀린 값이 있으면 아무것도 저장하지 않고 오류를 모두 보여 주며 입력값은 화면에 남는다.</td><td>기존 E2E mst, JUnit(수정 후) 마스터 저장 테스트</td></tr>
+      <tr><td>AC-8</td><td>Given 로그인 화면, When 올바른/잘못된 계정으로 로그인하면, Then 성공 시 주문 목록으로, 실패 시 같은 화면에서 오류 문구가 보인다. 폼 방식 로그인 호출(E2E 도우미)은 계속 동작한다.</td><td>기존 E2E AUTH-02·03, 도우미 사용 시나리오 전체</td></tr>
+      <tr><td>AC-9</td><td>Given 변경 후, When 전체 테스트를 실행하면, Then JUnit과 E2E가 모두 통과한다(실패 0). 수정을 승인받은 기존 테스트 외에는 기존 테스트 파일을 수정하지 않는다. 건너뛴 LST-04는 깨끗한 DB에서 따로 통과한다.</td><td><code>gradlew.bat test</code>, <code>npx playwright test --reporter=json</code>, LST-04 단독 실행</td></tr>
+      <tr><td>AC-10</td><td>Given 변경 후, When INTENT 원칙 1·3·4·5를 확인하면, Then 서버의 재계산, 변경 번호 증가, 동시 수정 확인, 전부-아니면-전무 저장이 그대로 있다. 서비스 클래스의 본문은 바뀌지 않는다.</td><td>서비스 파일 diff 0줄(또는 사유 기록), JUnit</td></tr>
+      <tr><td>AC-11</td><td>Given 변경 후, When CLAUDE.md와 INTENT 부록을 보면, Then 구조·기술 스택·규칙 설명이 새 구조(정적 HTML + JSON API)와 일치한다.</td><td>문서 grep (Thymeleaf, 옛 컨트롤러 메서드 설명)</td></tr>
+    </tbody>
+  </table></div>
+  <p class="sub" style="margin-top:10px">테스트 계층: JUnit(MockMvc 통합)으로 새 API의 응답 형식과 오류 상태를, Playwright E2E로 화면 동작을 확인한다. 새 API용 TC는 구현 뒤 D1 단계에서 추가하고, 구현 이전 코드에서 실패하는지(새 엔드포인트가 없어 404) 확인한다. 새로 만든 클래스를 직접 참조하는 단위·통합 TC는 이전 코드에서 컴파일되지 않으므로 "구현 없이는 통과할 수 없다"로만 기록한다.</p>
+</section>
+
+<section>
+  <h2><span class="no">7</span>대안 비교와 되돌리는 방법 (L3)</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>대안</th><th>내용</th><th>장점</th><th>단점·위험</th></tr></thead>
+    <tbody>
+      <tr><td><b>A. 전면 전환 (추천)</b></td><td>화면 5개를 모두 정적 HTML + JS로 바꾸고 Thymeleaf·템플릿을 제거. 서버는 JSON API만. 폼 로그인(<code>POST /login</code>)은 계약 유지. 한 PR 안에서 화면 단위로 커밋을 나눔.</td><td>지침(제거)을 그대로 충족. React 도입 준비 완료. 중간 상태(두 방식 공존)가 없음.</td><td>변경이 큼. 기존 테스트 일부 수정 필요. 한 번에 리뷰해야 함.</td></tr>
+      <tr><td>B. 이중 운영</td><td>JSON API와 정적 화면을 추가하되 기존 Thymeleaf 화면과 폼 엔드포인트도 남김.</td><td>기존 테스트를 하나도 안 고침.</td><td>지침(Thymeleaf 제거)을 충족하지 못함. 같은 화면이 두 벌이라 어긋남. 부분 작업이라 의미가 약함.</td></tr>
+      <tr><td>C. 화면 하나씩 단계 전환</td><td>화면별로 여러 PR로 나눠 전환하고 마지막 PR에서 Thymeleaf 제거.</td><td>한 번에 리뷰할 양이 작음. 문제 시 영향이 작음.</td><td>팀장 지침은 한 번에 Merge. 중간 PR마다 이중 운영 상태. 진행 기간이 길어짐.</td></tr>
+    </tbody>
+  </table></div>
+  <p class="sub" style="margin-top:10px"><b>추천: A.</b> 단, 커밋은 화면 단위로 쪼개 리뷰를 쉽게 한다. 로그인은 "폼 전송 계약 유지, 화면은 JS로 오류 표시"를 추천한다(E2E 도우미 4곳이 폼 로그인에 의존하므로 수정 범위를 줄임).<br>
+  <b>되돌리는 방법:</b> 병합 전에는 브랜치 폐기, 병합 후에는 병합 커밋을 revert. DB·데이터 변경이 없으므로 데이터 복구는 필요 없다.<br>
+  <b>영향받는 문서:</b> CLAUDE.md(기술 스택·구조·주의사항), docs/INTENT.md 부록(오류 변환 위치 등), docs/PRD.md(화면 설명이 구현 방식에 의존하는 곳이 있으면).</p>
+</section>
+
+<section>
+  <h2><span class="no">8</span>사람이 정할 기대 동작 (제안)</h2>
+  <div class="guide"><b>아래는 AI의 제안이며 확정이 아닙니다.</b> 게이트 ①에서 사람이 승인하거나 고칩니다. PRD에 정해진 내용이 없는 부분입니다(Q3).</div>
+  <div class="tablewrap"><table>
+    <thead><tr><th>#</th><th>항목</th><th>제안</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>화면 URL</td><td>유지(사용자 결정). 서버가 각 URL에 정적 HTML을 내준다. 정적 파일은 <code>static/</code> 아래에 두고, 보호 규칙은 인터셉터가 맡는다.</td></tr>
+      <tr><td>2</td><td>새 JSON API</td><td><code>GET /api/me</code>(로그인 사용자) · <code>GET /api/orders?status=</code>(목록, 상태별 건수, 전체 건수) · <code>GET /api/orders/{id}</code>(주문, 상태 전이 후보, 버전, 이력, 저장된 계획) · <code>POST /api/orders/{id}/status</code>(상태 변경, 본문: status, version) · <code>PUT /api/master</code>(마스터 저장) · 로그아웃은 폼 <code>POST /logout</code> 유지 검토. 기존 3개 API는 그대로.</td></tr>
+      <tr><td>3</td><td>오류 응답</td><td>기존 형식 <code>{error, conflict}</code> 유지. 마스터 저장 검증 오류는 <code>{errors:[…]}</code>(여러 건 한꺼번에, FR-18). 상태: 입력 오류 400, 로그인 필요 401, 없는 주문 404, 충돌 409.</td></tr>
+      <tr><td>4</td><td>없는 주문을 열면</td><td>화면 URL은 정적 페이지(200)를 내주고, 화면이 "주문을 찾을 수 없습니다" 안내를 보여 준다. API는 404. (HTTP 500 결함 해소. PRD Q2의 "취소하면 삭제" 정책 자체는 바꾸지 않음.)</td></tr>
+      <tr><td>5</td><td>상태 변경 후</td><td>같은 화면에서 새 상태·이력을 다시 불러 보여 주고 성공 메시지(<code>상태를 '진행'(으)로 바꿨습니다</code>)를 띄운다. 취소는 주문이 삭제되므로 주문 목록으로 이동하고 목록에서 취소 안내를 띄울지 사람이 결정.</td></tr>
+      <tr><td>6</td><td>마스터 저장 후</td><td>같은 화면에서 성공 메시지를 띄우고 값을 다시 불러온다. 오류 시 입력값은 그대로 두고 오류 목록을 보여 준다(FR-18).</td></tr>
+      <tr><td>7</td><td>로그인</td><td>폼 전송 계약 유지(성공 시 302 /orders). 실패 시 JS가 같은 화면에서 오류 문구를 보여 주고 URL은 <code>/login</code>에 머문다. 실패 응답의 HTTP 상태(현재 200)를 401로 바꿀지 사람이 결정(바꾸면 기존 JUnit 1개 수정).</td></tr>
+      <tr><td>8</td><td>억 원 변환 위치</td><td>저장 값은 원 단위 그대로. 화면에서 억 원으로 입력·표시하는 변환은 현재 서버(<code>MasterController</code>가 나눔, <code>MasterService</code>가 곱함)에 있다. 새 구조에서도 변환 책임을 서버에 두고 API는 억 원 문자열을 주고받는 안을 제안(규칙 변경 없음).</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2><span class="no">9</span>반복 한도와 중단 조건</h2>
+  <table>
+    <tr><th style="width:180px">최대 반복 횟수</th><td>3회</td></tr>
+    <tr><th>성공으로 끝내는 조건</th><td>6장 AC-1~11 모두 충족 + 게이트 ② 승인</td></tr>
+    <tr><th>중단하고 사람에게 넘기는 조건</th><td>3회 초과 / 같은 원인으로 2회 연속 실패 / 승인 범위 밖 기존 테스트 수정이 필요해짐 / 서비스 규칙(INTENT 원칙 1·3·4·5) 변경이 필요해 보임 / 로그인 보호가 약해질 가능성 / 환경 문제를 해결할 수 없음</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2><span class="no">10</span>미확인 사항과 열린 질문</h2>
+  <ul>
+    <li><b>질문 1 (결정 필요)</b> 4장의 기존 테스트 수정 후보를 승인할 것인가. JUnit 3개(로그인 실패 응답, 마스터 저장 2개), E2E는 <code>hg.helpers.ts</code>의 <code>countOrders</code>·<code>restoreMaster</code>, <code>mst.spec.ts</code>의 저장 응답 대기, <code>order-detail.spec.ts</code> DTL-05·DTL-08의 <code>test.fail(true)</code> 제거. 검증하는 내용은 유지하고 호출 방식만 바꿈. 이 범위를 넘는 수정은 다시 묻는다.</li>
+    <li><b>질문 2 (결정 필요)</b> 8장 기대 동작 제안(API 구성, 오류 상태, 취소 후 이동, 로그인 실패 상태 코드)을 승인할 것인가. 특히 5번(취소 후 이동)과 7번(401 여부).</li>
+    <li><b>질문 3 (결정 필요)</b> 7장 대안 A(전면 전환, 화면 단위 커밋)로 진행해도 되는가.</li>
+    <li><b>질문 4</b> <code>docs/PRD.md</code>의 "알려진 결함 후보(존재하지 않는 주문 조회 시 500)"는 이번 변경으로 해소된다. PRD 문구를 같은 변경에서 갱신해도 되는가. (기대 동작을 바꾸는 갱신이므로 사람 승인 사항)</li>
+    <li><b>결정 기록 (게이트 ① 전 대화에서 사람이 답함, 2026-10-22)</b>: 화면 URL은 유지. 질문 1~4(기존 테스트 수정 범위, 8장 기대 동작 제안, 대안 A, PRD 갱신)와 로그인 방식 등 나머지는 모두 AI 추천대로 승인하고 구현 시작을 지시함. 11장 확인 칸은 사람이 직접 채운다. <i>구현 중 한 가지가 승인한 안과 달라졌다(8장 5번, 취소 후 이동 → 같은 화면 안내). 이유와 결과는 report.html 2장·4장 참고.</i></li>
+    <li>미확인: 정적 페이지를 내주는 방식(포워드 등)에서 로그인 인터셉터가 내부 경로를 다시 가로채는지, 정적 파일 요청에 POST를 보냈을 때의 응답(AUTH-09가 302를 기대함)은 구현 중 실행으로 확인한다.</li>
+    <li>미확인: 새로 쓰는 JS는 린트·타입 검사 도구가 없어 E2E 실행으로만 확인한다.</li>
+  </ul>
+</section>
+
+<section>
+  <h2><span class="no">11</span>사람 확인 (HITL)</h2>
+  <ul class="check">
+    <li><input type="checkbox"><div>목표와 범위가 적절하다</div></li>
+    <li><input type="checkbox"><div>통과 기준이 구체적이고 검증할 수 있다</div></li>
+    <li><input type="checkbox"><div>위험과 되돌릴 수 없는 작업을 확인했다</div></li>
+    <li><input type="checkbox"><div>기대 동작(8장)과 대안(7장)을 결정했다 (L3)</div></li>
+  </ul>
+  <table style="margin-top:10px">
+    <tr><th style="width:150px">결정</th><td>(사람이 채움: 승인 / 보완 필요 / 보류)</td></tr>
+    <tr><th>확인한 사람</th><td>(사람이 채움)</td></tr>
+    <tr><th>의견</th><td>(사람이 채움)</td></tr>
+  </table>
+</section>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,500 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main3\\e2e\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "tests/pages.spec.ts",
+      "--reporter=json"
+    ],
+    "configFile": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main3\\e2e\\playwright.config.ts",
+    "rootDir": "C:/Users/<user>/AppData/Local/Temp/claude/C--work-battery/ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7/scratchpad/wt-main3/e2e/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/<user>/AppData/Local/Temp/claude/C--work-battery/ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7/scratchpad/wt-main3/e2e/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "C:/Users/<user>/AppData/Local/Temp/claude/C--work-battery/ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7/scratchpad/wt-main3/e2e/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main3\\e2e\\test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "chromium",
+        "testDir": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main3\\e2e\\tests",
+        "snapshotDir": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main3\\e2e\\tests",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 30000,
+        "use": {
+          "baseURL": "http://localhost:18083",
+          "trace": "retain-on-failure",
+          "screenshot": "only-on-failure",
+          "launchOptions": {
+            "slowMo": 0
+          },
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Safari/537.36",
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "screen": {
+            "width": 1920,
+            "height": 1080
+          },
+          "deviceScaleFactor": 1,
+          "isMobile": false,
+          "hasTouch": false,
+          "defaultBrowserType": "chromium"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "chromium"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.1",
+    "workers": 1,
+    "webServer": {
+      "command": ".\\gradlew.bat bootRun",
+      "cwd": "..",
+      "url": "http://localhost:18083/login",
+      "reuseExistingServer": true,
+      "timeout": 180000,
+      "env": {
+        "SERVER_PORT": "18083",
+        "SPRING_DATASOURCE_URL": "jdbc:h2:mem:battery-e2e;DB_CLOSE_DELAY=-1"
+      }
+    }
+  },
+  "suites": [
+    {
+      "title": "pages.spec.ts",
+      "file": "pages.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "정적 화면 전환",
+          "file": "pages.spec.ts",
+          "line": 11,
+          "column": 6,
+          "specs": [
+            {
+              "title": "PGE-01 존재하지 않는 주문을 열면 서버 오류 대신 안내가 나온다",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 861,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m200\u001b[39m\nReceived: \u001b[31m500\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m200\u001b[39m\nReceived: \u001b[31m500\u001b[39m\n    at C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main3\\e2e\\tests\\pages.spec.ts:16:32",
+                        "location": {
+                          "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main3\\e2e\\tests\\pages.spec.ts",
+                          "column": 32,
+                          "line": 16
+                        },
+                        "snippet": "  14 |     const response = await page.goto('/orders/999999');\n  15 |\n> 16 |     expect(response!.status()).toBe(200); // 화면(정적 HTML) 자체는 열린다\n     |                                ^\n  17 |     await expect(page.locator('.alert.error')).toHaveText('주문을 찾을 수 없습니다');\n  18 |     await expect(page.getByRole('link', { name: '목록으로' })).toBeVisible();\n  19 |     await expect(page).toHaveURL(/\\/orders\\/999999$/);"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main3\\e2e\\tests\\pages.spec.ts",
+                            "column": 32,
+                            "line": 16
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m200\u001b[39m\nReceived: \u001b[31m500\u001b[39m\n\n  14 |     const response = await page.goto('/orders/999999');\n  15 |\n> 16 |     expect(response!.status()).toBe(200); // 화면(정적 HTML) 자체는 열린다\n     |                                ^\n  17 |     await expect(page.locator('.alert.error')).toHaveText('주문을 찾을 수 없습니다');\n  18 |     await expect(page.getByRole('link', { name: '목록으로' })).toBeVisible();\n  19 |     await expect(page).toHaveURL(/\\/orders\\/999999$/);\n    at C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main3\\e2e\\tests\\pages.spec.ts:16:32"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-22T02:11:17.759Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main3\\e2e\\test-results\\pages-정적-화면-전환-PGE-01-존재하지-않는-주문을-열면-서버-오류-대신-안내가-나온다-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main3\\e2e\\test-results\\pages-정적-화면-전환-PGE-01-존재하지-않는-주문을-열면-서버-오류-대신-안내가-나온다-chromium\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main3\\e2e\\test-results\\pages-정적-화면-전환-PGE-01-존재하지-않는-주문을-열면-서버-오류-대신-안내가-나온다-chromium\\trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main3\\e2e\\tests\\pages.spec.ts",
+                        "column": 32,
+                        "line": 16
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "9bb6bb2ed574bebb3c58-461e0d4e5b0dc18a913a",
+              "file": "pages.spec.ts",
+              "line": 12,
+              "column": 7
+            },
+            {
+              "title": "PGE-02 취소하면 같은 화면에 안내가 나오고 주문은 목록에서 사라진다",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 6163,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.alert.ok')\nExpected substring: \u001b[32m\"주문 #1을(를) 취소했습니다\"\u001b[39m\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" locator('.alert.ok') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.alert.ok')\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.alert.ok')\nExpected substring: \u001b[32m\"주문 #1을(를) 취소했습니다\"\u001b[39m\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" locator('.alert.ok') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.alert.ok')\u001b[22m\n\n    at C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main3\\e2e\\tests\\pages.spec.ts:34:45",
+                        "location": {
+                          "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main3\\e2e\\tests\\pages.spec.ts",
+                          "column": 45,
+                          "line": 34
+                        },
+                        "snippet": "  32 |     await changeStatus(page, '취소(으)로 변경');\n  33 |\n> 34 |     await expect(page.locator('.alert.ok')).toContainText(`주문 #${id}을(를) 취소했습니다`);\n     |                                             ^\n  35 |     await expect(page.locator('h1 .badge')).toHaveText('취소');\n  36 |     await expect(page.getByRole('button', { name: /\\(으\\)로 변경/ })).toHaveCount(0);\n  37 |     await expect(page).toHaveURL(new RegExp(`/orders/${id}$`));"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main3\\e2e\\tests\\pages.spec.ts",
+                            "column": 45,
+                            "line": 34
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.alert.ok')\nExpected substring: \u001b[32m\"주문 #1을(를) 취소했습니다\"\u001b[39m\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" locator('.alert.ok') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.alert.ok')\u001b[22m\n\n\n  32 |     await changeStatus(page, '취소(으)로 변경');\n  33 |\n> 34 |     await expect(page.locator('.alert.ok')).toContainText(`주문 #${id}을(를) 취소했습니다`);\n     |                                             ^\n  35 |     await expect(page.locator('h1 .badge')).toHaveText('취소');\n  36 |     await expect(page.getByRole('button', { name: /\\(으\\)로 변경/ })).toHaveCount(0);\n  37 |     await expect(page).toHaveURL(new RegExp(`/orders/${id}$`));\n    at C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main3\\e2e\\tests\\pages.spec.ts:34:45"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-22T02:11:19.959Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main3\\e2e\\test-results\\pages-정적-화면-전환-PGE-02-취소하면-같은-화면에-안내가-나오고-주문은-목록에서-사라진다-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main3\\e2e\\test-results\\pages-정적-화면-전환-PGE-02-취소하면-같은-화면에-안내가-나오고-주문은-목록에서-사라진다-chromium\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main3\\e2e\\test-results\\pages-정적-화면-전환-PGE-02-취소하면-같은-화면에-안내가-나오고-주문은-목록에서-사라진다-chromium\\trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main3\\e2e\\tests\\pages.spec.ts",
+                        "column": 45,
+                        "line": 34
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "9bb6bb2ed574bebb3c58-cfd33833bd7f2d9a2788",
+              "file": "pages.spec.ts",
+              "line": 27,
+              "column": 7
+            },
+            {
+              "title": "PGE-03 로그인하지 않으면 모든 화면 주소가 로그인으로 이동한다",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 475,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-22T02:11:27.474Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9bb6bb2ed574bebb3c58-3535b9c1f404de711668",
+              "file": "pages.spec.ts",
+              "line": 44,
+              "column": 7
+            },
+            {
+              "title": "PGE-04 로그인 요청이 틀리면 401 과 이유가 온다 (폼 전송 계약 유지)",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 55,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m401\u001b[39m\nReceived: \u001b[31m200\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m401\u001b[39m\nReceived: \u001b[31m200\u001b[39m\n    at C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main3\\e2e\\tests\\pages.spec.ts:53:26",
+                        "location": {
+                          "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main3\\e2e\\tests\\pages.spec.ts",
+                          "column": 26,
+                          "line": 53
+                        },
+                        "snippet": "  51 |   test('PGE-04 로그인 요청이 틀리면 401 과 이유가 온다 (폼 전송 계약 유지)', async ({ request }) => {\n  52 |     const bad = await request.post('/login', { form: { username: 'admin', password: 'wrong' }, maxRedirects: 0 });\n> 53 |     expect(bad.status()).toBe(401);\n     |                          ^\n  54 |     expect((await bad.json()).error).toBe('아이디 또는 비밀번호가 올바르지 않습니다');\n  55 |\n  56 |     const ok = await request.post('/login', { form: { username: 'admin', password: 'admin' }, maxRedirects: 0 });"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main3\\e2e\\tests\\pages.spec.ts",
+                            "column": 26,
+                            "line": 53
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m401\u001b[39m\nReceived: \u001b[31m200\u001b[39m\n\n  51 |   test('PGE-04 로그인 요청이 틀리면 401 과 이유가 온다 (폼 전송 계약 유지)', async ({ request }) => {\n  52 |     const bad = await request.post('/login', { form: { username: 'admin', password: 'wrong' }, maxRedirects: 0 });\n> 53 |     expect(bad.status()).toBe(401);\n     |                          ^\n  54 |     expect((await bad.json()).error).toBe('아이디 또는 비밀번호가 올바르지 않습니다');\n  55 |\n  56 |     const ok = await request.post('/login', { form: { username: 'admin', password: 'admin' }, maxRedirects: 0 });\n    at C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main3\\e2e\\tests\\pages.spec.ts:53:26"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-22T02:11:28.224Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main3\\e2e\\test-results\\pages-정적-화면-전환-PGE-04-로그인-요청이-틀리면-401-과-이유가-온다-폼-전송-계약-유지--chromium\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main3\\e2e\\test-results\\pages-정적-화면-전환-PGE-04-로그인-요청이-틀리면-401-과-이유가-온다-폼-전송-계약-유지--chromium\\trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main3\\e2e\\tests\\pages.spec.ts",
+                        "column": 26,
+                        "line": 53
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "9bb6bb2ed574bebb3c58-c512ed2ef212cec9bdb0",
+              "file": "pages.spec.ts",
+              "line": 51,
+              "column": 7
+            },
+            {
+              "title": "PGE-05 화면 상단은 로그인한 아이디를 API 로 받아 보여 준다",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 558,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 44\u001b[39m\n\n\u001b[2m  Object {\u001b[22m\n\u001b[32m-   \"username\": \"admin\",\u001b[39m\n\u001b[31m+   \"error\": \"Not Found\",\u001b[39m\n\u001b[31m+   \"message\": \"No static resource api/me.\",\u001b[39m\n\u001b[31m+   \"path\": \"/api/me\",\u001b[39m\n\u001b[31m+   \"status\": 404,\u001b[39m\n\u001b[31m+   \"timestamp\": \"2026-10-22T02:11:30.027Z\",\u001b[39m\n\u001b[31m+   \"trace\": \"org.springframework.web.servlet.resource.NoResourceFoundException: No static resource api/me for request '/api/me'.\r\u001b[39m\n\u001b[31m+ \tat org.springframework.web.servlet.resource.ResourceHttpRequestHandler.handleRequest(ResourceHttpRequestHandler.java:527)\r\u001b[39m\n\u001b[31m+ \tat org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter.handle(HttpRequestHandlerAdapter.java:50)\r\u001b[39m\n\u001b[31m+ \tat org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:963)\r\u001b[39m\n\u001b[31m+ \tat org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:866)\r\u001b[39m\n\u001b[31m+ \tat org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1000)\r\u001b[39m\n\u001b[31m+ \tat org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:892)\r\u001b[39m\n\u001b[31m+ \tat jakarta.servlet.http.HttpServlet.service(HttpServlet.java:622)\r\u001b[39m\n\u001b[31m+ \tat org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:874)\r\u001b[39m\n\u001b[31m+ \tat jakarta.servlet.http.HttpServlet.service(HttpServlet.java:710)\r\u001b[39m\n\u001b[31m+ \tat org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:132)\r\u001b[39m\n\u001b[31m+ \tat org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:59)\r\u001b[39m\n\u001b[31m+ \tat org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)\r\u001b[39m\n\u001b[31m+ \tat org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)\r\u001b[39m\n\u001b[31m+ \tat org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)\r\u001b[39m\n\u001b[31m+ \tat org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)\r\u001b[39m\n\u001b[31m+ \tat org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)\r\u001b[39m\n\u001b[31m+ \tat org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)\r\u001b[39m\n\u001b[31m+ \tat org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)\r\u001b[39m\n\u001b[31m+ \tat org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:199)\r\u001b[39m\n\u001b[31m+ \tat org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)\r\u001b[39m\n\u001b[31m+ \tat org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)\r\u001b[39m\n\u001b[31m+ \tat org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165)\r\u001b[39m\n\u001b[31m+ \tat org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:77)\r\u001b[39m\n\u001b[31m+ \tat org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:535)\r\u001b[39m\n\u001b[31m+ \tat org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)\r\u001b[39m\n\u001b[31m+ \tat org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:86)\r\u001b[39m\n\u001b[31m+ \tat org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:71)\r\u001b[39m\n\u001b[31m+ \tat org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:347)\r\u001b[39m\n\u001b[31m+ \tat org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:406)\r\u001b[39m\n\u001b[31m+ \tat org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:71)\r\u001b[39m\n\u001b[31m+ \tat org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:1307)\r\u001b[39m\n\u001b[31m+ \tat org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:2036)\r\u001b[39m\n\u001b[31m+ \tat org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:74)\r\u001b[39m\n\u001b[31m+ \tat org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:949)\r\u001b[39m\n\u001b[31m+ \tat org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:483)\r\u001b[39m\n\u001b[31m+ \tat org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:74)\r\u001b[39m\n\u001b[31m+ \tat java.base/java.lang.Thread.run(Thread.java:840)\r\u001b[39m\n\u001b[31m+ \",\u001b[39m\n\u001b[2m  }\u001b[22m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 44\u001b[39m\n\n\u001b[2m  Object {\u001b[22m\n\u001b[32m-   \"username\": \"admin\",\u001b[39m\n\u001b[31m+   \"error\": \"Not Found\",\u001b[39m\n\u001b[31m+   \"message\": \"No static resource api/me.\",\u001b[39m\n\u001b[31m+   \"path\": \"/api/me\",\u001b[39m\n\u001b[31m+   \"status\": 404,\u001b[39m\n\u001b[31m+   \"timestamp\": \"2026-10-22T02:11:30.027Z\",\u001b[39m\n\u001b[31m+   \"trace\": \"org.springframework.web.servlet.resource.NoResourceFoundException: No static resource api/me for request '/api/me'.\r\u001b[39m\n\u001b[31m+ \tat org.springframework.web.servlet.resource.ResourceHttpRequestHandler.handleRequest(ResourceHttpRequestHandler.java:527)\r\u001b[39m\n\u001b[31m+ \tat org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter.handle(HttpRequestHandlerAdapter.java:50)\r\u001b[39m\n\u001b[31m+ \tat org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:963)\r\u001b[39m\n\u001b[31m+ \tat org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:866)\r\u001b[39m\n\u001b[31m+ \tat org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1000)\r\u001b[39m\n\u001b[31m+ \tat org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:892)\r\u001b[39m\n\u001b[31m+ \tat jakarta.servlet.http.HttpServlet.service(HttpServlet.java:622)\r\u001b[39m\n\u001b[31m+ \tat org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:874)\r\u001b[39m\n\u001b[31m+ \tat jakarta.servlet.http.HttpServlet.service(HttpServlet.java:710)\r\u001b[39m\n\u001b[31m+ \tat org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:132)\r\u001b[39m\n\u001b[31m+ \tat org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:59)\r\u001b[39m\n\u001b[31m+ \tat org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)\r\u001b[39m\n\u001b[31m+ \tat org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)\r\u001b[39m\n\u001b[31m+ \tat org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)\r\u001b[39m\n\u001b[31m+ \tat org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)\r\u001b[39m\n\u001b[31m+ \tat org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)\r\u001b[39m\n\u001b[31m+ \tat org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)\r\u001b[39m\n\u001b[31m+ \tat org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)\r\u001b[39m\n\u001b[31m+ \tat org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:199)\r\u001b[39m\n\u001b[31m+ \tat org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)\r\u001b[39m\n\u001b[31m+ \tat org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)\r\u001b[39m\n\u001b[31m+ \tat org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165)\r\u001b[39m\n\u001b[31m+ \tat org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:77)\r\u001b[39m\n\u001b[31m+ \tat org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:535)\r\u001b[39m\n\u001b[31m+ \tat org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)\r\u001b[39m\n\u001b[31m+ \tat org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:86)\r\u001b[39m\n\u001b[31m+ \tat org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:71)\r\u001b[39m\n\u001b[31m+ \tat org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:347)\r\u001b[39m\n\u001b[31m+ \tat org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:406)\r\u001b[39m\n\u001b[31m+ \tat org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:71)\r\u001b[39m\n\u001b[31m+ \tat org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:1307)\r\u001b[39m\n\u001b[31m+ \tat org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:2036)\r\u001b[39m\n\u001b[31m+ \tat org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:74)\r\u001b[39m\n\u001b[31m+ \tat org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:949)\r\u001b[39m\n\u001b[31m+ \tat org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:483)\r\u001b[39m\n\u001b[31m+ \tat org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:74)\r\u001b[39m\n\u001b[31m+ \tat java.base/java.lang.Thread.run(Thread.java:840)\r\u001b[39m\n\u001b[31m+ \",\u001b[39m\n\u001b[2m  }\u001b[22m\n    at C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main3\\e2e\\tests\\pages.spec.ts:64:29",
+                        "location": {
+                          "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main3\\e2e\\tests\\pages.spec.ts",
+                          "column": 29,
+                          "line": 64
+                        },
+                        "snippet": "  62 |     await login(page);\n  63 |     const me = await page.request.get('/api/me');\n> 64 |     expect(await me.json()).toEqual({ username: 'admin' });\n     |                             ^\n  65 |     for (const path of ['/orders', '/orders/new', '/master']) {\n  66 |       await page.goto(path);\n  67 |       await expect(page.locator('header .user span'), path).toHaveText('admin');"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main3\\e2e\\tests\\pages.spec.ts",
+                            "column": 29,
+                            "line": 64
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 44\u001b[39m\n\n\u001b[2m  Object {\u001b[22m\n\u001b[32m-   \"username\": \"admin\",\u001b[39m\n\u001b[31m+   \"error\": \"Not Found\",\u001b[39m\n\u001b[31m+   \"message\": \"No static resource api/me.\",\u001b[39m\n\u001b[31m+   \"path\": \"/api/me\",\u001b[39m\n\u001b[31m+   \"status\": 404,\u001b[39m\n\u001b[31m+   \"timestamp\": \"2026-10-22T02:11:30.027Z\",\u001b[39m\n\u001b[31m+   \"trace\": \"org.springframework.web.servlet.resource.NoResourceFoundException: No static resource api/me for request '/api/me'.\r\u001b[39m\n\u001b[31m+ \tat org.springframework.web.servlet.resource.ResourceHttpRequestHandler.handleRequest(ResourceHttpRequestHandler.java:527)\r\u001b[39m\n\u001b[31m+ \tat org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter.handle(HttpRequestHandlerAdapter.java:50)\r\u001b[39m\n\u001b[31m+ \tat org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:963)\r\u001b[39m\n\u001b[31m+ \tat org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:866)\r\u001b[39m\n\u001b[31m+ \tat org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1000)\r\u001b[39m\n\u001b[31m+ \tat org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:892)\r\u001b[39m\n\u001b[31m+ \tat jakarta.servlet.http.HttpServlet.service(HttpServlet.java:622)\r\u001b[39m\n\u001b[31m+ \tat org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:874)\r\u001b[39m\n\u001b[31m+ \tat jakarta.servlet.http.HttpServlet.service(HttpServlet.java:710)\r\u001b[39m\n\u001b[31m+ \tat org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:132)\r\u001b[39m\n\u001b[31m+ \tat org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:59)\r\u001b[39m\n\u001b[31m+ \tat org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)\r\u001b[39m\n\u001b[31m+ \tat org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)\r\u001b[39m\n\u001b[31m+ \tat org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)\r\u001b[39m\n\u001b[31m+ \tat org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)\r\u001b[39m\n\u001b[31m+ \tat org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)\r\u001b[39m\n\u001b[31m+ \tat org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)\r\u001b[39m\n\u001b[31m+ \tat org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)\r\u001b[39m\n\u001b[31m+ \tat org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:199)\r\u001b[39m\n\u001b[31m+ \tat org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)\r\u001b[39m\n\u001b[31m+ \tat org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)\r\u001b[39m\n\u001b[31m+ \tat org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165)\r\u001b[39m\n\u001b[31m+ \tat org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:77)\r\u001b[39m\n\u001b[31m+ \tat org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:535)\r\u001b[39m\n\u001b[31m+ \tat org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)\r\u001b[39m\n\u001b[31m+ \tat org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:86)\r\u001b[39m\n\u001b[31m+ \tat org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:71)\r\u001b[39m\n\u001b[31m+ \tat org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:347)\r\u001b[39m\n\u001b[31m+ \tat org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:406)\r\u001b[39m\n\u001b[31m+ \tat org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:71)\r\u001b[39m\n\u001b[31m+ \tat org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:1307)\r\u001b[39m\n\u001b[31m+ \tat org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:2036)\r\u001b[39m\n\u001b[31m+ \tat org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:74)\r\u001b[39m\n\u001b[31m+ \tat org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:949)\r\u001b[39m\n\u001b[31m+ \tat org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:483)\r\u001b[39m\n\u001b[31m+ \tat org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:74)\r\u001b[39m\n\u001b[31m+ \tat java.base/java.lang.Thread.run(Thread.java:840)\r\u001b[39m\n\u001b[31m+ \",\u001b[39m\n\u001b[2m  }\u001b[22m\n\n  62 |     await login(page);\n  63 |     const me = await page.request.get('/api/me');\n> 64 |     expect(await me.json()).toEqual({ username: 'admin' });\n     |                             ^\n  65 |     for (const path of ['/orders', '/orders/new', '/master']) {\n  66 |       await page.goto(path);\n  67 |       await expect(page.locator('header .user span'), path).toHaveText('admin');\n    at C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main3\\e2e\\tests\\pages.spec.ts:64:29"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-22T02:11:29.341Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main3\\e2e\\test-results\\pages-정적-화면-전환-PGE-05-화면-상단은-로그인한-아이디를-API-로-받아-보여-준다-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main3\\e2e\\test-results\\pages-정적-화면-전환-PGE-05-화면-상단은-로그인한-아이디를-API-로-받아-보여-준다-chromium\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main3\\e2e\\test-results\\pages-정적-화면-전환-PGE-05-화면-상단은-로그인한-아이디를-API-로-받아-보여-준다-chromium\\trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main3\\e2e\\tests\\pages.spec.ts",
+                        "column": 29,
+                        "line": 64
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "9bb6bb2ed574bebb3c58-6ed7e18f00157393b81a",
+              "file": "pages.spec.ts",
+              "line": 61,
+              "column": 7
+            },
+            {
+              "title": "PGE-06 메모에 태그를 넣어도 글자 그대로 보이고 실행되지 않는다",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 753,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-22T02:11:31.165Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9bb6bb2ed574bebb3c58-7dce649c849c5eb74b5a",
+              "file": "pages.spec.ts",
+              "line": 70,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-22T02:11:09.726Z",
+    "duration": 23676.436,
+    "expected": 2,
+    "skipped": 0,
+    "unexpected": 4,
+    "flaky": 0
+  }
+}

@@ -232,7 +232,7 @@ test.describe('마스터 데이터', () => {
       // B 는 새로 고치지 않은 옛 화면(배 척수 3)에서 운항비만 바꿔 저장
       await fillMaster(b, { shipDailyCost: '2' });
       const [response] = await Promise.all([
-        b.waitForResponse((r) => new URL(r.url()).pathname === '/master' && r.request().method() === 'POST'),
+        b.waitForResponse((r) => new URL(r.url()).pathname === '/api/master' && r.request().method() === 'PUT'),
         saveMaster(b),
       ]);
 

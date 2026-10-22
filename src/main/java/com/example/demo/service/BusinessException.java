@@ -6,6 +6,7 @@ import java.util.List;
 public class BusinessException extends RuntimeException {
 
 	private final boolean conflict;
+	private final boolean notFound;
 	private final List<String> messages;
 
 	public BusinessException(String message) {
@@ -13,15 +14,30 @@ public class BusinessException extends RuntimeException {
 	}
 
 	public BusinessException(String message, boolean conflict) {
+		this(message, conflict, false);
+	}
+
+	private BusinessException(String message, boolean conflict, boolean notFound) {
 		super(message);
 		this.conflict = conflict;
+		this.notFound = notFound;
 		this.messages = List.of(message);
 	}
 
 	public BusinessException(List<String> messages) {
 		super(String.join(" / ", messages));
 		this.conflict = false;
+		this.notFound = false;
 		this.messages = messages;
+	}
+
+	/** 찾는 대상이 없을 때(HTTP 404). */
+	public static BusinessException notFound(String message) {
+		return new BusinessException(message, false, true);
+	}
+
+	public boolean isNotFound() {
+		return notFound;
 	}
 
 	public boolean isConflict() {

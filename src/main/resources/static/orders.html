@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>주문 목록 - 배터리 주문 관리</title>
+	<link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+<div id="app-header"></div>
+<main>
+	<div class="page-head">
+		<h1>주문 목록</h1>
+		<a class="button primary" href="/orders/new">주문 추가</a>
+	</div>
+
+	<div class="filters" id="filters"></div>
+
+	<table class="grid">
+		<thead>
+		<tr>
+			<th>주문번호</th><th>확정 일시</th><th class="num">총 수량(K)</th><th>경로</th>
+			<th class="num">소요 일수</th><th class="num">총 비용(억원)</th><th>상태</th><th>작성자</th>
+		</tr>
+		</thead>
+		<tbody id="rows"></tbody>
+	</table>
+</main>
+<script src="/js/common.js"></script>
+<script type="module" src="/js/orders.js"></script>
+</body>
+</html>

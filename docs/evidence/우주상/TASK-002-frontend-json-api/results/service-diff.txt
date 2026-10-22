@@ -1,0 +1,58 @@
+diff --git a/src/main/java/com/example/demo/service/BusinessException.java b/src/main/java/com/example/demo/service/BusinessException.java
+index e335257..59869c8 100644
+--- a/src/main/java/com/example/demo/service/BusinessException.java
++++ b/src/main/java/com/example/demo/service/BusinessException.java
+@@ -6,6 +6,7 @@ import java.util.List;
+ public class BusinessException extends RuntimeException {
+ 
+ 	private final boolean conflict;
++	private final boolean notFound;
+ 	private final List<String> messages;
+ 
+ 	public BusinessException(String message) {
+@@ -13,17 +14,32 @@ public class BusinessException extends RuntimeException {
+ 	}
+ 
+ 	public BusinessException(String message, boolean conflict) {
++		this(message, conflict, false);
++	}
++
++	private BusinessException(String message, boolean conflict, boolean notFound) {
+ 		super(message);
+ 		this.conflict = conflict;
++		this.notFound = notFound;
+ 		this.messages = List.of(message);
+ 	}
+ 
+ 	public BusinessException(List<String> messages) {
+ 		super(String.join(" / ", messages));
+ 		this.conflict = false;
++		this.notFound = false;
+ 		this.messages = messages;
+ 	}
+ 
++	/** 찾는 대상이 없을 때(HTTP 404). */
++	public static BusinessException notFound(String message) {
++		return new BusinessException(message, false, true);
++	}
++
++	public boolean isNotFound() {
++		return notFound;
++	}
++
+ 	public boolean isConflict() {
+ 		return conflict;
+ 	}
+diff --git a/src/main/java/com/example/demo/service/OrderService.java b/src/main/java/com/example/demo/service/OrderService.java
+index 89504c9..d16a45d 100644
+--- a/src/main/java/com/example/demo/service/OrderService.java
++++ b/src/main/java/com/example/demo/service/OrderService.java
+@@ -82,7 +82,7 @@ public class OrderService {
+ 
+ 	@Transactional(readOnly = true)
+ 	public Order getOrder(Long id) {
+-		return orderRepository.findById(id).orElseThrow(() -> new BusinessException("주문을 찾을 수 없습니다"));
++		return orderRepository.findById(id).orElseThrow(() -> BusinessException.notFound("주문을 찾을 수 없습니다"));
+ 	}
+ 
+ 	@Transactional(readOnly = true)

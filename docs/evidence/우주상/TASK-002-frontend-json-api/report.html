@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>검증 리포트 (report)</title>
+<style>
+:root{
+  --bg:#f6f7f9; --card:#fff; --text:#1c2430; --muted:#5d6b7c; --line:#d8dee6;
+  --accent:#1f4e78; --ph:#fff4c2; --ph-line:#e6c84a;
+  --ok:#17803d; --ok-bg:#e3f4ea; --warn:#9a6700; --warn-bg:#fdf1d6; --bad:#b42318; --bad-bg:#fde7e4;
+  --guide-bg:#eaf1fa; --guide-line:#9db8d8; --code:#eef1f5;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#10151c; --card:#18202a; --text:#e6ebf2; --muted:#9aa8ba; --line:#2d3947;
+    --accent:#7db3e8; --ph:#4a3f12; --ph-line:#a88a1c;
+    --ok:#4cc27a; --ok-bg:#16301f; --warn:#f0b24b; --warn-bg:#35290f; --bad:#ff8a80; --bad-bg:#3a1a17;
+    --guide-bg:#1b2a3d; --guide-line:#3d5a80; --code:#212c39;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.7 -apple-system,"Segoe UI","Malgun Gothic",sans-serif}
+.wrap{max-width:960px;margin:0 auto;padding:24px 16px 80px}
+h1{font-size:26px;margin:4px 0 2px}
+h2{font-size:18px;margin:0 0 10px;color:var(--accent)}
+h2 .no{display:inline-block;background:var(--accent);color:#fff;border-radius:6px;padding:0 8px;margin-right:6px;font-size:14px}
+section{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:16px 0}
+.sub{color:var(--muted);margin:0 0 12px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+th{background:var(--bg);color:var(--muted);font-weight:600}
+.tablewrap{overflow-x:auto}
+.ph{background:var(--ph);border-bottom:1px dashed var(--ph-line);padding:0 3px;border-radius:3px}
+.guide{background:var(--guide-bg);border-left:4px solid var(--guide-line);padding:9px 13px;border-radius:6px;margin:0 0 12px;font-size:13.5px}
+.guide b{color:var(--accent)}
+.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px 16px}
+.meta div{border:1px solid var(--line);border-radius:8px;padding:6px 10px;background:var(--card)}
+.meta span{display:block;font-size:12px;color:var(--muted)}
+.badge{display:inline-block;border-radius:999px;padding:1px 10px;font-size:12.5px;font-weight:600}
+.b-ok{background:var(--ok-bg);color:var(--ok)} .b-warn{background:var(--warn-bg);color:var(--warn)} .b-bad{background:var(--bad-bg);color:var(--bad)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:8px 0 4px}
+.tile{border:1px solid var(--line);border-radius:10px;padding:10px 12px;text-align:center}
+.tile b{display:block;font-size:26px;line-height:1.2}
+.tile small{color:var(--muted)}
+.tile.ok b{color:var(--ok)} .tile.bad b{color:var(--bad)} .tile.warn b{color:var(--warn)}
+.timeline{list-style:none;margin:0;padding:0 0 0 14px;border-left:3px solid var(--line)}
+.timeline li{position:relative;padding:0 0 16px 16px}
+.timeline li::before{content:"";position:absolute;left:-23px;top:6px;width:11px;height:11px;border-radius:50%;background:var(--accent)}
+.timeline li:last-child{padding-bottom:0}
+.check{list-style:none;padding:0;margin:0}
+.check li{display:flex;gap:10px;padding:6px 0;border-bottom:1px solid var(--line)}
+.check li:last-child{border-bottom:0}
+.check input{margin-top:5px}
+pre{background:var(--code);padding:10px 12px;border-radius:8px;overflow-x:auto;font:13px/1.55 Consolas,"D2Coding",monospace;margin:6px 0}
+.rules{font-size:13px;color:var(--muted)} .rules li{margin:2px 0}
+@media print{ body{background:#fff} .guide{display:none} section{break-inside:avoid} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="sub">Inner Loop · 검증·리포트 작성 단계의 증거(Evidence)</p>
+  <h1>검증 리포트: 프런트엔드를 Thymeleaf에서 정적 HTML + JavaScript(JSON API)로 변경 (리팩토링 2)</h1>
+  <div class="meta">
+    <div><span>작성자</span>joosang425 (AI 초안 작성, 사람 확인 전)</div>
+    <div><span>작성일</span>2026-10-22</div>
+    <div><span>브랜치 / PR</span>refactor/frontend-json-api · PR #19</div>
+    <div><span>사전 검토 문서</span><a href="precheck.html">precheck.html</a></div>
+    <div><span>최종 결과</span><span class="badge b-warn">완료 (사람 승인 대기)</span></div>
+  </div>
+</header>
+
+<section>
+  <h2><span class="no">1</span>한눈에 보기</h2>
+  <div class="tiles">
+    <div class="tile ok"><b id="c-pass">-</b><small>통과</small></div>
+    <div class="tile bad"><b id="c-fail">-</b><small>실패</small></div>
+    <div class="tile warn"><b id="c-skip">-</b><small>건너뜀·미확인</small></div>
+    <div class="tile"><b id="c-ac">-</b><small>충족한 통과 기준</small></div>
+    <div class="tile"><b id="c-loop">3</b><small>반복 횟수</small></div>
+  </div>
+  <p><b>한 줄 요약:</b> Thymeleaf와 템플릿을 제거하고 화면 5개를 정적 HTML + JS로, 서버 컨트롤러를 JSON API로 바꿨다(화면 URL 유지). JUnit 33/33(기존 22 + 신규 11), E2E 78 통과(기존 72 + 신규 6), 건너뜀 1개는 깨끗한 DB에서 따로 통과. 승인받은 기존 테스트 수정 외의 기존 테스트는 고치지 않았다. <b>승인한 안과 다른 점 1가지</b>(취소 후 동작, 2장)가 있다.</p>
+  <p class="sub">※ 위 숫자는 3장 표(<code>id="results"</code>)의 행만 센다. 표 밖의 건너뜀·미확인은 집계되지 않으므로 5장을 함께 읽는다. "건너뜀·미확인 0"을 "문제 없음"으로 읽지 않는다.</p>
+</section>
+
+<section>
+  <h2><span class="no">2</span>구현 요약</h2>
+  <table>
+    <tr><th style="width:150px">구현한 것</th><td>사용자에게 보이는 화면과 주소는 같다. 서버가 HTML을 만들어 주던 방식을, 정적 HTML이 열린 뒤 JS가 JSON API로 데이터를 받아 그리는 방식으로 바꿨다. 오류 응답이 모두 JSON({error, conflict}, 여러 건이면 errors)이 되었고, 없는 주문은 HTTP 500 대신 404(화면은 안내 문구)다.</td></tr>
+    <tr><th>접근 방법</th><td>① 화면 주소(<code>/orders</code>, <code>/orders/new</code>, <code>/orders/{id}</code>, <code>/master</code>, <code>/login</code>)는 <code>PageController</code>/<code>AuthController</code>가 정적 HTML로 포워드한다. ② 데이터는 <code>/api/me</code>, <code>/api/orders</code>(목록·상세·확정·상태 변경), <code>/api/master</code>(조회·<code>/form</code>·저장 PUT), <code>/api/simulate</code>가 준다. ③ 업무 오류는 <code>ApiExceptionHandler</code>가 모아서 변환한다. ④ 서비스(MasterService, SimulationService, OrderService)의 업무 규칙은 바꾸지 않았다(찾을 수 없음을 구분하는 오류 종류 추가만, 3장 AC-10). ⑤ 화면 스크립트는 최상위 <code>await</code>로 데이터를 받아 그린다. 처음에는 이것이 "그린 뒤에야 페이지 로딩이 끝나게 해서 로드 직후 읽는 기존 E2E가 그대로 동작한다"고 보았지만, <b>PR 리뷰의 반복 실행에서 보장되지 않음이 확인되었다</b>(4장 3회차). 그래서 로드 직후 읽는 테스트 쪽에 명시적 대기를 추가했다.</td></tr>
+    <tr><th>승인한 안과 다른 점</th><td><b>취소 후 동작</b>: precheck 8장 5번은 "취소 후 주문 목록으로 이동"이었다. 구현해 보니 취소 직후 이동이 비동기라서, 취소 바로 뒤에 <code>goto('/orders')</code>를 하는 기존 E2E(DTL-06)가 이동과 겹쳐 실패했다(폼 전송 방식에서는 클릭이 이동 완료까지 기다려 줬던 차이). 그래서 <b>같은 화면에 "주문 #N을(를) 취소했습니다" 안내와 "목록으로" 버튼을 보여 주는 방식</b>으로 바꿨다. 사람이 승인한 동작과 다르므로 게이트 ②에서 확인이 필요하다.</td></tr>
+  </table>
+  <h3 style="font-size:15px;margin:14px 0 6px">바뀐 파일</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>파일</th><th>변경 내용</th><th>종류</th></tr></thead>
+    <tbody>
+      <tr><td>build.gradle.kts, application.properties</td><td>Thymeleaf 의존성 2개와 <code>spring.thymeleaf.cache</code> 제거</td><td>수정</td></tr>
+      <tr><td>templates/*.html 6개</td><td>서버 템플릿 삭제</td><td>삭제(6)</td></tr>
+      <tr><td>static/login.html, orders.html, order-new.html, order-detail.html, master.html</td><td>정적 화면(기존 DOM 구조와 문구 유지)</td><td>추가(5)</td></tr>
+      <tr><td>static/js/orders.js, order-detail.js, master.js, login.js</td><td>화면별 JS(API 호출, 그리기, 상태 변경, 저장, 로그인)</td><td>추가(4)</td></tr>
+      <tr><td>static/js/common.js</td><td>API 호출 도우미, 상단 메뉴, 날짜 형식, 이스케이프 추가</td><td>수정</td></tr>
+      <tr><td>controller/PageController, ApiExceptionHandler, SimulationController, dto/*(StatusInfo, OrderList, OrderDetail, StatusChange)</td><td>화면 주소 연결, 오류 변환, 시뮬레이션 API, 화면용 응답</td><td>추가</td></tr>
+      <tr><td>controller/AuthController, OrderController, MasterController</td><td>뷰 반환을 JSON API로 교체. 로그인 실패는 401 JSON, 성공은 기존처럼 302 /orders</td><td>수정</td></tr>
+      <tr><td>controller/ApiController, LoginUserAdvice</td><td>역할이 새 컨트롤러로 이동 / 뷰 모델이 없어져 불필요</td><td>삭제(2)</td></tr>
+      <tr><td>config/WebConfig</td><td>로그인 보호 제외 목록에 /login.html 추가(포워드된 로그인 화면이 다시 로그인으로 보내지지 않게)</td><td>수정</td></tr>
+      <tr><td>service/BusinessException, OrderService</td><td>"찾을 수 없음" 구분(<code>notFound</code>) 추가, <code>getOrder</code>가 이를 사용. 업무 규칙은 그대로.</td><td>수정</td></tr>
+      <tr><td>src/test/.../JsonApiTests.java, e2e/tests/pages.spec.ts</td><td>새 TC (3장 표)</td><td>추가</td></tr>
+      <tr><td>기존 테스트 (사람이 승인한 범위만, 3장 별도 표)</td><td>OrderFlowTests, e2e hg.helpers.ts, mst.spec.ts, order-detail.spec.ts</td><td>수정</td></tr>
+      <tr><td>docs/INTENT.md, docs/PRD.md</td><td>오류 변환 위치 갱신, PRD 결함 후보 2건을 "해소"로 갱신(승인된 범위)</td><td>수정</td></tr>
+      <tr><td>CLAUDE.md (<b>이 브랜치에 커밋하지 않는 로컬 파일</b>)</td><td>기술 스택·구조·주의사항 갱신. 리뷰어가 확인할 수 없다.</td><td>수정(로컬)</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2><span class="no">3</span>검증 결과</h2>
+  <div class="tablewrap"><table id="results">
+    <thead><tr><th style="width:60px">AC</th><th>검증 항목</th><th>실행 명령 / 방법</th><th style="width:80px">결과</th><th>근거 (결과 파일·로그)</th></tr></thead>
+    <tbody>
+      <tr data-result="pass" data-ac="AC-1"><td>AC-1</td><td>컴파일 에러 0</td><td><code>.\gradlew.bat compileJava compileTestJava --rerun-tasks</code></td><td><span class="badge b-ok">통과</span></td><td>results/after-compile.log (BUILD SUCCESSFUL)</td></tr>
+      <tr data-result="pass" data-ac="AC-2"><td>AC-2</td><td>Thymeleaf 의존성·템플릿·설정·<code>th:</code> 속성 없음, 컨트롤러가 뷰 이름·<code>Model</code>을 쓰지 않음</td><td><code>grep -rniE "thymeleaf|th:..." src build.gradle.kts</code>, <code>grep "ui.Model|return \"…\";"</code>, <code>ls templates</code></td><td><span class="badge b-ok">통과</span></td><td>results/grep-thymeleaf.txt (0건, templates 폴더 없음). 단 PageController·AuthController는 <code>forward:</code> 문자열을 돌려주며 이는 정적 파일 연결이다.</td></tr>
+      <tr data-result="pass" data-ac="AC-3"><td>AC-3</td><td>화면 URL이 기존 주소에서 같은 화면(제목, 표 컬럼, 입력칸, 버튼, 문구)으로 열림</td><td>기존 E2E(lst, order-detail, mst, flow, sim, order-confirm) + 신규 PGE-05</td><td><span class="badge b-ok">통과</span></td><td>results/after-e2e.json (expected 78, skipped 1, unexpected 0)</td></tr>
+      <tr data-result="pass" data-ac="AC-4"><td>AC-4</td><td>비로그인은 화면 URL이 로그인으로 이동, API는 401, 정적 파일·로그인 화면만 공개, 비로그인 상태 변경 요청은 변경되지 않음</td><td>기존 E2E AUTH-01~09 + 신규 PGE-03 + JUnit <code>pageUrlsServeStaticHtmlAndStayProtected</code></td><td><span class="badge b-ok">통과</span></td><td>results/after-e2e.json, results/after-junit/TEST-…JsonApiTests.xml</td></tr>
+      <tr data-result="pass" data-ac="AC-5"><td>AC-5</td><td>새 API가 JSON으로 응답하고 오류는 {error, conflict}(+errors)와 400/401/404/409로 이유를 알림. 없는 주문은 500이 아니라 404</td><td>신규 JUnit JsonApiTests 11개 + 신규 PGE-01·04, 기존 API-01~07</td><td><span class="badge b-ok">통과</span></td><td>results/after-junit/TEST-com.example.demo.JsonApiTests.xml (11/11), results/after-e2e.json</td></tr>
+      <tr data-result="pass" data-ac="AC-6"><td>AC-6</td><td>상태 변경: 이력 갱신, 성공 메시지, 다른 사용자가 먼저 바꾸면 충돌 메시지와 최신 상태 유지</td><td>기존 E2E DTL-01~09, LST, flow + 신규 PGE-02(취소)</td><td><span class="badge b-ok">통과</span></td><td>results/after-e2e.json. 취소 후 동작은 2장의 "승인한 안과 다른 점" 참고.</td></tr>
+      <tr data-result="pass" data-ac="AC-7"><td>AC-7</td><td>마스터 저장: 성공 메시지와 변경 번호 증가, 틀린 값은 아무것도 저장 안 하고 오류를 모두 보여 주며 입력값 유지</td><td>기존 E2E MST-01~, JUnit(수정) <code>masterUpdateBumps…</code>·<code>invalidMasterIsNotSaved</code> + 신규 <code>masterFormUsesEok…</code></td><td><span class="badge b-ok">통과</span></td><td>results/after-e2e.json, results/after-junit/</td></tr>
+      <tr data-result="pass" data-ac="AC-8"><td>AC-8</td><td>로그인: 성공은 주문 목록으로, 실패는 같은 화면에서 오류 문구(URL은 /login 유지). 폼 방식 로그인 호출(E2E 도우미)은 계속 동작</td><td>기존 E2E AUTH-02·03, 도우미 사용 시나리오 전체 + 신규 PGE-04</td><td><span class="badge b-ok">통과</span></td><td>results/after-e2e.json</td></tr>
+      <tr data-result="pass" data-ac="AC-9"><td>AC-9</td><td>JUnit·E2E 전부 통과(실패 0). 승인 범위 외 기존 테스트 파일 수정 없음. 건너뛴 LST-04는 깨끗한 DB에서 통과</td><td><code>gradlew.bat test --rerun-tasks</code>, <code>npx playwright test --reporter=json</code>, <code>E2E_PORT=18081 … -g LST-04</code></td><td><span class="badge b-ok">통과</span></td><td>results/after-junit/ (33/33), results/after-e2e.json (78 통과·1 건너뜀·0 실패), results/after-e2e-repeat3.json (전체 3회 반복: 234 통과·3 건너뜀·0 실패·flaky 0), results/after-e2e-clean-db.json (1/1), 수정한 기존 테스트: results/existing-tests-diff.txt</td></tr>
+      <tr data-result="pass" data-ac="AC-10"><td>AC-10</td><td>INTENT 원칙 1·3·4·5 유지, 서비스의 업무 규칙 변경 없음</td><td>서비스 diff 검토 + JUnit(OrderFlowTests, JsonApiTests) + E2E</td><td><span class="badge b-ok">통과</span></td><td>results/service-diff.txt: 변경은 <code>BusinessException</code>의 <code>notFound</code> 구분 추가와 <code>OrderService.getOrder</code>가 그것을 던지는 한 줄뿐. 계산·검증·재계산·버전 비교 코드는 diff에 없음. precheck의 "서비스 diff 0줄"을 이 한 가지 예외로 수정해 판정(사유: 404 구분에 필요).</td></tr>
+      <tr data-result="pass" data-ac="AC-11"><td>AC-11</td><td>문서가 새 구조와 일치</td><td><code>grep -n "Thymeleaf\|ApiController\|LoginUserAdvice\|templates/" docs/INTENT.md docs/PRD.md</code> (PR 포함 문서), CLAUDE.md는 로컬 확인</td><td><span class="badge b-ok">통과</span></td><td>PR 포함 문서(INTENT.md, PRD.md) 0건. CLAUDE.md에는 "Thymeleaf를 쓰지 않는다"는 설명 문장 1곳만 있다(옛 구조 설명 아님).</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 style="font-size:15px;margin:14px 0 6px">추가한 테스트(TC)와 통과 기준 대응</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>통과 기준</th><th>추가한 TC</th><th>구현 이전 코드(66e9030)에서의 결과</th></tr></thead>
+    <tbody>
+      <tr><td>AC-4, AC-5</td><td>JsonApiTests <code>pageUrlsServeStaticHtmlAndStayProtected</code>, <code>meReturnsLoginUser</code>, <code>orderListHasCountsAndFilters</code>, <code>orderDetailHasStoredPlanHistoryAndVersion</code>, <code>missingOrderIsNotFoundNotServerError</code>, <code>statusChangeReturnsUpdatedOrderAndRejectsBadRequests</code>, <code>cancelDeletesOrderAndReportsDeleted</code>, <code>masterFormUsesEokAndInvalidSaveListsAllErrors</code>, <code>malformedRequestsGetReasonInJson</code>, <code>masterSaveReturnsSavedFormInEok</code></td><td><b>10개 실패</b>(새 API·화면 연결이 없음, 요청 형식 오류 응답 포함). JUnit이 새 클래스를 직접 참조하지 않아 이전 코드에서도 컴파일·실행되어 실제 실패를 확인했다. 증거: results/before-new-junit.log</td></tr>
+      <tr><td>AC-5</td><td>JsonApiTests <code>singleErrorHasNoErrorsList</code></td><td>이전에도 <b>통과</b>(기존 API-02와 같은 동작을 지키는 회귀 방지용이며 새 기능을 검증하지는 않는다)</td></tr>
+      <tr><td>AC-5, AC-6</td><td>PGE-01 없는 주문 안내·404, PGE-02 취소 후 안내, PGE-04 로그인 401·302, PGE-05 상단 로그인 아이디(API)</td><td><b>4개 실패</b> (results/before-new-e2e.json: unexpected 4)</td></tr>
+      <tr><td>AC-3 (회귀 방지)</td><td>PGE-06 메모에 넣은 태그가 글자 그대로 보이고 실행되지 않음(JS가 직접 이스케이프하게 된 자리를 지킴)</td><td>이전에도 <b>통과</b>(서버 렌더링 시절에는 Thymeleaf가 이스케이프했음). 새 동작을 검증하는 TC가 아니라 전환 후에도 이스케이프가 유지되는지 지키는 회귀 방지용이다.</td></tr>
+      <tr><td>AC-4</td><td>PGE-03 비로그인 화면 주소 이동</td><td>이전에도 <b>통과</b>(기존 AUTH-01의 범위 확장, 회귀 방지용)</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 style="font-size:15px;margin:14px 0 6px">수정한 기존 테스트 (사람이 승인한 범위만)</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>파일 / 테스트</th><th>바꾼 것</th><th>검증 내용이 약해졌는가</th></tr></thead>
+    <tbody>
+      <tr><td>OrderFlowTests <code>wrongPasswordIsRejected</code></td><td>로그인 실패 응답을 200 → 401(+오류 JSON 존재)로 단언</td><td>아니오. 거부되는지 확인하며 오히려 정확해짐.</td></tr>
+      <tr><td>OrderFlowTests <code>masterUpdateBumpsVersionAndKeepsConfirmedPlans</code></td><td>폼 POST + 302 단언 → <code>PUT /api/master</code>(JSON) + 200 단언</td><td>아니오. 변경 번호 증가와 확정 주문 보존 단언은 그대로.</td></tr>
+      <tr><td>OrderFlowTests <code>invalidMasterIsNotSaved</code></td><td>폼 POST + 200 → <code>PUT</code> + 400 + 오류 목록(errors) 단언, 저장 안 됨 확인은 그대로</td><td>아니오.</td></tr>
+      <tr><td>e2e hg.helpers.ts <code>countOrders</code></td><td>목록 HTML의 <code>class="clickable"</code> 개수 → <code>GET /api/orders</code>의 주문 수</td><td>아니오. 같은 값(전체 주문 수)을 구한다.</td></tr>
+      <tr><td>e2e hg.helpers.ts <code>restoreMaster</code></td><td><code>POST /master</code> 폼 → <code>PUT /api/master</code> JSON</td><td>아니오.</td></tr>
+      <tr><td>e2e mst.spec.ts 동시 저장 탐색</td><td>기다리는 응답을 <code>POST /master</code> → <code>PUT /api/master</code></td><td>아니오.</td></tr>
+      <tr><td>e2e order-detail.spec.ts DTL-05</td><td><code>test.fail(true)</code> 제거(결함 해소). 기다리는 응답을 "취소 직후 이동한 <code>/orders/{id}</code> GET" → "취소 요청 <code>POST /api/orders/{id}/status</code>"로 변경, 5xx 아님을 단언</td><td><b>일부 약해졌다.</b> 이제 취소 요청의 상태 코드만 본다(사실상 항상 통과하는 형태). 취소 직후 화면이 정상이라는 원래 의도는 신규 PGE-02(안내 문구, 버튼 없음, 목록에서 사라짐)가 보완한다.</td></tr>
+      <tr><td>e2e order-detail.spec.ts DTL-08</td><td><code>test.fail(true)</code> 제거. 5xx 아님을 단언(안내 문구는 신규 PGE-01에서 확인)</td><td><b>일부 약해졌다.</b> 이제 정적 HTML을 열어 5xx가 아님을 보므로 화면은 항상 200이라 옛 결함(500)을 이 테스트만으로는 감지하지 못한다. 안내 문구와 API 404는 신규 PGE-01이 단언해 보완한다.</td></tr>
+      <tr><td>e2e helpers.ts <code>chipCounts</code> (PR 리뷰 반영, 승인)</td><td>이동 직후 칩 건수를 읽기 전에 첫 칩이 그려질 때까지 기다리는 한 줄 추가</td><td>아니오. 읽는 값과 단언은 그대로, 기다림만 추가.</td></tr>
+      <tr><td>e2e lst.spec.ts LST-04, LST-06 (PR 리뷰 반영, <b>같은 종류의 간헐 실패 방지를 위해 범위를 넓힘</b>)</td><td>이동 직후 행 수·번호를 읽기 전에 첫 행이 그려질 때까지 기다리는 한 줄씩 추가</td><td>아니오. 단언 그대로, 기다림만 추가. 이 두 곳은 사람이 지정한 항목(chipCounts) 밖이라 게이트 ②에서 확인이 필요하다.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 style="font-size:15px;margin:14px 0 6px">린트 결과</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>도구</th><th>대상</th><th>에러</th><th>경고</th><th>기준선과 비교</th></tr></thead>
+    <tbody>
+      <tr><td>린트 미설정 → 컴파일로 대체 (javac via Gradle), 로그: results/after-compile.log</td><td>변경한 Java 코드와 테스트</td><td>0</td><td>콘솔 출력에서 경고 줄을 보지 못함(경고 수를 따로 집계하지는 않음)</td><td>기준선도 컴파일 에러 0. 동일.</td></tr>
+      <tr><td>JS 린트·타입 검사 도구 없음</td><td>새로 쓰거나 고친 JS 5개 파일(화면별 4개 + common.js)</td><td>미확인</td><td>미확인</td><td>도구 도입은 별도 기능. E2E 실행으로 동작만 확인했고 정적 검사는 하지 않았다.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2><span class="no">4</span>반복(Feedback) 기록</h2>
+  <ol class="timeline">
+    <li><b>3회차 (PR #19 리뷰 반영)</b> — 통과<br>
+      계기: 리뷰어(anglermoon)가 E2E 간헐 실패를 보고함 → 직접 재현(<code>CNF-07·08, DTL-06</code> 10회씩 30회 중 1회 실패, <code>CNF-07</code>의 칩 건수를 그려지기 전에 읽음).<br>
+      원인: <b>구현 설명의 오류 + 검증 방법의 취약함</b>. 최상위 <code>await</code>가 페이지 로딩 완료를 보장한다는 가정이 틀렸고, 로드 직후 바로 읽는 테스트(<code>chipCounts</code>, LST-04, LST-06)가 화면이 그려지기를 기다리지 않았다.<br>
+      조치: 해당 테스트 3곳에 명시적 대기 추가(승인). 마스터 화면은 값을 받은 뒤 입력칸을 만들어 입력칸이 보이면 값도 채워져 있게 함(앱 쪽 수정). 그 밖의 리뷰 반영: 요청 형식 오류(깨진 JSON, 없는 상태·나라 값, 범위를 넘는 번호)를 {error, conflict} JSON 400으로 응답, 메모 이스케이프 E2E(PGE-06) 추가, <code>order-new</code> 상단을 별도 JS로 통일, 로그인 네트워크 오류 한글 문구와 중복 제출 방지, 결과 파일의 로컬 사용자 경로 치환(TASK-001 포함), 이 문서의 서술 정정.<br>
+      재검증: E2E 전체 3회 반복 실행(results/after-e2e-repeat3.json), 단일 실행, JUnit, 컴파일 (수치는 3장·1장).</li>
+    <li><b>1회차</b> — 실패 후 수정, 재검증 통과<br>
+      실패 내용: E2E 1건 실패. <code>DTL-06</code> "취소된 주문은 목록에서 사라지고…" — <code>page.goto: net::ERR_ABORTED at /orders</code><br>
+      원인: <b>구현(설계)의 문제</b>. 취소 성공 뒤 JS가 비동기로 <code>/orders</code>로 이동시키는데, 테스트는 취소 클릭 직후 바로 <code>goto('/orders')</code>를 해서 두 이동이 겹쳐 하나가 중단됨. 폼 전송 방식에서는 클릭이 이동이 끝나길 기다려 줬기 때문에 드러나지 않던 차이.<br>
+      조치: 취소 후 이동하지 않고 같은 화면에 취소 안내를 보여 주도록 구현 변경(승인한 안과 달라짐, 2장). 이에 맞춰 DTL-05가 기다리는 응답을 변경(승인된 테스트 수정 범위 안). → 재검증 결과: <b>통과</b> (E2E 72 + 신규 5)</li>
+    <li><b>2회차</b> — 실패 후 수정, 재검증 통과<br>
+      실패 내용: 새 JUnit 1건 실패. <code>pageUrlsServeStaticHtmlAndStayProtected</code> — 로그인 화면 HTML 안의 한글을 문자열로 비교했으나 MockMvc가 정적 파일을 ISO-8859-1로 읽어 한글이 깨짐.<br>
+      원인: <b>검증 방법 오류</b>(앱은 맞고 테스트의 단언 방식이 틀림). 새로 추가한 테스트이므로 사람 승인 대상이 아님.<br>
+      조치: 한글 대신 ASCII 요소 <code>id="loginForm"</code>으로 단언 → 재검증 통과(당시 JUnit 31/31).</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="no">5</span>건너뛴 것과 확인하지 못한 것</h2>
+  <ul>
+    <li>전체 E2E에서 LST-04 1개 건너뜀 — 주문이 이미 쌓인 환경에서는 재현할 수 없는 조건부 테스트. AC-9에서 깨끗한 DB로 따로 실행해 통과를 확인했다. 3장 표에는 AC-9가 "통과"로 들어 있으므로 전체 실행에서 건너뛴 사실은 여기에만 있다.</li>
+    <li><b>최상위 await는 "로딩 완료 전에 그려지는 것"을 보장하지 않는다</b>(3회차에서 확인). 이 PR은 이를 믿지 않고 테스트에 명시적 대기를 추가했다. 이 방식 자체는 Chromium에서만 확인했고 Firefox·Safari는 미확인이다. 최상위 await는 최신 브라우저에서만 동작한다(지원 브라우저 범위는 정해져 있지 않음).</li>
+    <li>요청 형식 오류의 JSON 응답은 이번에 추가했지만, 로그인 인터셉터의 401은 Spring 기본 형식(<code>{timestamp, status, error, path}</code>)이다. 개발 환경에서는 <code>spring-boot-devtools</code> 때문에 기본 오류 응답에 스택 트레이스(<code>trace</code>)가 포함될 수 있다(이 PR이 만든 문제가 아니고 개발 환경 한정, 운영 설정은 미확인).</li>
+    <li>취소한 주문 화면을 새로고침하면 주문이 이미 삭제되어 "주문을 찾을 수 없습니다"로 바뀐다. 화면의 안내 문구("삭제되어 목록에서 사라집니다")는 PRD 열린 질문 Q2(취소 시 삭제) 정책을 그대로 알린다. 정책이 바뀌면 이 문구와 동작도 바뀌어야 한다.</li>
+    <li>JS 없이는 로그인·마스터 저장이 동작하지 않는다(폼이 JS로 가로채어 API로 전송). 마스터 폼의 <code>action="/master"</code> 속성은 기존 E2E 도우미가 이 선택자로 폼을 찾기 때문에 남겼고, 서버에 <code>POST /master</code>는 더 이상 없다.</li>
+    <li>화면을 사람이 직접 눈으로 보는 수동 확인은 하지 않았다(E2E가 문구·컬럼·동작을 단언). L3 필수 범위인 "수동 확인"을 <b>실행하지 못했다</b> → 게이트 ②에서 사람이 화면을 한 번 열어 보길 권한다(<code>./gradlew bootRun</code> 후 <code>/login</code>).</li>
+    <li>비숫자 주문 번호(<code>/orders/abc</code>)는 이제 화면 연결에 걸리지 않고 <b>404</b>다(리뷰 중 실행으로 확인). 변경 전에는 400이었다.</li>
+    <li>동시 요청 부하와 트랜잭션 차이는 별도로 확인하지 않았다(precheck 그대로).</li>
+    <li>이 문서는 승인 칸을 비워 두었다. 사람 확인 전이다. 사전 검토 때 사람이 대화에서 답한 결정은 precheck에 기록했다.</li>
+  </ul>
+</section>
+
+<section>
+  <h2><span class="no">6</span>남은 이슈와 후속 작업</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>이슈</th><th>심각도</th><th>제안</th></tr></thead>
+    <tbody>
+      <tr><td><b>사전 검토가 놓친 항목</b>: ① E2E가 화면을 읽는 <b>시점</b>(로드 직후 목록·칩을 바로 읽는 helpers, <code>chipCounts</code>·LST-04 건너뜀 판정)과 ② 클릭 직후 <code>goto</code>가 이어지는 구조에 의존한다는 점. 사전 검토는 E2E가 서버 HTML과 옛 엔드포인트에 묶인 곳(4장)만 찾고 시점 의존은 찾지 못했다.</td><td><span class="badge b-warn">중</span></td><td>다음 사전 검토 점검 항목에 "화면을 JS로 그리는 변경은 로드 직후 읽는 테스트와 클릭 직후 이동하는 테스트를 검색"을 추가.</td></tr>
+      <tr><td>PR 리뷰에서 제안됐지만 이번에 반영하지 않은 것: 최상위 await 제거(R-3, 테스트 대기를 추가했으므로 앱 구조를 단순하게 되돌리는 정리), 나라 목록·라벨의 서버·JS 이중 관리(R-5), 상태 변경 뒤 재조회가 별도 트랜잭션인 점(R-6, 매우 드묾), <code>innerHTML</code> 대신 <code>textContent</code> 헬퍼, 다른 브라우저 확인</td><td><span class="badge b-ok">낮</span></td><td>후속 작업(이슈)으로 분리. R-3은 E2E 대기 정리와 함께 하는 것을 제안.</td></tr>
+      <tr><td><code>PUT /api/master</code>가 화면 입력칸 이름 → 문자열의 맵을 그대로 받는다(폼 모양). React 도입 시 타입이 있는 요청 형태로 바꾸는 것이 자연스럽다.</td><td><span class="badge b-ok">낮</span></td><td>React 도입 작업에서 정리. 지금은 서비스의 검증 규칙(원칙 5)을 그대로 쓰기 위한 선택.</td></tr>
+      <tr><td>옛 구조를 설명하는 과거 문서: <code>docs/understand/*</code>, <code>docs/loops/오재석/README.md</code>, TASK-001 증거(옛 클래스 이름), e2e 주석(<code>BatteryService.initDefaults</code>)</td><td><span class="badge b-ok">낮</span></td><td>과거 기록이라 수정하지 않음. 필요하면 별도 정리.</td></tr>
+      <tr><td><code>JpaConfig</code>의 <code>considerNestedRepositories=true</code>가 불필요(PR #18 리뷰에서 나온 후속)</td><td><span class="badge b-ok">낮</span></td><td>이번 범위 밖, 그대로 둠.</td></tr>
+      <tr><td>CLAUDE.md는 아직 커밋 전(untracked) 파일</td><td><span class="badge b-ok">낮</span></td><td>커밋 때 포함 여부를 사람이 정한다(이 작업에서도 제외).</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2><span class="no">7</span>증거 파일 목록</h2>
+  <ul>
+    <li>기준선(변경 전): results/before-junit/, results/before-e2e.json</li>
+    <li>변경 후: results/after-compile.log, results/after-junit/, results/after-e2e.json, results/after-e2e-clean-db.json</li>
+    <li>새 TC가 구현 이전 코드(66e9030)에서 실패하는지: results/before-new-junit.log, results/before-new-e2e.json</li>
+    <li>Thymeleaf 제거 확인: results/grep-thymeleaf.txt</li>
+    <li>안정성(전체 E2E 3회 반복): results/after-e2e-repeat3.json</li>
+    <li>※ <code>before-new-e2e.json</code>, <code>before-new-junit.log</code>과 TASK-001의 <code>before-e2e.json</code>에 있던 작성자 PC의 사용자 계정 이름은 <code>&lt;user&gt;</code>로 치환했다(PR 리뷰 지적). 그 밖의 값은 그대로다.</li>
+    <li>서비스 변경 diff: results/service-diff.txt / 수정한 기존 테스트 diff: results/existing-tests-diff.txt</li>
+    <li>사전 검토: <a href="precheck.html">precheck.html</a></li>
+  </ul>
+</section>
+
+<section>
+  <h2><span class="no">8</span>사람 확인 (HITL)</h2>
+  <ul class="check">
+    <li><input type="checkbox"><div>검증 결과가 통과 기준을 모두 충족한다</div></li>
+    <li><input type="checkbox"><div>실패·건너뜀·미확인 항목이 정직하게 기록되어 있다</div></li>
+    <li><input type="checkbox"><div>기존 기능이 깨지지 않았다(회귀 확인)</div></li>
+    <li><input type="checkbox"><div>승인한 안과 달라진 점(취소 후 동작)을 확인했다</div></li>
+  </ul>
+  <table style="margin-top:10px">
+    <tr><th style="width:150px">결정</th><td>(사람이 채움: 완료 / 보완 필요)</td></tr>
+    <tr><th>확인한 사람</th><td>(사람이 채움)</td></tr>
+    <tr><th>의견</th><td>(사람이 채움)</td></tr>
+  </table>
+</section>
+
+</div>
+<script>
+// 3장 검증 결과 표의 data-result 값으로 요약 숫자를 센다. (값을 손으로 적지 않기 위해)
+(function () {
+  var rows = document.querySelectorAll('#results tbody tr');
+  function count(v) { return Array.prototype.filter.call(rows, function (r) { return r.dataset.result === v; }).length; }
+  function put(id, text) { var el = document.getElementById(id); if (el) el.textContent = text; }
+  if (!rows.length) return;
+  var pass = count('pass');
+  put('c-pass', pass);
+  put('c-fail', count('fail'));
+  put('c-skip', count('skip'));
+  put('c-ac', pass + ' / ' + rows.length);
+})();
+</script>
+</body>
+</html>
