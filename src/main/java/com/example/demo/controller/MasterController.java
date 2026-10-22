@@ -17,16 +17,16 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class MasterController {
 
-	private final MasterService service;
+	private final MasterService masterService;
 
-	public MasterController(MasterService service) {
-		this.service = service;
+	public MasterController(MasterService masterService) {
+		this.masterService = masterService;
 	}
 
 	@GetMapping("/master")
 	public String master(Model model) {
 		if (!model.containsAttribute("form")) {
-			model.addAttribute("form", toForm(service.currentMaster()));
+			model.addAttribute("form", toForm(masterService.currentMaster()));
 		}
 		model.addAttribute("factories", Country.factories());
 		model.addAttribute("countries", Country.values());
@@ -36,7 +36,7 @@ public class MasterController {
 	@PostMapping("/master")
 	public String saveMaster(@RequestParam Map<String, String> form, Model model, RedirectAttributes redirect) {
 		try {
-			service.updateMaster(form);
+			masterService.updateMaster(form);
 		} catch (BusinessException e) {
 			model.addAttribute("errors", e.getMessages());
 			model.addAttribute("form", form);

@@ -24,50 +24,51 @@ public class MasterService {
 	public static final long WON_PER_EOK = 100_000_000L;
 	private static final int MAX_SHIPS = 4;
 
-	private final FactoryRepository factories;
-	private final RouteRepository routes;
-	private final SettingRepository settings;
+	private final FactoryRepository factoryRepository;
+	private final RouteRepository routeRepository;
+	private final SettingRepository settingRepository;
 
-	public MasterService(FactoryRepository factories, RouteRepository routes, SettingRepository settings) {
-		this.factories = factories;
-		this.routes = routes;
-		this.settings = settings;
+	public MasterService(FactoryRepository factoryRepository, RouteRepository routeRepository,
+			SettingRepository settingRepository) {
+		this.factoryRepository = factoryRepository;
+		this.routeRepository = routeRepository;
+		this.settingRepository = settingRepository;
 	}
 
 	/** 마스터 데이터가 비어 있으면 초기값을 넣는다. */
 	@Transactional
 	public void initDefaults() {
-		if (settings.count() > 0) {
+		if (settingRepository.count() > 0) {
 			return;
 		}
-		factories.save(new Factory(Country.CHINA, 400, 4000, 700));
-		factories.save(new Factory(Country.JAPAN, 800, 2000, 900));
-		factories.save(new Factory(Country.VIETNAM, 200, 10000, 550));
-		factories.save(new Factory(Country.INDONESIA, 300, 7000, 450));
+		factoryRepository.save(new Factory(Country.CHINA, 400, 4000, 700));
+		factoryRepository.save(new Factory(Country.JAPAN, 800, 2000, 900));
+		factoryRepository.save(new Factory(Country.VIETNAM, 200, 10000, 550));
+		factoryRepository.save(new Factory(Country.INDONESIA, 300, 7000, 450));
 
-		routes.save(new Route(Country.KOREA, Country.CHINA, 1));
-		routes.save(new Route(Country.KOREA, Country.JAPAN, 2));
-		routes.save(new Route(Country.KOREA, Country.VIETNAM, 5));
-		routes.save(new Route(Country.KOREA, Country.INDONESIA, 7));
-		routes.save(new Route(Country.CHINA, Country.JAPAN, 2));
-		routes.save(new Route(Country.CHINA, Country.VIETNAM, 4));
-		routes.save(new Route(Country.CHINA, Country.INDONESIA, 6));
-		routes.save(new Route(Country.JAPAN, Country.VIETNAM, 5));
-		routes.save(new Route(Country.JAPAN, Country.INDONESIA, 7));
-		routes.save(new Route(Country.VIETNAM, Country.INDONESIA, 2));
+		routeRepository.save(new Route(Country.KOREA, Country.CHINA, 1));
+		routeRepository.save(new Route(Country.KOREA, Country.JAPAN, 2));
+		routeRepository.save(new Route(Country.KOREA, Country.VIETNAM, 5));
+		routeRepository.save(new Route(Country.KOREA, Country.INDONESIA, 7));
+		routeRepository.save(new Route(Country.CHINA, Country.JAPAN, 2));
+		routeRepository.save(new Route(Country.CHINA, Country.VIETNAM, 4));
+		routeRepository.save(new Route(Country.CHINA, Country.INDONESIA, 6));
+		routeRepository.save(new Route(Country.JAPAN, Country.VIETNAM, 5));
+		routeRepository.save(new Route(Country.JAPAN, Country.INDONESIA, 7));
+		routeRepository.save(new Route(Country.VIETNAM, Country.INDONESIA, 2));
 
-		settings.save(new Setting(3, WON_PER_EOK));
+		settingRepository.save(new Setting(3, WON_PER_EOK));
 	}
 
 	@Transactional(readOnly = true)
 	public Master currentMaster() {
-		Setting s = settings.findById(Setting.SINGLETON_ID)
+		Setting s = settingRepository.findById(Setting.SINGLETON_ID)
 				.orElseThrow(() -> new IllegalStateException("마스터 데이터가 초기화되지 않았습니다"));
-		List<Master.FactoryParam> fs = factories.findAll().stream()
+		List<Master.FactoryParam> fs = factoryRepository.findAll().stream()
 				.sorted(Comparator.comparing(Factory::getCountry))
 				.map(f -> new Master.FactoryParam(f.getCountry(), f.getMaxDaily(), f.getStockLimit(), f.getUnitCost()))
 				.toList();
-		List<Master.RouteParam> rs = routes.findAll().stream()
+		List<Master.RouteParam> rs = routeRepository.findAll().stream()
 				.sorted(Comparator.comparing(Route::getFromCountry).thenComparing(Route::getToCountry))
 				.map(r -> new Master.RouteParam(r.getFromCountry(), r.getToCountry(), r.getDays()))
 				.toList();
@@ -130,15 +131,15 @@ public class MasterService {
 		}
 
 		for (Country c : Country.factories()) {
-			Factory f = factories.findById(c).orElseThrow();
+			Factory f = factoryRepository.findById(c).orElseThrow();
 			f.setMaxDaily(factoryValues.get(c)[0]);
 			f.setStockLimit(factoryValues.get(c)[1]);
 			f.setUnitCost(unitCosts.get(c));
 		}
-		for (Route r : routes.findAll()) {
+		for (Route r : routeRepository.findAll()) {
 			r.setDays(days.get(routeKey(r.getFromCountry(), r.getToCountry())));
 		}
-		Setting s = settings.findById(Setting.SINGLETON_ID).orElseThrow();
+		Setting s = settingRepository.findById(Setting.SINGLETON_ID).orElseThrow();
 		s.setShipCount(shipCount);
 		s.setShipDailyCostWon(shipCostWon);
 		s.bumpMasterVersion();

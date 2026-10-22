@@ -17,15 +17,15 @@ public class SimulationService {
 			List<Plan> options) {
 	}
 
-	private final MasterService masters;
+	private final MasterService masterService;
 
-	public SimulationService(MasterService masters) {
-		this.masters = masters;
+	public SimulationService(MasterService masterService) {
+		this.masterService = masterService;
 	}
 
 	public SimulationResult simulate(Map<Country, Integer> rawOrders) {
 		Map<Country, Integer> validated = validateOrders(rawOrders);
-		Master master = masters.currentMaster();
+		Master master = masterService.currentMaster();
 		return new SimulationResult(master, validated, Planner.visits(master, validated),
 				Planner.plan(master, validated));
 	}

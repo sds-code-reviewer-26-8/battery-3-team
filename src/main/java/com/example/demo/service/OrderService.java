@@ -23,16 +23,16 @@ public class OrderService {
 
 	private static final int MAX_MEMO = 1000;
 
-	private final SimulationService simulations;
-	private final OrderRepository orders;
-	private final OrderStatusHistoryRepository histories;
+	private final SimulationService simulationService;
+	private final OrderRepository orderRepository;
+	private final OrderStatusHistoryRepository orderStatusHistoryRepository;
 	private final ObjectMapper json;
 
-	public OrderService(SimulationService simulations, OrderRepository orders,
-			OrderStatusHistoryRepository histories, ObjectMapper json) {
-		this.simulations = simulations;
-		this.orders = orders;
-		this.histories = histories;
+	public OrderService(SimulationService simulationService, OrderRepository orderRepository,
+			OrderStatusHistoryRepository orderStatusHistoryRepository, ObjectMapper json) {
+		this.simulationService = simulationService;
+		this.orderRepository = orderRepository;
+		this.orderStatusHistoryRepository = orderStatusHistoryRepository;
 		this.json = json;
 	}
 
@@ -43,7 +43,7 @@ public class OrderService {
 	@Transactional
 	public Order confirm(Map<Country, Integer> requested, String routeType, long masterVersion, String memo,
 			String user) {
-		SimulationResult result = simulations.simulate(requested);
+		SimulationResult result = simulationService.simulate(requested);
 		if (result.master().version() != masterVersion) {
 			throw new BusinessException("시뮬레이션 이후 마스터 데이터가 바뀌었습니다. 다시 시뮬레이션해 주세요", true);
 		}
@@ -60,34 +60,34 @@ public class OrderService {
 		StoredPlan stored = new StoredPlan(result.master(), result.orders(), result.visits(), plan);
 		int totalK = result.orders().values().stream().mapToInt(Integer::intValue).sum();
 		LocalDateTime now = LocalDateTime.now();
-		Order order = orders.save(new Order(now, user, totalK, plan.type(), plan.label(), plan.totalDays(),
+		Order order = orderRepository.save(new Order(now, user, totalK, plan.type(), plan.label(), plan.totalDays(),
 				plan.productionCost(), plan.shippingCost(), plan.totalCost(), note, json.writeValueAsString(stored)));
-		histories.save(new OrderStatusHistory(order.getId(), null, OrderStatus.CONFIRMED, user, now));
+		orderStatusHistoryRepository.save(new OrderStatusHistory(order.getId(), null, OrderStatus.CONFIRMED, user, now));
 		return order;
 	}
 
 	@Transactional(readOnly = true)
 	public List<Order> listOrders(OrderStatus status) {
-		return status == null ? orders.findAllByOrderByIdDesc() : orders.findByStatusOrderByIdDesc(status);
+		return status == null ? orderRepository.findAllByOrderByIdDesc() : orderRepository.findByStatusOrderByIdDesc(status);
 	}
 
 	@Transactional(readOnly = true)
 	public Map<OrderStatus, Long> countByStatus() {
 		Map<OrderStatus, Long> counts = new EnumMap<>(OrderStatus.class);
 		for (OrderStatus s : OrderStatus.values()) {
-			counts.put(s, orders.countByStatus(s));
+			counts.put(s, orderRepository.countByStatus(s));
 		}
 		return counts;
 	}
 
 	@Transactional(readOnly = true)
 	public Order getOrder(Long id) {
-		return orders.findById(id).orElseThrow(() -> new BusinessException("주문을 찾을 수 없습니다"));
+		return orderRepository.findById(id).orElseThrow(() -> new BusinessException("주문을 찾을 수 없습니다"));
 	}
 
 	@Transactional(readOnly = true)
 	public List<OrderStatusHistory> history(Long orderId) {
-		return histories.findByOrderIdOrderByIdAsc(orderId);
+		return orderStatusHistoryRepository.findByOrderIdOrderByIdAsc(orderId);
 	}
 
 	/**
@@ -106,13 +106,13 @@ public class OrderService {
 		OrderStatus from = order.getStatus();
 		order.setStatus(target);
 		try {
-			orders.saveAndFlush(order);
+			orderRepository.saveAndFlush(order);
 		} catch (ObjectOptimisticLockingFailureException e) {
 			throw conflict();
 		}
-		histories.save(new OrderStatusHistory(id, from, target, user, LocalDateTime.now()));
+		orderStatusHistoryRepository.save(new OrderStatusHistory(id, from, target, user, LocalDateTime.now()));
 		if (target == OrderStatus.CANCELED) {
-			orders.delete(order);
+			orderRepository.delete(order);
 		}
 	}
 
