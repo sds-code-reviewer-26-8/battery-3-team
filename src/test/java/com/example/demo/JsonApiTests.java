@@ -60,9 +60,10 @@ class JsonApiTests {
 				.andExpect(content().string(org.hamcrest.Matchers.containsString("id=\"loginForm\"")));
 
 		MockHttpSession s = login();
+		int id = confirm(s);
 		mvc.perform(get("/orders").session(s)).andExpect(forwardedUrl("/orders.html"));
 		mvc.perform(get("/orders/new").session(s)).andExpect(forwardedUrl("/order-new.html"));
-		mvc.perform(get("/orders/7").session(s)).andExpect(forwardedUrl("/order-detail.html"));
+		mvc.perform(get("/orders/" + id).session(s)).andExpect(forwardedUrl("/order-detail.html"));
 		mvc.perform(get("/master").session(s)).andExpect(forwardedUrl("/master.html"));
 
 		// 로그인하지 않으면 화면은 로그인으로, API 는 401
