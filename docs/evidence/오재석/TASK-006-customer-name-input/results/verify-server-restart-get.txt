@@ -1,0 +1,9 @@
+login GET: 200
+login POST: 302
+GET /api/orders: 200
+orders: 125 total: 125 hasField(all): true nonNull: 0
+first id: 161
+GET /api/orders/161: 200
+detail has customerName: true value: null status: COMPLETED
+GET /orders.html page: 200
+<th>고객사</th>

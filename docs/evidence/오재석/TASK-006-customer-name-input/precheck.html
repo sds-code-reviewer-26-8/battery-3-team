@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>사전 검토 (precheck)</title>
+<style>
+:root{
+  --bg:#f6f7f9; --card:#fff; --text:#1c2430; --muted:#5d6b7c; --line:#d8dee6;
+  --accent:#1f4e78; --ph:#fff4c2; --ph-line:#e6c84a;
+  --ok:#17803d; --ok-bg:#e3f4ea; --warn:#9a6700; --warn-bg:#fdf1d6; --bad:#b42318; --bad-bg:#fde7e4;
+  --guide-bg:#eaf1fa; --guide-line:#9db8d8; --code:#eef1f5;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#10151c; --card:#18202a; --text:#e6ebf2; --muted:#9aa8ba; --line:#2d3947;
+    --accent:#7db3e8; --ph:#4a3f12; --ph-line:#a88a1c;
+    --ok:#4cc27a; --ok-bg:#16301f; --warn:#f0b24b; --warn-bg:#35290f; --bad:#ff8a80; --bad-bg:#3a1a17;
+    --guide-bg:#1b2a3d; --guide-line:#3d5a80; --code:#212c39;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.7 -apple-system,"Segoe UI","Malgun Gothic",sans-serif}
+.wrap{max-width:960px;margin:0 auto;padding:24px 16px 80px}
+h1{font-size:26px;margin:4px 0 2px}
+h2{font-size:18px;margin:0 0 10px;color:var(--accent)}
+h2 .no{display:inline-block;background:var(--accent);color:#fff;border-radius:6px;padding:0 8px;margin-right:6px;font-size:14px}
+section{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:16px 0}
+.sub{color:var(--muted);margin:0 0 12px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+th{background:var(--bg);color:var(--muted);font-weight:600}
+.tablewrap{overflow-x:auto}
+.ph{background:var(--ph);border-bottom:1px dashed var(--ph-line);padding:0 3px;border-radius:3px}
+.guide{background:var(--guide-bg);border-left:4px solid var(--guide-line);padding:9px 13px;border-radius:6px;margin:0 0 12px;font-size:13.5px}
+.guide b{color:var(--accent)}
+.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px 16px}
+.meta div{border:1px solid var(--line);border-radius:8px;padding:6px 10px;background:var(--card)}
+.meta span{display:block;font-size:12px;color:var(--muted)}
+.badge{display:inline-block;border-radius:999px;padding:1px 10px;font-size:12.5px;font-weight:600}
+.b-ok{background:var(--ok-bg);color:var(--ok)} .b-warn{background:var(--warn-bg);color:var(--warn)} .b-bad{background:var(--bad-bg);color:var(--bad)}
+.check{list-style:none;padding:0;margin:0}
+.check li{display:flex;gap:10px;padding:6px 0;border-bottom:1px solid var(--line)}
+.check li:last-child{border-bottom:0}
+.check input{margin-top:5px}
+pre{background:var(--code);padding:10px 12px;border-radius:8px;overflow-x:auto;font:13px/1.55 Consolas,"D2Coding",monospace;margin:6px 0}
+.rules{font-size:13px;color:var(--muted)}
+.rules li{margin:2px 0}
+@media print{ body{background:#fff} .guide{display:none} section{break-inside:avoid} }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <p class="sub">Inner Loop · 사전 검토·세팅 단계의 증거(Evidence) · 라운드 1/3</p>
+  <h1>사전 검토: 고객사 이름 입력 (TASK-006)</h1>
+  <div class="meta">
+    <div><span>작성자</span>Prepare 에이전트</div>
+    <div><span>작성일</span>2026-10-22</div>
+    <div><span>브랜치</span>feat/customer-name-input_jaesuk</div>
+    <div><span>검토 상태</span><span class="badge b-ok">승인</span></div>
+    <div><span>영역 제안 (최종은 사람)</span><span class="badge b-warn">Yellow</span></div>
+  </div>
+</header>
+<section>
+  <h2><span class="no">1</span>목표와 범위</h2>
+  <table>
+    <tr><th style="width:150px">만들 기능</th><td>주문 확정 때 고객사 이름(선택)을 입력해 주문과 함께 저장하고, 확정·진행 상태에서는 이후에도 고쳐 쓸 수 있으며, 목록·상세에서 볼 수 있다.</td></tr>
+    <tr><th>선택한 이유</th><td>주문을 고객사별로 구분해야 한다는 요구. 도전 요소는 (1) 자유 입력 문자열을 JS 로 그리는 화면의 이스케이프, (2) 기존 주문 행에 컬럼이 추가되는 영향, (3) 상태별 수정 허용과 낙관적 잠금.</td></tr>
+    <tr><th>영역 제안</th><td><b>Yellow</b>. 근거: 인증·결제·권한이 아닌 일반 업무 기능이라 Red 는 아니다. 다만 (1) 사용자 자유 입력을 innerHTML 로 그리는 화면(orders.js, order-detail.js)이라 XSS 를 직접 검증해야 하고, (2) 기존 E2E 중 목록 헤더를 고정 검증하는 테스트(lst.spec.ts:74)가 있어 기존 테스트를 그대로 믿기 어렵고, (3) 기준선 E2E 에서 MST-09 가 전체 실행 때 실패하는 불안정성이 확인됐다. 최종 결정은 사람.</td></tr>
+    <tr><th>이번에 포함</th><td>
+      1) Order 엔티티에 nullable 컬럼 customerName(길이 100) 추가, 확정 요청(POST /api/orders)에 customerName 추가<br>
+      2) 값 정규화: 앞뒤 공백 제거, 공백만이면 null, 100자 초과는 400(BusinessException)<br>
+      3) 수정 API: PUT /api/orders/{id}/customer, 본문 {customerName, version}. 확정·진행만 허용, 완료는 400(이유 메시지), 취소(삭제)·없는 주문은 404, version 불일치는 409. 수정 성공 시 주문 version 증가, 응답은 갱신된 주문 상세<br>
+      4) 목록·상세 응답에 customerName 포함<br>
+      5) 화면: order-new 에 입력칸, order-detail 에 표시와 수정 폼(수정 가능한 상태일 때만), orders 목록에 '고객사' 열(없으면 '-')<br>
+      6) JUnit 과 Playwright E2E 추가, 목록 헤더를 검증하는 기존 E2E 갱신</td></tr>
+    <tr><th>이번에 포함하지 않음</th><td>수정 이력 저장, 고객사 마스터·자동완성·검색·필터, 기존 주문 데이터 이전, 확정 이후 다른 필드 수정, 미션 4 관련 작업, 작업 폴더의 무관한 변경(.gitignore, docs/e2e/, e2e/tests/login.spec.ts, e2e/tsconfig.json, e2e/results/, PROGRESS.md), 커밋·push·PR</td></tr>
+  </table>
+</section>
+<section>
+  <h2><span class="no">2</span>근거 자료 점검</h2>
+<div class="tablewrap"><table><thead><tr><th>구분</th><th>자료 / 위치</th><th>확인한 내용</th><th>확인 방법</th></tr></thead><tbody><tr><td>요구사항</td><td>docs/PRD.md</td><td>고객사 항목 없음(grep "고객" 결과 없음). 요구는 이번 작업 입력(요구·사람이 결정한 사항)이 근거. <b>PR #24 리뷰 반영</b>: PRD 4장 범위, FR-8, 새 FR-26, 8장 수용 기준 2건을 이 변경에서 갱신했다.</td><td>grep 실행(결과 0건), PR 에서 PRD diff 확인</td></tr>
+<tr><td>설계 의도</td><td>docs/INTENT.md</td><td>고객사 관련 내용 없음. 설계 포인트는 CLAUDE.md(낙관적 잠금, 스냅샷 저장, 취소 시 행 삭제)를 근거로 함. <b>PR #24 리뷰 반영(INTENT 확인 결과)</b>: 원칙 2(확정 주문은 확정 당시 그대로)는 계획·날짜·금액이 바뀌지 않아 어기지 않지만, 확정 후 바꿀 수 있는 값이 상태와 고객사 이름으로 늘었다. 원칙 4(동시 수정 확인)는 이름 수정도 같은 방식(version 비교와 낙관적 잠금 예외 409)을 쓴다. 원칙 8(누가 했는지 기록)은 수정 이력을 남기지 않아 부딪힐 수 있어 INTENT 6장 Q5 로 남겼고, INTENT 4장 표에 "확정 후 고칠 수 있는 값 추가" 행을 더했다.</td><td>grep 실행(결과 0건), CLAUDE.md 읽음</td></tr>
+<tr><td>관련 코드(서버)</td><td>controller/OrderController, service/OrderService, entity/Order, entity/OrderStatus, controller/dto/OrderDetail·OrderList, controller/ApiExceptionHandler, service/BusinessException</td><td>ConfirmRequest(orders, routeType, masterVersion, memo)에 고객사 없음. 메모는 strip 후 빈 값이면 null, 1000자 초과면 BusinessException(400): 같은 방식으로 구현 가능. changeStatus 가 version 불일치와 ObjectOptimisticLockingFailureException 을 conflict()(409)로 처리: 수정에도 재사용. getOrder 는 없으면 notFound(404). OrderStatus.next() 는 CONFIRMED/IN_PROGRESS 만 비어 있지 않은 전이를 가짐. 취소는 주문 행 삭제.</td><td>소스 읽음</td></tr>
+<tr><td>관련 코드(화면)</td><td>static/js/orders.js, order-detail.js, order-new.js, common.js, orders.html, order-new.html</td><td>목록은 colspan="8" 두 곳과 th 8개, 행은 esc() 로 이스케이프해 innerHTML 로 그림. 상세는 meta dl 에 메모 표시(null 이면 "-"), 상태 버튼은 d.next 로 결정. order-new.js 는 확정 시 memo 를 postJson 으로 전송. common.js 에 putJson 이미 있음.</td><td>소스 읽음</td></tr>
+<tr><td>기존 테스트</td><td>JsonApiTests, OrderFlowTests, e2e/tests/lst.spec.ts, order-confirm.spec.ts, order-detail.spec.ts, helpers.ts</td><td>lst.spec.ts:74 가 목록 th 8개를 고정 검증하므로 열을 추가하면 실패한다(갱신 필요). helpers.ts createOrderViaApi 는 memo 만 받음(고객사 옵션 추가 필요).</td><td>grep·소스 읽음</td></tr>
+</tbody></table></div>
+</section>
+<section>
+  <h2><span class="no">3</span>현재 상태 확인</h2>
+  <table>
+    <tr><th style="width:150px">확인한 방법</th><td>소스 grep "customer" 와 8080 서버(IDEA 실행)로 목록 조회, 수정 엔드포인트 존재 확인 시도</td></tr>
+    <tr><th>확인 결과</th><td>고객사 기능은 소스 어디에도 없다. 8080 의 /api/orders 응답 항목에 customerName 이 없고, PUT /api/orders/161/customer 는 404(No static resource, 매핑 없음)다. 이 PUT 은 존재하지 않는 주소 확인용으로 한 번 보냈고 매핑이 없어 데이터는 바뀌지 않았다(이후 변경 요청은 하지 않는다).</td></tr>
+  </table>
+<pre>$ grep -rni customer src   -> (출력 없음)
+$ curl -b cookie http://localhost:8080/api/orders
+  {"orders":[{"id":161,...,"createdBy":"admin"}, ...],"counts":{"CONFIRMED":89,"IN_PROGRESS":18,"COMPLETED":18,"CANCELED":0},"total":125 ...
+$ curl -X PUT .../api/orders/161/customer  -> HTTP 404 "No static resource api/orders/161/customer"</pre>
+</section>
+<section>
+  <h2><span class="no">4</span>영향 범위와 위험</h2>
+<div class="tablewrap"><table><thead><tr><th>영향받는 곳</th><th>어떻게 영향받는가</th><th>위험</th><th>대응 / 확인 방법</th></tr></thead><tbody><tr><td>entity/Order, 개발 DB(./data/battery)</td><td>nullable 컬럼 customerName 추가(ddl-auto=update). 기존 125건은 null.</td><td><span class="badge b-warn">중</span> 컬럼 추가 실패 시 기동 불가</td><td>nullable 이라 기존 행 영향 없음. 재시작 후 8080 에서 기존 주문 조회(GET)로 확인. 데이터 삭제 없음.</td></tr>
+<tr><td>OrderService, OrderController, DTO</td><td>confirm 시그니처 변경, 수정 메서드·엔드포인트·요청 record 추가, 응답에 필드 추가</td><td><span class="badge b-warn">중</span> confirm 호출부(테스트 포함) 컴파일 오류</td><td>컴파일·전체 JUnit 로 확인. 기존 JSON 필드는 유지(추가만). customerName 없는 기존 요청도 그대로 성공해야 함.</td></tr>
+<tr><td>수정 동시성</td><td>version 비교와 saveAndFlush 로 낙관적 잠금. 상태 변경과 수정이 동시에 오면 한쪽이 409</td><td><span class="badge b-warn">중</span> 완료 상태 판정과 저장 사이 경쟁</td><td>@Version 으로 충돌 감지, 409 테스트 추가</td></tr>
+<tr><td>orders.js, order-detail.js, order-new.js/html</td><td>자유 입력 문자열을 innerHTML 로 그림</td><td><span class="badge b-bad">상</span> XSS</td><td>esc() 로 반드시 이스케이프. img onerror 문자열을 넣어 텍스트로 보이는지 E2E 로 검증</td></tr>
+<tr><td>e2e/tests/lst.spec.ts, helpers.ts</td><td>목록 헤더 고정 검증이 깨짐, 헬퍼에 옵션 추가</td><td><span class="badge b-warn">중</span> 기존 테스트 수정이 필요</td><td>헤더 기대값만 갱신(열 추가 반영). 다른 기준은 낮추지 않음</td></tr>
+<tr><td>목록 열 위치</td><td>열 인덱스에 의존하는 기존 테스트가 있을 수 있음</td><td><span class="badge b-ok">하</span></td><td>고객사 열을 맨 끝(작성자 다음)에 두면 기존 인덱스 의존이 줄어든다(권장). 기존 td nth 사용 위치를 grep 으로 확인함(상세 이력 표 등 다른 표뿐)</td></tr>
+</tbody></table></div>
+  <p class="sub" style="margin-top:10px">되돌릴 수 없는 작업(데이터 삭제, push, 배포, 공유 DB 변경)이 포함되는가? <b>없음</b>. 개발 DB 에는 nullable 컬럼이 추가될 뿐이며(데이터 손실 없음), 커밋·push·PR 은 하지 않는다. E2E 는 인메모리 DB(18080)에서만 변경 요청을 보낸다.</p>
+</section>
+<section>
+  <h2><span class="no">5</span>환경·세팅 점검</h2>
+  <ul class="check">
+<li><input type="checkbox" checked><div><b>앱을 실행할 수 있다</b><br><small class="sub">확인 근거: 처음엔 localhost:8080 이 응답하지 않아(curl 000) IDEA MCP 로 DemoApplication 을 실행, 이후 /login 이 HTTP 200, 로그인 후 /api/orders 조회 성공(총 125건)</small></div></li>
+<li><input type="checkbox" checked><div><b>기존 테스트가 통과한다 (기준선)</b><br><small class="sub">확인 근거: .\gradlew.bat test 성공(최신 결과 XML: DemoApplicationTests 1, JsonApiTests 19, OrderFlowTests 9, PlannerTest 12 = 41건, 실패 0). E2E(cd e2e; npx playwright test, 포트 18080 인메모리): 82 passed, 1 failed, 1 skipped, 1 did not run. 실패는 MST-09(마스터 변경이 확정 주문 계획에 영향 없음). mst.spec.ts 를 단독 실행하면 10건 모두 통과 → 전체 실행 때만 나타나는 불안정(원인 미확인). 이번 기능과 무관한 기존 문제로 기록하며, 검증에서는 단독 재실행 결과와 함께 판단해야 한다.</small></div></li>
+<li><input type="checkbox" checked><div><b>작업 브랜치를 만들었다</b><br><small class="sub">확인 근거: git branch --show-current → feat/customer-name-input_jaesuk (이미 있어 새로 만들거나 바꾸지 않음)</small></div></li>
+<li><input type="checkbox" checked><div><b>테스트 데이터·DB 상태를 알고 있다</b><br><small class="sub">확인 근거: 개발 DB(8080)는 주문 125건(확정 89, 진행 18, 완료 18, 취소 0), 마스터 version 162, 조회만 함. JUnit·E2E 는 인메모리 DB 라 개발 DB 무관. 8080 에는 변경 요청을 하지 않는다.</small></div></li>
+<li><input type="checkbox" checked><div><b>필요한 도구·설정이 갖춰졌다</b><br><small class="sub">확인 근거: java 17.0.20.1, node v24.21.0, Gradle 9.8.1, e2e/node_modules 존재, playwright.config.ts 기본값이 18080 인메모리 서버. 작업 트리의 무관한 변경(.gitignore, docs/e2e/ 등)은 건드리지 않음.</small></div></li>
+  </ul>
+</section>
+<section>
+  <h2><span class="no">6</span>통과 기준 (수용 기준)</h2>
+<div class="tablewrap"><table><thead><tr><th>ID</th><th>Given / When / Then</th><th>검증 방법</th></tr></thead><tbody><tr><td>AC-1</td><td><b>확정 시 이름 저장</b><br>유효한 시뮬레이션 입력과 마스터 version 이 있을 때, POST /api/orders 에 customerName "  ABC전자  " 를 넣어 확정하면, 응답 id 로 조회한 상세와 목록 항목의 customerName 이 "ABC전자"(앞뒤 공백 제거)다</td><td>JUnit JsonApiTests 신규</td></tr>
+<tr><td>AC-2</td><td><b>선택 입력과 길이</b><br>customerName 을 생략/null/공백만 보내 확정하면 성공하고 customerName 은 null 이며, 100자는 성공, 101자는 400 과 이유 메시지(주문 미생성)</td><td>JUnit 신규</td></tr>
+<tr><td>AC-3</td><td><b>확정·진행 상태에서 수정</b><br>CONFIRMED 와 IN_PROGRESS 주문에 PUT /api/orders/{id}/customer {customerName, version} 을 보내면 200, 응답 상세의 customerName 이 반영되고 version 이 이전보다 커진다. 공백만 보내면 null 로 지워진다. 100자 초과는 400 이고 값은 그대로</td><td>JUnit 신규</td></tr>
+<tr><td>AC-4</td><td><b>완료·삭제 후 수정 불가</b><br>COMPLETED 주문 수정은 400(error 에 완료 상태라 수정할 수 없다는 이유)이고 값·version 불변. 취소로 삭제된 주문과 없는 id 는 404</td><td>JUnit 신규</td></tr>
+<tr><td>AC-5</td><td><b>동시 수정 충돌</b><br>오래된 version 으로 수정하면 409, conflict=true, 값 불변. 최신 version 으로 다시 보내면 성공</td><td>JUnit 신규, E2E(두 번째 세션)</td></tr>
+<tr><td>AC-6</td><td><b>수정 이력 없음</b><br>수정 전후 상세의 history 항목 수가 같다(상태 이력 불변)</td><td>JUnit 신규</td></tr>
+<tr><td>AC-7</td><td><b>주문 추가 화면에서 입력</b><br>주문 추가 화면에서 시뮬레이션 후 고객사 입력칸(최대 100자)에 값을 넣고 확정하면, 이동한 상세에 그 이름이 보이고 목록 고객사 열에도 보인다. 비워 확정해도 성공하고 "-" 로 보인다</td><td>Playwright 신규(order-confirm 계열)</td></tr>
+<tr><td>AC-8</td><td><b>상세에서 수정 UI</b><br>확정/진행 상태 상세에는 수정 입력과 저장 버튼이 있고 저장하면 성공 안내와 새 값이 보인다. 완료 상태 상세에는 수정 UI 가 없고 값만 보인다. 다른 세션이 먼저 수정했다면 저장 시 충돌 오류 안내가 나온다</td><td>Playwright 신규</td></tr>
+<tr><td>AC-9</td><td><b>XSS 이스케이프</b><br>고객사 이름에 img onerror 같은 HTML 문자열을 저장하면 목록·상세에 그대로 텍스트로 보이고 스크립트가 실행되지 않는다(해당 요소가 DOM 에 생기지 않음)</td><td>Playwright 신규</td></tr>
+<tr><td>AC-10</td><td><b>목록 열과 기존 주문 호환</b><br>목록 표 머리글에 고객사가 있고 빈 행·오류 행 colspan 이 열 수(9)와 맞다. 고객사 없는 기존 주문은 "-" 로 보인다. lst.spec.ts 헤더 기대값만 열 추가를 반영해 갱신</td><td>Playwright(lst.spec.ts 갱신)</td></tr>
+<tr><td>AC-11</td><td><b>회귀 없음</b><br>.\gradlew.bat test 가 기존 41건 포함 전부 통과, E2E 전체가 기준선(82 통과) 이상. MST-09 가 전체 실행에서만 실패하면 mst.spec.ts 단독 결과와 함께 기록하고 기준을 낮추지 않는다</td><td>gradlew test, cd e2e; npx playwright test</td></tr>
+<tr><td>AC-12</td><td><b>재시작 후 기존 DB 호환(조회만)</b><br>IDEA 로 8080 재시작 후 기존 주문 목록·상세가 오류 없이 조회되고 customerName 이 null(화면 "-")이다. 8080 에서는 GET 만 사용</td><td>IDEA MCP 재시작 후 curl GET, 화면 확인</td></tr>
+</tbody></table></div>
+</section>
+<section>
+  <h2><span class="no">7</span>반복 한도와 중단 조건</h2>
+  <table>
+    <tr><th style="width:180px">최대 반복 횟수</th><td>3회 (현재 라운드 1/3)</td></tr>
+    <tr><th>성공으로 끝내는 조건</th><td>6장의 AC-1 ~ AC-12 가 모두 충족</td></tr>
+    <tr><th>중단하고 사람에게 넘기는 조건</th><td>같은 원인으로 2회 연속 검증 실패 / 범위 밖 수정(무관한 변경 파일, 미션 4 관련)이 필요해짐 / 되돌릴 수 없는 작업(데이터 삭제, push, 8080 에서의 변경 요청)이 필요해짐 / 통과 기준을 바꿔야 함 / 기준선 불안정(MST-09)이 이번 변경과 무관한데 검증을 계속 막음</td></tr>
+  </table>
+</section>
+<section>
+  <h2><span class="no">8</span>미확인 사항과 열린 질문</h2>
+  <ul>
+    <li>구현 방향을 가르는 열린 질문: 없음(필수 여부, 길이, 상태 규칙, 동시성, 이력, 목록 표시는 사람이 이미 결정).</li>
+    <li>미확인: E2E 기준선 MST-09 가 전체 실행에서만 실패하는 원인(단독 실행은 통과). 이번 기능과 무관한 기존 문제로 보이나 확정하지 못함. skipped 1건과 did not run 1건이 어느 테스트인지는 확인하지 않음.</li>
+    <li>사람 확인이 좋은 점: (1) 목록의 고객사 열 위치(권장: 맨 끝, 기존 테스트 영향 최소) (2) 완료 상태 400 메시지 문구 (3) 수정 API 가 갱신된 상세를 돌려주는 방식(권장) (4) 영역(Yellow) 최종 결정.</li>
+    <li>8080 서버는 IDEA 로 실행해 두었다. 구현 후 재시작해 기존 DB 호환(AC-12)을 확인한다.</li>
+  </ul>
+</section>
+<section>
+  <h2><span class="no">9</span>사람 확인 (HITL)</h2>
+  <div class="guide"><b>구현에 들어가도 되는지</b> 사람이 판단하는 자리입니다. AI는 이 칸을 임의로 채우지 않습니다.</div>
+  <ul class="check">
+    <li><input type="checkbox" checked><div>목표와 범위가 적절하다</div></li>
+    <li><input type="checkbox" checked><div>통과 기준이 구체적이고 검증할 수 있다</div></li>
+    <li><input type="checkbox" checked><div>위험과 되돌릴 수 없는 작업을 확인했다</div></li>
+  </ul>
+  <table style="margin-top:10px">
+    <tr><th style="width:150px">결정</th><td>승인</td></tr>
+    <tr><th>확인한 사람</th><td>오재석 · 2026-10-22</td></tr>
+    <tr><th>의견</th><td>범위, 통과 기준, 최종 영역(<b>Yellow</b>), 목록의 고객사 열 위치(맨 끝), 완료 상태 400 문구("완료된 주문은 고객사 이름을 수정할 수 없습니다")를 확인하고 구현을 승인했습니다(2026-10-22).</td></tr>
+  </table>
+</section>
+
+</div>
+</body>
+</html>

@@ -72,7 +72,7 @@ test.describe('주문 목록', () => {
     await page.goto('/orders');
 
     await expect(page.locator('table.grid th')).toHaveText([
-      '주문번호', '확정 일시', '총 수량(K)', '경로', '소요 일수', '총 비용(억원)', '상태', '작성자',
+      '주문번호', '확정 일시', '총 수량(K)', '경로', '소요 일수', '총 비용(억원)', '상태', '작성자', '고객사',
     ]);
 
     const chips = page.locator('.filters .chip');
