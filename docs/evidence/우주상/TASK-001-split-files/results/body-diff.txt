@@ -1,0 +1,31 @@
+== service/BatteryService.java : 새 파일들에 없는 옛 줄(import/닫는 괄호 제외)
+// ---------------------------------------------------------------- 마스터 데이터
+// ---------------------------------------------------------------- 시뮬레이션
+// ---------------------------------------------------------------- 주문
+Master master = currentMaster();
+OrderRepository orders, OrderStatusHistoryRepository histories, ObjectMapper json) {
+SimulationResult result = simulate(requested);
+public BatteryService(FactoryRepository factories, RouteRepository routes, SettingRepository settings,
+public class BatteryService {
+
+== controller/AppController.java : 새 파일들에 없는 옛 줄(import/닫는 괄호 제외)
+.divide(BigDecimal.valueOf(BatteryService.WON_PER_EOK)).stripTrailingZeros().toPlainString());
+// ---------------------------------------------------------------- JSON API
+// ---------------------------------------------------------------- 로그인
+// ---------------------------------------------------------------- 마스터 데이터 화면
+// ---------------------------------------------------------------- 주문 화면
+Order order = service.confirm(request.orders(), request.routeType(), request.masterVersion(),
+Order order = service.getOrder(id);
+form.put(BatteryService.routeKey(r.from(), r.to()), String.valueOf(r.days()));
+model.addAttribute("counts", service.countByStatus());
+model.addAttribute("history", service.history(id));
+model.addAttribute("master", service.currentMaster());
+model.addAttribute("orders", service.listOrders(status));
+model.addAttribute("total", service.listOrders(null).size());
+private final BatteryService service;
+public AppController(BatteryService service) {
+public class AppController {
+return ResponseEntity.ok(service.simulate(request.orders()));
+return service.currentMaster();
+service.changeStatus(id, status, version, (String) session.getAttribute(LoginInterceptor.SESSION_USER));
+
