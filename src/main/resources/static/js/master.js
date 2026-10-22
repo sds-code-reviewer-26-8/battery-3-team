@@ -3,9 +3,9 @@
 const form = document.getElementById('masterForm');
 const messages = document.getElementById('messages');
 
-buildFields();
 try {
 	const [, values] = await Promise.all([renderHeader('master'), getJson('/api/master/form')]);
+	buildFields();   // 값을 받은 뒤에 입력칸을 만들어, 입력칸이 보이면 값도 채워져 있게 한다
 	fill(values);
 } catch (e) {
 	showErrors([e.message]);
