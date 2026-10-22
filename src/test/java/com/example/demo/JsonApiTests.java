@@ -69,6 +69,7 @@ class JsonApiTests {
 		MockHttpSession s = login();
 		mvc.perform(get("/orders").session(s)).andExpect(forwardedUrl("/orders.html"));
 		mvc.perform(get("/orders/new").session(s)).andExpect(forwardedUrl("/order-new.html"));
+		// 화면 주소는 주문이 있는지 확인하지 않고 화면을 내준다(안내는 화면이 JSON API 로 보여 준다). 번호는 아무 값이다.
 		mvc.perform(get("/orders/7").session(s)).andExpect(forwardedUrl("/order-detail.html"));
 		mvc.perform(get("/master").session(s)).andExpect(forwardedUrl("/master.html"));
 
