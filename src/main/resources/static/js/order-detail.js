@@ -41,6 +41,14 @@ function showCanceled(d) {
 		`주문 #${d.id}을(를) 취소했습니다. 취소한 주문은 삭제되어 목록에서 사라집니다.`);
 }
 
+/** 필요 납기일 칸 문구. 선택한 경로가 납기를 넘으면 그 사실도 적는다. */
+function deadlineText(d) {
+	if (d.requiredDays == null) return '가능한 빨리';
+	return d.late
+		? `${d.requiredDays}일 (소요 ${d.totalDays}일, 납기 ${d.totalDays - d.requiredDays}일 초과)`
+		: `${d.requiredDays}일`;
+}
+
 function render(d, ok, error) {
 	const actions = d.next.length > 0
 		? `<div class="actions">${d.next.map(s => `<form class="status-form" data-status="${s.name}" data-label="${esc(s.label)}">
@@ -65,6 +73,7 @@ function render(d, ok, error) {
 			<div><dt>확정 일시</dt><dd>${fmtDateTime(d.confirmedAt)}</dd></div>
 			<div><dt>작성자</dt><dd>${esc(d.createdBy)}</dd></div>
 			<div><dt>경로</dt><dd>${esc(d.routeLabel)}</dd></div>
+			<div><dt>필요 납기일</dt><dd${d.late ? ' class="late"' : ''}>${deadlineText(d)}</dd></div>
 			<div><dt>메모</dt><dd>${d.memo != null ? esc(d.memo) : '-'}</dd></div>
 		</dl>
 		${actions}

@@ -51,6 +51,9 @@ public class Order {
 	@Column(length = 1000)
 	private String memo;
 
+	/** 고객이 요청한 필요 납기일(일). 비어 있으면 '가능한 빨리' */
+	private Integer requiredDays;
+
 	/** 확정 시점의 계획 스냅샷(주문 수량, 마스터 값, 경로, 일별 생산) JSON */
 	@Lob
 	@Column(nullable = false)
@@ -63,8 +66,8 @@ public class Order {
 	}
 
 	public Order(LocalDateTime confirmedAt, String createdBy, int totalK, String routeType, String routeLabel,
-			int totalDays, long productionCost, long shippingCost, long totalCost, String memo, String planJson,
-			Long operatingCost) {
+			int totalDays, long productionCost, long shippingCost, long totalCost, String memo, Integer requiredDays,
+			String planJson, Long operatingCost) {
 		this.confirmedAt = confirmedAt;
 		this.createdBy = createdBy;
 		this.totalK = totalK;
@@ -76,6 +79,7 @@ public class Order {
 		this.totalCost = totalCost;
 		this.operatingCost = operatingCost;
 		this.memo = memo;
+		this.requiredDays = requiredDays;
 		this.planJson = planJson;
 		this.status = OrderStatus.CONFIRMED;
 	}
@@ -134,6 +138,15 @@ public class Order {
 
 	public String getMemo() {
 		return memo;
+	}
+
+	public Integer getRequiredDays() {
+		return requiredDays;
+	}
+
+	/** 선택한 경로의 소요 일수가 필요 납기일을 넘는가. '가능한 빨리'면 넘을 기준이 없다. */
+	public boolean isLate() {
+		return requiredDays != null && totalDays > requiredDays;
 	}
 
 	public String getPlanJson() {

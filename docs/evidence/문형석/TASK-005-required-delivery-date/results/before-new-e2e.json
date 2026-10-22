@@ -1,0 +1,535 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\work\\battery\\e2e\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "deadline",
+      "--reporter=json"
+    ],
+    "configFile": "C:\\work\\battery\\e2e\\playwright.config.ts",
+    "rootDir": "C:/work/battery/e2e/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/work/battery/e2e/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "C:/work/battery/e2e/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\work\\battery\\e2e\\test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "chromium",
+        "testDir": "C:\\work\\battery\\e2e\\tests",
+        "snapshotDir": "C:\\work\\battery\\e2e\\tests",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 30000,
+        "use": {
+          "baseURL": "http://localhost:18081",
+          "trace": "retain-on-failure",
+          "screenshot": "only-on-failure",
+          "launchOptions": {
+            "slowMo": 0
+          },
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Safari/537.36",
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "screen": {
+            "width": 1920,
+            "height": 1080
+          },
+          "deviceScaleFactor": 1,
+          "isMobile": false,
+          "hasTouch": false,
+          "defaultBrowserType": "chromium"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "chromium"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "deadline.spec.ts",
+      "file": "deadline.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "필요 납기일",
+          "file": "deadline.spec.ts",
+          "line": 29,
+          "column": 6,
+          "specs": [
+            {
+              "title": "DLN-01 기본은 가능한 빨리이고 빨간 경로가 없으며 확정하면 상세에 그대로 보인다",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 6366,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeChecked\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('#asap')\nExpected: checked\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeChecked\" locator('#asap') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('#asap')\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeChecked\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('#asap')\nExpected: checked\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeChecked\" locator('#asap') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('#asap')\u001b[22m\n\n    at C:\\work\\battery\\e2e\\tests\\deadline.spec.ts:36:41",
+                        "location": {
+                          "file": "C:\\work\\battery\\e2e\\tests\\deadline.spec.ts",
+                          "column": 41,
+                          "line": 36
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 34 |\u001b[39m\n \u001b[90m 35 |\u001b[39m   test(\u001b[32m'DLN-01 기본은 가능한 빨리이고 빨간 경로가 없으며 확정하면 상세에 그대로 보인다'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 36 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'#asap'\u001b[39m))\u001b[33m.\u001b[39mtoBeChecked()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                         \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 37 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'#requiredDays'\u001b[39m))\u001b[33m.\u001b[39mtoBeDisabled()\u001b[33m;\u001b[39m\n \u001b[90m 38 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'#options .option.late'\u001b[39m))\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m0\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 39 |\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\work\\battery\\e2e\\tests\\deadline.spec.ts",
+                            "column": 41,
+                            "line": 36
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeChecked\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('#asap')\nExpected: checked\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeChecked\" locator('#asap') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('#asap')\u001b[22m\n\n\n  34 |\n  35 |   test('DLN-01 기본은 가능한 빨리이고 빨간 경로가 없으며 확정하면 상세에 그대로 보인다', async ({ page }) => {\n> 36 |     await expect(page.locator('#asap')).toBeChecked();\n     |                                         ^\n  37 |     await expect(page.locator('#requiredDays')).toBeDisabled();\n  38 |     await expect(page.locator('#options .option.late')).toHaveCount(0);\n  39 |\n    at C:\\work\\battery\\e2e\\tests\\deadline.spec.ts:36:41"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-22T05:39:51.633Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\work\\battery\\e2e\\test-results\\deadline-필요-납기일-DLN-01-기본은-c5fbb-빨간-경로가-없으며-확정하면-상세에-그대로-보인다-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\work\\battery\\e2e\\test-results\\deadline-필요-납기일-DLN-01-기본은-c5fbb-빨간-경로가-없으며-확정하면-상세에-그대로-보인다-chromium\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\work\\battery\\e2e\\test-results\\deadline-필요-납기일-DLN-01-기본은-c5fbb-빨간-경로가-없으며-확정하면-상세에-그대로-보인다-chromium\\trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\work\\battery\\e2e\\tests\\deadline.spec.ts",
+                        "column": 41,
+                        "line": 36
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "14b5a360763e3a68c1df-e278826afe9cdb72ecdd",
+              "file": "deadline.spec.ts",
+              "line": 35,
+              "column": 7
+            },
+            {
+              "title": "DLN-02 체크를 풀면 5~50일 입력이 켜지고 다시 체크하면 꺼진다",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "timedOut",
+                      "duration": 30459,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "C:\\work\\battery\\e2e\\tests\\deadline.spec.ts",
+                            "column": 33,
+                            "line": 47
+                          },
+                          "message": "Error: locator.uncheck: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#asap')\u001b[22m\n\n\n  45 |\n  46 |   test('DLN-02 체크를 풀면 5~50일 입력이 켜지고 다시 체크하면 꺼진다', async ({ page }) => {\n> 47 |     await page.locator('#asap').uncheck();\n     |                                 ^\n  48 |     const input = page.locator('#requiredDays');\n  49 |     await expect(input).toBeEnabled();\n  50 |     await expect(input).toHaveAttribute('min', '5');\n    at C:\\work\\battery\\e2e\\tests\\deadline.spec.ts:47:33"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-22T05:39:59.720Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\work\\battery\\e2e\\test-results\\deadline-필요-납기일-DLN-02-체크를-풀면-5-50일-입력이-켜지고-다시-체크하면-꺼진다-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\work\\battery\\e2e\\test-results\\deadline-필요-납기일-DLN-02-체크를-풀면-5-50일-입력이-켜지고-다시-체크하면-꺼진다-chromium\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\work\\battery\\e2e\\test-results\\deadline-필요-납기일-DLN-02-체크를-풀면-5-50일-입력이-켜지고-다시-체크하면-꺼진다-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "14b5a360763e3a68c1df-a9065242ff69e9986ae6",
+              "file": "deadline.spec.ts",
+              "line": 46,
+              "column": 7
+            },
+            {
+              "title": "DLN-03 소요 일수가 납기일을 넘는 경로만 빨간색이고 일수를 바꾸면 바로 바뀐다",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "timedOut",
+                      "duration": 30492,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "C:\\work\\battery\\e2e\\tests\\deadline.spec.ts",
+                            "column": 31,
+                            "line": 25
+                          },
+                          "message": "Error: locator.uncheck: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#asap')\u001b[22m\n\n\n  23 |\n  24 | async function setDeadline(page: Page, value: string) {\n> 25 |   await page.locator('#asap').uncheck();\n     |                               ^\n  26 |   await page.locator('#requiredDays').fill(value);\n  27 | }\n  28 |\n    at setDeadline (C:\\work\\battery\\e2e\\tests\\deadline.spec.ts:25:31)\n    at C:\\work\\battery\\e2e\\tests\\deadline.spec.ts:63:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-22T05:40:31.825Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\work\\battery\\e2e\\test-results\\deadline-필요-납기일-DLN-03-소요--afbff-넘는-경로만-빨간색이고-일수를-바꾸면-바로-바뀐다-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\work\\battery\\e2e\\test-results\\deadline-필요-납기일-DLN-03-소요--afbff-넘는-경로만-빨간색이고-일수를-바꾸면-바로-바뀐다-chromium\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\work\\battery\\e2e\\test-results\\deadline-필요-납기일-DLN-03-소요--afbff-넘는-경로만-빨간색이고-일수를-바꾸면-바로-바뀐다-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "14b5a360763e3a68c1df-ef5f69ff17fa94ff113d",
+              "file": "deadline.spec.ts",
+              "line": 57,
+              "column": 7
+            },
+            {
+              "title": "DLN-04 납기를 넘는 경로도 확정되고 주문 상세에 초과가 빨간색으로 나온다",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "timedOut",
+                      "duration": 30798,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "C:\\work\\battery\\e2e\\tests\\deadline.spec.ts",
+                            "column": 31,
+                            "line": 25
+                          },
+                          "message": "Error: locator.uncheck: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#asap')\u001b[22m\n\n\n  23 |\n  24 | async function setDeadline(page: Page, value: string) {\n> 25 |   await page.locator('#asap').uncheck();\n     |                               ^\n  26 |   await page.locator('#requiredDays').fill(value);\n  27 | }\n  28 |\n    at setDeadline (C:\\work\\battery\\e2e\\tests\\deadline.spec.ts:25:31)\n    at C:\\work\\battery\\e2e\\tests\\deadline.spec.ts:87:11"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-22T05:41:03.951Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\work\\battery\\e2e\\test-results\\deadline-필요-납기일-DLN-04-납기를-넘는-경로도-확정되고-주문-상세에-초과가-빨간색으로-나온다-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\work\\battery\\e2e\\test-results\\deadline-필요-납기일-DLN-04-납기를-넘는-경로도-확정되고-주문-상세에-초과가-빨간색으로-나온다-chromium\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\work\\battery\\e2e\\test-results\\deadline-필요-납기일-DLN-04-납기를-넘는-경로도-확정되고-주문-상세에-초과가-빨간색으로-나온다-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "14b5a360763e3a68c1df-87070afc05a9dfd63609",
+              "file": "deadline.spec.ts",
+              "line": 86,
+              "column": 7
+            },
+            {
+              "title": "DLN-05 납기를 넘지 않으면 상세에 일수만 나오고 빨간색이 아니다",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "timedOut",
+                      "duration": 31116,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "C:\\work\\battery\\e2e\\tests\\deadline.spec.ts",
+                            "column": 31,
+                            "line": 25
+                          },
+                          "message": "Error: locator.uncheck: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#asap')\u001b[22m\n\n\n  23 |\n  24 | async function setDeadline(page: Page, value: string) {\n> 25 |   await page.locator('#asap').uncheck();\n     |                               ^\n  26 |   await page.locator('#requiredDays').fill(value);\n  27 | }\n  28 |\n    at setDeadline (C:\\work\\battery\\e2e\\tests\\deadline.spec.ts:25:31)\n    at C:\\work\\battery\\e2e\\tests\\deadline.spec.ts:100:11"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-22T05:41:36.421Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\work\\battery\\e2e\\test-results\\deadline-필요-납기일-DLN-05-납기를-넘지-않으면-상세에-일수만-나오고-빨간색이-아니다-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\work\\battery\\e2e\\test-results\\deadline-필요-납기일-DLN-05-납기를-넘지-않으면-상세에-일수만-나오고-빨간색이-아니다-chromium\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\work\\battery\\e2e\\test-results\\deadline-필요-납기일-DLN-05-납기를-넘지-않으면-상세에-일수만-나오고-빨간색이-아니다-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "14b5a360763e3a68c1df-dbd355e983352719d9ce",
+              "file": "deadline.spec.ts",
+              "line": 99,
+              "column": 7
+            },
+            {
+              "title": "DLN-06 범위를 벗어난 납기일은 화면과 API 모두 거부한다",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 0,
+                      "status": "timedOut",
+                      "duration": 30477,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "C:\\work\\battery\\e2e\\tests\\deadline.spec.ts",
+                            "column": 31,
+                            "line": 25
+                          },
+                          "message": "Error: locator.uncheck: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#asap')\u001b[22m\n\n\n  23 |\n  24 | async function setDeadline(page: Page, value: string) {\n> 25 |   await page.locator('#asap').uncheck();\n     |                               ^\n  26 |   await page.locator('#requiredDays').fill(value);\n  27 | }\n  28 |\n    at setDeadline (C:\\work\\battery\\e2e\\tests\\deadline.spec.ts:25:31)\n    at C:\\work\\battery\\e2e\\tests\\deadline.spec.ts:110:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-22T05:42:09.172Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\work\\battery\\e2e\\test-results\\deadline-필요-납기일-DLN-06-범위를-벗어난-납기일은-화면과-API-모두-거부한다-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\work\\battery\\e2e\\test-results\\deadline-필요-납기일-DLN-06-범위를-벗어난-납기일은-화면과-API-모두-거부한다-chromium\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\work\\battery\\e2e\\test-results\\deadline-필요-납기일-DLN-06-범위를-벗어난-납기일은-화면과-API-모두-거부한다-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "14b5a360763e3a68c1df-2436d44727113943b1ef",
+              "file": "deadline.spec.ts",
+              "line": 108,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-22T05:39:51.007Z",
+    "duration": 169698.13700000002,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 6,
+    "flaky": 0
+  }
+}

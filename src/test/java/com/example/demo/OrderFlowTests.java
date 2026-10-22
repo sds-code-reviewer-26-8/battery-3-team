@@ -301,7 +301,7 @@ class OrderFlowTests {
 		java.time.LocalDateTime at = java.time.LocalDateTime.of(2026, 1, 2, 3, 4, 5);
 		var legacy = orderRepository.save(new com.example.demo.entity.Order(at, "admin", base.getTotalK(), "COST",
 				"운항비 최소", base.getTotalDays(), base.getProductionCost(), base.getShippingCost(),
-				base.getProductionCost() + base.getShippingCost(), null, json.writeValueAsString(root), null));
+				base.getProductionCost() + base.getShippingCost(), null, null, json.writeValueAsString(root), null));
 
 		mvc.perform(get("/api/orders/" + legacy.getId()).session(s)).andExpect(status().isOk())
 				.andExpect(jsonPath("$.operatingCostEok").doesNotExist())
