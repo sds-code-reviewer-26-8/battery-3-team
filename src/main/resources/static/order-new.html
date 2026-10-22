@@ -1,8 +1,13 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments :: head('주문 추가')}"></head>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>주문 추가 - 배터리 주문 관리</title>
+	<link rel="stylesheet" href="/css/app.css">
+</head>
 <body>
-<header th:replace="~{fragments :: header('new')}"></header>
+<div id="app-header"></div>
 <main>
 	<div class="page-head"><h1>주문 추가</h1></div>
 
@@ -44,9 +49,10 @@
 	</div>
 </main>
 
-<script th:src="@{/js/common.js}"></script>
-<script th:src="@{/js/anim.js}"></script>
-<script th:src="@{/js/planview.js}"></script>
-<script th:src="@{/js/order-new.js}"></script>
+<script src="/js/common.js"></script>
+<script src="/js/anim.js"></script>
+<script src="/js/planview.js"></script>
+<script src="/js/order-new.js"></script>
+<script type="module">await renderHeader('new');</script>
 </body>
 </html>

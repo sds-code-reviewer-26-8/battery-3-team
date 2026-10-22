@@ -1,20 +1,18 @@
 package com.example.demo.controller;
 
-import com.example.demo.entity.Country;
-import com.example.demo.service.BusinessException;
 import com.example.demo.service.MasterService;
 import com.example.demo.simulation.Master;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
+@RequestMapping("/api/master")
 public class MasterController {
 
 	private final MasterService masterService;
@@ -23,32 +21,24 @@ public class MasterController {
 		this.masterService = masterService;
 	}
 
-	@GetMapping("/master")
-	public String master(Model model) {
-		if (!model.containsAttribute("form")) {
-			model.addAttribute("form", toForm(masterService.currentMaster()));
-		}
-		model.addAttribute("factories", Country.factories());
-		model.addAttribute("countries", Country.values());
-		return "master";
+	@GetMapping
+	public Master master() {
+		return masterService.currentMaster();
 	}
 
-	@PostMapping("/master")
-	public String saveMaster(@RequestParam Map<String, String> form, Model model, RedirectAttributes redirect) {
-		try {
-			masterService.updateMaster(form);
-		} catch (BusinessException e) {
-			model.addAttribute("errors", e.getMessages());
-			model.addAttribute("form", form);
-			model.addAttribute("factories", Country.factories());
-			model.addAttribute("countries", Country.values());
-			return "master";
-		}
-		redirect.addFlashAttribute("message", "마스터 데이터를 저장했습니다");
-		return "redirect:/master";
+	/** 마스터 화면 입력칸 이름 → 값 (운항비는 억 원) */
+	@GetMapping("/form")
+	public Map<String, String> form() {
+		return toForm(masterService.currentMaster());
 	}
 
-	/** 화면 입력칸 이름 → 값 */
+	/** 입력칸 이름 → 값 을 검증하고 저장한다. 틀린 값이 있으면 아무것도 저장하지 않고 400 과 이유 목록을 돌려준다. */
+	@PutMapping
+	public Map<String, String> save(@RequestBody Map<String, String> form) {
+		masterService.updateMaster(form);
+		return toForm(masterService.currentMaster());
+	}
+
 	private static Map<String, String> toForm(Master m) {
 		Map<String, String> form = new HashMap<>();
 		for (Master.FactoryParam f : m.factories()) {

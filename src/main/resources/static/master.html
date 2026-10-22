@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>마스터 데이터 - 배터리 주문 관리</title>
+	<link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+<div id="app-header"></div>
+<main>
+	<div class="page-head"><h1>마스터 데이터</h1></div>
+	<p class="muted">모든 사용자가 같은 값을 봅니다. 값을 바꿔도 이미 확정한 주문의 계획은 바뀌지 않습니다.</p>
+
+	<div id="messages"></div>
+
+	<form action="/master" method="post" id="masterForm">
+		<section class="card">
+			<h2>공장</h2>
+			<table class="grid">
+				<thead><tr><th>나라</th><th>하루 최대 생산량(K)</th><th>재고 상한(K)</th><th>셀당 원가(원)</th></tr></thead>
+				<tbody id="factoryRows"></tbody>
+			</table>
+		</section>
+
+		<section class="card">
+			<h2>선박</h2>
+			<div class="row">
+				<label>배 척수 (1~4)
+					<input type="number" min="1" max="4" name="shipCount"></label>
+				<label>척당 일 운항비(억 원)
+					<input type="text" inputmode="decimal" name="shipDailyCost"></label>
+			</div>
+		</section>
+
+		<section class="card">
+			<h2>항로 (항해 일수, 양방향 동일)</h2>
+			<table class="grid matrix" id="routeMatrix"></table>
+		</section>
+
+		<button type="submit" class="primary">저장</button>
+	</form>
+</main>
+<script src="/js/common.js"></script>
+<script type="module" src="/js/master.js"></script>
+</body>
+</html>

@@ -82,7 +82,7 @@ public class OrderService {
 
 	@Transactional(readOnly = true)
 	public Order getOrder(Long id) {
-		return orderRepository.findById(id).orElseThrow(() -> new BusinessException("주문을 찾을 수 없습니다"));
+		return orderRepository.findById(id).orElseThrow(() -> BusinessException.notFound("주문을 찾을 수 없습니다"));
 	}
 
 	@Transactional(readOnly = true)
