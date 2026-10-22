@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.demo.SignupTests" tests="12" skipped="0" failures="0" errors="0" timestamp="2026-10-22T05:18:30.300Z" hostname="DESKTOP-2GEPPK4" time="1.573">
+  <properties/>
+  <testcase name="passwordIsStoredAsHash()" classname="com.example.demo.SignupTests" time="0.088"/>
+  <testcase name="signedUpUserHasSameAccessAsAdmin()" classname="com.example.demo.SignupTests" time="0.281"/>
+  <testcase name="invalidInputIsRejectedWithAllReasons()" classname="com.example.demo.SignupTests" time="0.125"/>
+  <testcase name="wrongCredentialsAreRejectedWithTheSameMessage()" classname="com.example.demo.SignupTests" time="0.224"/>
+  <testcase name="signupCreatesAccountAndDoesNotLogIn()" classname="com.example.demo.SignupTests" time="0.105"/>
+  <testcase name="duplicateUsernameIsConflict()" classname="com.example.demo.SignupTests" time="0.085"/>
+  <testcase name="rejectedSignupDoesNotCreateAccount()" classname="com.example.demo.SignupTests" time="0.006"/>
+  <testcase name="sameUsernameSignedUpConcurrentlyCreatesOnlyOneAccount()" classname="com.example.demo.SignupTests" time="0.129"/>
+  <testcase name="adminIsSeededOnceAndStillLogsIn()" classname="com.example.demo.SignupTests" time="0.084"/>
+  <testcase name="usernameIsCaseInsensitive()" classname="com.example.demo.SignupTests" time="0.182"/>
+  <testcase name="signupPagesAreOpenOnlyBeforeLogin()" classname="com.example.demo.SignupTests" time="0.083"/>
+  <testcase name="signedUpUserCanLogIn()" classname="com.example.demo.SignupTests" time="0.154"/>
+  <system-out><![CDATA[2026-10-22T14:18:30.302+09:00  INFO 18932 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.example.demo.SignupTests]: SignupTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-10-22T14:18:30.307+09:00  INFO 18932 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.example.demo.DemoApplication for test class com.example.demo.SignupTests
+2026-10-22T14:18:30.309+09:00  INFO 18932 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.example.demo.SignupTests]: SignupTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-10-22T14:18:30.311+09:00  INFO 18932 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.example.demo.DemoApplication for test class com.example.demo.SignupTests
+2026-10-22T14:18:31.340+09:00  WARN 18932 --- [pool-2-thread-8] org.hibernate.orm.jdbc.error             : HHH000247: ErrorCode: 23505, SQLState: 23505
+2026-10-22T14:18:31.340+09:00  WARN 18932 --- [pool-2-thread-7] org.hibernate.orm.jdbc.error             : HHH000247: ErrorCode: 23505, SQLState: 23505
+2026-10-22T14:18:31.340+09:00  WARN 18932 --- [pool-2-thread-4] org.hibernate.orm.jdbc.error             : HHH000247: ErrorCode: 23505, SQLState: 23505
+2026-10-22T14:18:31.342+09:00  WARN 18932 --- [pool-2-thread-7] org.hibernate.orm.jdbc.error             : Unique index or primary key violation: "PUBLIC.CONSTRAINT_4D INDEX PUBLIC.CONSTRAINT_INDEX_4D ON PUBLIC.USERS(USERNAME NULLS FIRST) VALUES ( /* 8 */ 'user_9_17fw' )"; SQL statement:
+insert into users (created_at,password_hash,username,id) values (?,?,?,default) [23505-240]
+2026-10-22T14:18:31.342+09:00  WARN 18932 --- [pool-2-thread-4] org.hibernate.orm.jdbc.error             : Unique index or primary key violation: "PUBLIC.CONSTRAINT_4D INDEX PUBLIC.CONSTRAINT_INDEX_4D ON PUBLIC.USERS(USERNAME NULLS FIRST) VALUES ( /* 8 */ 'user_9_17fw' )"; SQL statement:
+insert into users (created_at,password_hash,username,id) values (?,?,?,default) [23505-240]
+2026-10-22T14:18:31.342+09:00  WARN 18932 --- [pool-2-thread-8] org.hibernate.orm.jdbc.error             : Unique index or primary key violation: "PUBLIC.CONSTRAINT_4D INDEX PUBLIC.CONSTRAINT_INDEX_4D ON PUBLIC.USERS(USERNAME NULLS FIRST) VALUES ( /* 8 */ 'user_9_17fw' )"; SQL statement:
+insert into users (created_at,password_hash,username,id) values (?,?,?,default) [23505-240]
+2026-10-22T14:18:31.348+09:00  WARN 18932 --- [pool-2-thread-1] org.hibernate.orm.jdbc.error             : HHH000247: ErrorCode: 23505, SQLState: 23505
+2026-10-22T14:18:31.349+09:00  WARN 18932 --- [pool-2-thread-1] org.hibernate.orm.jdbc.error             : Unique index or primary key violation: "PUBLIC.CONSTRAINT_4D INDEX PUBLIC.CONSTRAINT_INDEX_4D ON PUBLIC.USERS(USERNAME NULLS FIRST) VALUES ( /* 8 */ 'user_9_17fw' )"; SQL statement:
+insert into users (created_at,password_hash,username,id) values (?,?,?,default) [23505-240]
+2026-10-22T14:18:31.351+09:00  WARN 18932 --- [pool-2-thread-6] org.hibernate.orm.jdbc.error             : HHH000247: ErrorCode: 23505, SQLState: 23505
+2026-10-22T14:18:31.352+09:00  WARN 18932 --- [pool-2-thread-6] org.hibernate.orm.jdbc.error             : Unique index or primary key violation: "PUBLIC.CONSTRAINT_4D INDEX PUBLIC.CONSTRAINT_INDEX_4D ON PUBLIC.USERS(USERNAME NULLS FIRST) VALUES ( /* 8 */ 'user_9_17fw' )"; SQL statement:
+insert into users (created_at,password_hash,username,id) values (?,?,?,default) [23505-240]
+2026-10-22T14:18:31.355+09:00  WARN 18932 --- [pool-2-thread-2] org.hibernate.orm.jdbc.error             : HHH000247: ErrorCode: 23505, SQLState: 23505
+2026-10-22T14:18:31.355+09:00  WARN 18932 --- [pool-2-thread-2] org.hibernate.orm.jdbc.error             : Unique index or primary key violation: "PUBLIC.CONSTRAINT_4D INDEX PUBLIC.CONSTRAINT_INDEX_4D ON PUBLIC.USERS(USERNAME NULLS FIRST) VALUES ( /* 8 */ 'user_9_17fw' )"; SQL statement:
+insert into users (created_at,password_hash,username,id) values (?,?,?,default) [23505-240]
+2026-10-22T14:18:31.358+09:00  WARN 18932 --- [pool-2-thread-5] org.hibernate.orm.jdbc.error             : HHH000247: ErrorCode: 23505, SQLState: 23505
+2026-10-22T14:18:31.358+09:00  WARN 18932 --- [pool-2-thread-5] org.hibernate.orm.jdbc.error             : Unique index or primary key violation: "PUBLIC.CONSTRAINT_4D INDEX PUBLIC.CONSTRAINT_INDEX_4D ON PUBLIC.USERS(USERNAME NULLS FIRST) VALUES ( /* 8 */ 'user_9_17fw' )"; SQL statement:
+insert into users (created_at,password_hash,username,id) values (?,?,?,default) [23505-240]
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

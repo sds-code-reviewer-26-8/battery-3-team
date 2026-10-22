@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>검증 리포트 (report)</title>
+<style>
+:root{
+  --bg:#f6f7f9; --card:#fff; --text:#1c2430; --muted:#5d6b7c; --line:#d8dee6;
+  --accent:#1f4e78; --ph:#fff4c2; --ph-line:#e6c84a;
+  --ok:#17803d; --ok-bg:#e3f4ea; --warn:#9a6700; --warn-bg:#fdf1d6; --bad:#b42318; --bad-bg:#fde7e4;
+  --guide-bg:#eaf1fa; --guide-line:#9db8d8; --code:#eef1f5;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#10151c; --card:#18202a; --text:#e6ebf2; --muted:#9aa8ba; --line:#2d3947;
+    --accent:#7db3e8; --ph:#4a3f12; --ph-line:#a88a1c;
+    --ok:#4cc27a; --ok-bg:#16301f; --warn:#f0b24b; --warn-bg:#35290f; --bad:#ff8a80; --bad-bg:#3a1a17;
+    --guide-bg:#1b2a3d; --guide-line:#3d5a80; --code:#212c39;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.7 -apple-system,"Segoe UI","Malgun Gothic",sans-serif}
+.wrap{max-width:960px;margin:0 auto;padding:24px 16px 80px}
+h1{font-size:26px;margin:4px 0 2px}
+h2{font-size:18px;margin:0 0 10px;color:var(--accent)}
+h2 .no{display:inline-block;background:var(--accent);color:#fff;border-radius:6px;padding:0 8px;margin-right:6px;font-size:14px}
+section{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:16px 0}
+.sub{color:var(--muted);margin:0 0 12px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+th{background:var(--bg);color:var(--muted);font-weight:600}
+.tablewrap{overflow-x:auto}
+.ph{background:var(--ph);border-bottom:1px dashed var(--ph-line);padding:0 3px;border-radius:3px}
+.guide{background:var(--guide-bg);border-left:4px solid var(--guide-line);padding:9px 13px;border-radius:6px;margin:0 0 12px;font-size:13.5px}
+.guide b{color:var(--accent)}
+.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px 16px}
+.meta div{border:1px solid var(--line);border-radius:8px;padding:6px 10px;background:var(--card)}
+.meta span{display:block;font-size:12px;color:var(--muted)}
+.badge{display:inline-block;border-radius:999px;padding:1px 10px;font-size:12.5px;font-weight:600}
+.b-ok{background:var(--ok-bg);color:var(--ok)} .b-warn{background:var(--warn-bg);color:var(--warn)} .b-bad{background:var(--bad-bg);color:var(--bad)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:8px 0 4px}
+.tile{border:1px solid var(--line);border-radius:10px;padding:10px 12px;text-align:center}
+.tile b{display:block;font-size:26px;line-height:1.2}
+.tile small{color:var(--muted)}
+.tile.ok b{color:var(--ok)} .tile.bad b{color:var(--bad)} .tile.warn b{color:var(--warn)}
+.timeline{list-style:none;margin:0;padding:0 0 0 14px;border-left:3px solid var(--line)}
+.timeline li{position:relative;padding:0 0 16px 16px}
+.timeline li::before{content:"";position:absolute;left:-23px;top:6px;width:11px;height:11px;border-radius:50%;background:var(--accent)}
+.timeline li:last-child{padding-bottom:0}
+.check{list-style:none;padding:0;margin:0}
+.check li{display:flex;gap:10px;padding:6px 0;border-bottom:1px solid var(--line)}
+.check li:last-child{border-bottom:0}
+.check input{margin-top:5px}
+pre{background:var(--code);padding:10px 12px;border-radius:8px;overflow-x:auto;font:13px/1.55 Consolas,"D2Coding",monospace;margin:6px 0}
+.rules{font-size:13px;color:var(--muted)} .rules li{margin:2px 0}
+@media print{ body{background:#fff} .guide{display:none} section{break-inside:avoid} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="sub">Inner Loop · 검증·리포트 작성 단계의 증거(Evidence)</p>
+  <h1>검증 리포트: 사용자 추가 기능 (회원 가입 후 로그인)</h1>
+  <div class="meta">
+    <div><span>작성자</span>joosang425 (AI 초안 작성, 사람 확인 전)</div>
+    <div><span>작성일</span>2026-10-22</div>
+    <div><span>브랜치 / PR</span>feature/signup</div>
+    <div><span>사전 검토 문서</span><a href="precheck.html">precheck.html</a></div>
+    <div><span>최종 결과</span><span class="badge b-warn">완료 (사람 승인 대기)</span></div>
+  </div>
+</header>
+
+<section>
+  <h2><span class="no">1</span>한눈에 보기</h2>
+  <div class="tiles">
+    <div class="tile ok"><b id="c-pass">-</b><small>통과</small></div>
+    <div class="tile bad"><b id="c-fail">-</b><small>실패</small></div>
+    <div class="tile warn"><b id="c-skip">-</b><small>건너뜀·미확인</small></div>
+    <div class="tile"><b id="c-ac">-</b><small>충족한 통과 기준</small></div>
+    <div class="tile"><b id="c-loop">2</b><small>반복 횟수</small></div>
+  </div>
+  <p><b>한 줄 요약:</b> 로그인 화면에서 회원 가입을 할 수 있고, 가입한 계정으로 로그인하면 admin과 같은 기능을 모두 쓸 수 있다. 비밀번호는 BCrypt 해시로 저장한다. JUnit 53/53(기존 41 + 신규 12), E2E 90 통과(기존 82 + 신규 8), 건너뜀 1개는 깨끗한 DB에서 통과, 전체 3회 반복에서도 실패 0. 기존 테스트는 하나도 수정하지 않았다. 검증 중 결함 2개를 찾아 고쳤다(4장).</p>
+  <p class="sub">※ 위 숫자는 3장 표(<code>id="results"</code>)의 행만 센다. 표 밖의 건너뜀·미확인은 집계되지 않으므로 5장을 함께 읽는다. "건너뜀·미확인 0"을 "문제 없음"으로 읽지 않는다.</p>
+</section>
+
+<section>
+  <h2><span class="no">2</span>구현 요약</h2>
+  <table>
+    <tr><th style="width:150px">구현한 것</th><td>① 로그인 화면의 "회원가입" 링크와 가입 화면(<code>/signup</code>, 로그인 없이 열림). 아이디(영문·숫자·밑줄 4~20자, 대소문자 구분 없음), 비밀번호(8~64자), 비밀번호 확인. ② 가입하면 완료 안내와 로그인 링크를 보여 주고 자동 로그인하지 않는다. ③ 틀린 값이 있으면 가입하지 않고 이유를 한꺼번에 모두 보여 주며, 이미 쓰는 아이디(<code>admin</code> 포함)는 409. ④ 로그인은 저장된 사용자와 비밀번호 해시를 비교하고, <code>admin</code>/<code>admin</code>은 시작할 때 없으면 만든다. ⑤ 가입한 회원은 역할 구분 없이 admin과 같은 기능을 쓴다.</td></tr>
+    <tr><th>접근 방법</th><td>사전 검토의 대안 A. 새 <code>users</code> 테이블(아이디는 소문자로 정규화, 유일 제약)에 BCrypt 해시를 저장한다(<code>spring-security-crypto</code>만 추가, Spring Security 설정은 쓰지 않음). 같은 아이디의 동시 가입은 먼저 존재 여부를 확인하고, 마지막 방어선으로 유일 제약 위반을 409로 바꾼다. 가입 API는 기존 JSON API와 같은 오류 형식({error, conflict, errors})을 쓴다. 인터셉터는 <code>/signup</code>, <code>/signup.html</code>, <code>/api/signup</code> 세 경로만 추가로 열었다.</td></tr>
+    <tr><th>함께 한 코드 정리</th><td>사람 결정(사전 검토 질문 5)에 따라 문서 없이 코드만 수정했다. 이전 작업(PR #21)의 주문 상세 화면 스크립트에서 반복되던 문자열을 상수로 정리했다(<code>order-detail.js</code>, 동작 변경 없음, 별도 커밋).</td></tr>
+  </table>
+  <h3 style="font-size:15px;margin:14px 0 6px">바뀐 파일</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>파일</th><th>변경 내용</th><th>종류</th></tr></thead>
+    <tbody>
+      <tr><td>build.gradle.kts</td><td>의존성 <code>spring-security-crypto</code> 추가(승인됨)</td><td>수정</td></tr>
+      <tr><td>entity/User, repository/UserRepository</td><td>사용자 엔티티(<code>users</code> 테이블)와 저장소</td><td>추가</td></tr>
+      <tr><td>service/UserService, config/PasswordConfig</td><td>가입(검증·중복 확인·해시 저장), 인증, admin 보장 / BCrypt 설정</td><td>추가</td></tr>
+      <tr><td>controller/SignupController</td><td><code>POST /api/signup</code></td><td>추가</td></tr>
+      <tr><td>controller/AuthController, ApiExceptionHandler</td><td>로그인을 저장된 사용자 기준으로 변경, <code>/signup</code> 화면 연결(로그인했으면 주문 목록으로), 가입 API 오류 변환 적용</td><td>수정</td></tr>
+      <tr><td>config/WebConfig, DataInitializer</td><td>로그인 없이 열 경로 3개 추가 / 시작할 때 admin 계정 보장</td><td>수정</td></tr>
+      <tr><td>static/signup.html, js/signup.js, login.html, css/app.css</td><td>가입 화면과 스크립트, 로그인 화면의 링크, <code>[hidden]</code>이 항상 숨기도록 CSS 한 줄(4장 2회차)</td><td>추가·수정</td></tr>
+      <tr><td>static/js/order-detail.js</td><td>반복 문자열 상수화(동작 변경 없음)</td><td>수정</td></tr>
+      <tr><td>src/test/.../SignupTests.java, e2e/tests/signup.spec.ts</td><td>새 테스트(3장 표)</td><td>추가</td></tr>
+      <tr><td>docs/PRD.md, docs/INTENT.md</td><td>FR-22~25와 범위·한계·인수 기준·열린 질문 갱신 / 의도 8과 관련 표 갱신</td><td>수정</td></tr>
+      <tr><td>CLAUDE.md (<b>이 브랜치에 커밋하지 않는 로컬 파일</b>)</td><td>구조·주의사항 갱신. 리뷰어가 확인할 수 없다.</td><td>수정(로컬)</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2><span class="no">3</span>검증 결과</h2>
+  <div class="tablewrap"><table id="results">
+    <thead><tr><th style="width:60px">AC</th><th>검증 항목</th><th>실행 명령 / 방법</th><th style="width:80px">결과</th><th>근거 (결과 파일·로그)</th></tr></thead>
+    <tbody>
+      <tr data-result="pass" data-ac="AC-1"><td>AC-1</td><td>컴파일 에러 0</td><td><code>.\gradlew.bat compileJava compileTestJava --rerun-tasks</code></td><td><span class="badge b-ok">통과</span></td><td>results/after-compile.log (BUILD SUCCESSFUL)</td></tr>
+      <tr data-result="pass" data-ac="AC-2"><td>AC-2</td><td>가입하면 완료 안내와 로그인 링크가 보이고 가입 양식은 감춰지며 자동 로그인되지 않음</td><td>E2E SGN-01·02, JUnit <code>signupCreatesAccountAndDoesNotLogIn</code></td><td><span class="badge b-ok">통과</span></td><td>results/after-e2e.json (expected 90, skipped 1, unexpected 0), results/after-junit/TEST-…SignupTests.xml (12/12)</td></tr>
+      <tr data-result="pass" data-ac="AC-3"><td>AC-3</td><td>가입한 계정으로 로그인하면 주문 목록으로 가고 상단에 아이디가 보임, 틀리면 기존과 같은 문구</td><td>E2E SGN-03, JUnit <code>signedUpUserCanLogIn</code>, <code>wrongCredentialsAreRejectedWithTheSameMessage</code>, <code>usernameIsCaseInsensitive</code></td><td><span class="badge b-ok">통과</span></td><td>results/after-e2e.json, results/after-junit/</td></tr>
+      <tr data-result="pass" data-ac="AC-4"><td>AC-4</td><td>가입한 계정이 주문 확정·상태 변경·마스터 저장을 할 수 있고 작성자·변경 기록에 아이디가 남음</td><td>E2E SGN-04, JUnit <code>signedUpUserHasSameAccessAsAdmin</code></td><td><span class="badge b-ok">통과</span></td><td>results/after-e2e.json, results/after-junit/</td></tr>
+      <tr data-result="pass" data-ac="AC-5"><td>AC-5</td><td>규칙 위반(빈 값, 형식·길이, 비밀번호 짧음, 확인 불일치)은 가입되지 않고 이유를 모두 표시, 아이디는 남기고 비밀번호는 비움</td><td>E2E SGN-05, JUnit <code>invalidInputIsRejectedWithAllReasons</code>, <code>rejectedSignupDoesNotCreateAccount</code></td><td><span class="badge b-ok">통과</span></td><td>results/after-e2e.json, results/after-junit/</td></tr>
+      <tr data-result="pass" data-ac="AC-6"><td>AC-6</td><td>이미 있는 아이디(admin 포함, 대소문자 무시)는 409, 같은 아이디 동시 가입은 한 건만 성공</td><td>E2E SGN-06, JUnit <code>duplicateUsernameIsConflict</code>, <code>sameUsernameSignedUpConcurrentlyCreatesOnlyOneAccount</code>(8개 동시 요청 → 201 한 건, 409 일곱 건)</td><td><span class="badge b-ok">통과</span></td><td>results/after-junit/TEST-…SignupTests.xml</td></tr>
+      <tr data-result="pass" data-ac="AC-7"><td>AC-7</td><td>비밀번호는 평문이 아닌 해시로 저장</td><td>JUnit <code>passwordIsStoredAsHash</code> (원문과 다르고 BCrypt 형식 <code>$2…</code>)</td><td><span class="badge b-ok">통과</span></td><td>results/after-junit/TEST-…SignupTests.xml</td></tr>
+      <tr data-result="pass" data-ac="AC-8"><td>AC-8</td><td>admin/admin 로그인 그대로, 기존 JUnit·E2E를 <b>수정 없이</b> 모두 통과, 반복 실행에서도 안정, LST-04는 깨끗한 DB에서 통과, admin 중복 생성 없음</td><td><code>gradlew.bat test</code>, <code>npx playwright test</code>, <code>--repeat-each=3</code>, LST-04 단독, JUnit <code>adminIsSeededOnceAndStillLogsIn</code></td><td><span class="badge b-ok">통과</span></td><td>results/after-junit/ (53/53), results/after-e2e.json (90 통과·1 건너뜀·0 실패), results/after-e2e-repeat3.json (전체 3회 반복: 270 통과·3 건너뜀·0 실패·flaky 0), results/after-e2e-clean-db.json (1/1). 기존 테스트 파일의 변경: 0건(git status에 기존 테스트 없음).</td></tr>
+      <tr data-result="pass" data-ac="AC-9"><td>AC-9</td><td>가입 화면은 로그인 없이 열리고 다른 화면·API는 그대로 보호, 로그인한 사용자가 가입 화면을 열면 주문 목록으로</td><td>E2E SGN-07·08, 기존 AUTH-01~09, JUnit <code>signupPagesAreOpenOnlyBeforeLogin</code></td><td><span class="badge b-ok">통과</span></td><td>results/after-e2e.json, results/after-junit/</td></tr>
+      <tr data-result="pass" data-ac="AC-10"><td>AC-10</td><td>주문·마스터·시뮬레이션 서비스의 업무 규칙 변경 없음</td><td><code>git diff main -- OrderService MasterService SimulationService BusinessException</code></td><td><span class="badge b-ok">통과</span></td><td>results/service-diff.txt (변경 0줄. 새 파일 <code>UserService</code>만 추가)</td></tr>
+      <tr data-result="pass" data-ac="AC-11"><td>AC-11</td><td>PRD·INTENT가 새 동작과 일치</td><td>문서 diff</td><td><span class="badge b-ok">통과</span></td><td>PRD(FR-22~25, 범위, 한계, 인수 기준, Q3), INTENT(의도 8, 4장, 열린 질문, 부록) 갱신.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 style="font-size:15px;margin:14px 0 6px">추가한 테스트(TC)와 통과 기준 대응</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>통과 기준</th><th>추가한 TC</th><th>구현 이전 코드(main 8c942bc)에서의 결과</th></tr></thead>
+    <tbody>
+      <tr><td>AC-2~9</td><td>JUnit <code>SignupTests</code> 12개</td><td><b>컴파일되지 않음</b>(새로 만든 <code>UserRepository</code>·<code>UserService</code>·<code>User</code>를 직접 참조하므로 "구현 없이는 통과할 수 없다"로만 기록). 동작 확인은 아래 E2E로 한다. results/before-new-junit.log</td></tr>
+      <tr><td>AC-2~9</td><td>E2E <code>signup.spec.ts</code> SGN-01~08 (8개)</td><td><b>8개 모두 실패</b> (가입 화면·API가 없음). results/before-new-e2e.json: unexpected 8</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 style="font-size:15px;margin:14px 0 6px">수정한 기존 테스트</h3>
+  <p class="sub">없음. 기존 JUnit·E2E는 모두 <code>admin</code>/<code>admin</code>으로 로그인하는데, 시작할 때 admin 계정을 만들어 그대로 통과한다.</p>
+
+  <h3 style="font-size:15px;margin:14px 0 6px">린트 결과</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>도구</th><th>대상</th><th>에러</th><th>경고</th><th>기준선과 비교</th></tr></thead>
+    <tbody>
+      <tr><td>린트 미설정 → 컴파일로 대체 (javac via Gradle), 로그: results/after-compile.log</td><td>변경한 Java 코드와 테스트</td><td>0</td><td>콘솔 출력에서 경고 줄을 보지 못함(경고 수를 따로 집계하지는 않음)</td><td>기준선도 컴파일 에러 0. 동일.</td></tr>
+      <tr><td>JS 린트·타입 검사 도구 없음</td><td>새로 쓴 JS(signup.js), 수정한 JS(order-detail.js), E2E TypeScript</td><td>미확인</td><td>미확인</td><td>도구 도입은 별도 기능. E2E 실행으로 동작만 확인했다.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2><span class="no">4</span>반복(Feedback) 기록</h2>
+  <ol class="timeline">
+    <li><b>2회차</b> — 통과<br>
+      실패 내용: E2E SGN-02 실패. 가입이 끝나도 가입 양식이 그대로 보임 (<code>toBeHidden</code> 기대 위반)<br>
+      원인: <b>구현의 문제</b>. 양식을 <code>hidden</code> 속성으로 감췄는데, 기존 CSS의 <code>.stack { display: flex }</code>가 <code>hidden</code>의 기본 숨김을 덮어썼다.<br>
+      조치: 공통 CSS에 <code>[hidden] { display: none !important; }</code> 한 줄 추가. → 재검증 결과: 통과 (SGN 8개, 전체 E2E 90)</li>
+    <li><b>1회차</b> — 통과<br>
+      실패 내용: JUnit <code>invalidInputIsRejectedWithAllReasons</code> 실패. 빈 입력 <code>{}</code>에서 이유가 2개일 것으로 기대했으나 3개가 나옴<br>
+      원인: <b>구현의 문제</b>(테스트가 틀린 것이 아님). 비밀번호가 비어 있어도 "비밀번호 확인이 같지 않습니다"까지 보여 줘 불필요한 안내가 늘었다.<br>
+      조치: 비밀번호가 있을 때만 확인 일치를 검사하도록 수정 → 재검증 결과: 통과 (JUnit 53/53)</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="no">5</span>건너뛴 것과 확인하지 못한 것</h2>
+  <ul>
+    <li>전체 E2E에서 LST-04 1개 건너뜀 — 주문이 이미 쌓인 환경에서는 재현할 수 없는 조건부 테스트. AC-8에서 깨끗한 DB로 따로 실행해 통과를 확인했다. 3장 표에는 AC-8이 "통과"로 들어 있으므로 전체 실행에서 건너뛴 사실은 여기에만 있다.</li>
+    <li><b>기존 개발 DB 파일(<code>./data/battery</code>)로 실제로 시작해 보는 확인은 하지 않았다.</b> 개발 DB를 건드리지 않는 원칙에 따라, 새 테이블이 자동 생성되고 기존 테이블이 바뀌지 않는다는 점은 설정(<code>ddl-auto=update</code>)과 코드 읽기로만 확인했다. admin이 이미 있을 때 중복 생성되지 않는 것은 JUnit(<code>ensureAdmin</code> 두 번 호출)로 확인했다. 사람이 처음 개발 DB로 실행할 때 확인하길 권한다.</li>
+    <li>화면을 사람이 직접 눈으로 보는 수동 확인(L3 필수)은 AI가 하지 못했고, <b>사람이 수동으로 확인했다고 알려 왔다</b>(2026-10-22 대화). 확인한 범위의 세부 기록은 없다.</li>
+    <li>가입 후 로그인할 때 세션 아이디를 새로 발급(세션 고정 방지)하지 않는다. 기존 로그인도 하지 않았고 범위 밖이다. 가입·로그인 폼의 비밀번호는 HTTPS가 아니면 평문으로 전송된다(기존과 같음).</li>
+    <li>JS 린트·타입 검사는 도구가 없어 미확인. Chromium 외 브라우저는 확인하지 않았다.</li>
+    <li>E2E 전체 실행 시간이 약 87초에서 약 107초로 늘었다. 로그인마다 BCrypt로 해시를 비교하기 때문이다(보안을 위해 기본 강도 유지).</li>
+    <li>이 문서는 승인 칸을 비워 두었다. 사람 확인 전이다.</li>
+  </ul>
+</section>
+
+<section>
+  <h2><span class="no">6</span>남은 이슈와 후속 작업</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>이슈</th><th>심각도</th><th>제안</th></tr></thead>
+    <tbody>
+      <tr><td><b>누구나 가입해 admin과 같은 권한(기준 정보 수정 포함)을 얻는다.</b> 가입 횟수 제한, 이메일 확인, 비밀번호 정책 강화가 없다. 요구사항이 정한 동작이며 PRD에 한계로 기록했다.</td><td><span class="badge b-warn">중</span></td><td>실제 운영 전에 가입 제한과 역할 구분(PRD Q3)을 후속 기능으로 검토.</td></tr>
+      <tr><td>비밀번호 변경·찾기, 회원 탈퇴·목록이 없다</td><td><span class="badge b-ok">낮</span></td><td>필요하면 후속 기능.</td></tr>
+      <tr><td>세션 고정 방지(로그인 때 세션 재발급), 로그인 실패 횟수 제한이 없다</td><td><span class="badge b-warn">중</span></td><td>보안 후속 작업으로 분리.</td></tr>
+      <tr><td>가입 계정은 삭제할 수 없고 테스트가 만든 계정은 인메모리 DB와 함께 사라진다(개발 DB에 만들어진 계정은 남음)</td><td><span class="badge b-ok">낮</span></td><td>계정 관리 기능과 함께 검토.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2><span class="no">7</span>증거 파일 목록</h2>
+  <ul>
+    <li>기준선(변경 전): results/before-junit/, results/before-e2e.json</li>
+    <li>변경 후: results/after-compile.log, results/after-junit/, results/after-e2e.json, results/after-e2e-clean-db.json, results/after-e2e-repeat3.json</li>
+    <li>새 TC의 구현 이전 코드(8c942bc) 대조: results/before-new-junit.log, results/before-new-e2e.json</li>
+    <li>서비스 변경 없음 확인과 바뀐 main 코드 목록: results/service-diff.txt</li>
+    <li>결과 파일의 작성자 PC 사용자 계정 이름은 <code>&lt;user&gt;</code>로 치환했다.</li>
+    <li>사전 검토: <a href="precheck.html">precheck.html</a></li>
+  </ul>
+</section>
+
+<section>
+  <h2><span class="no">8</span>사람 확인 (HITL)</h2>
+  <ul class="check">
+    <li><input type="checkbox"><div>검증 결과가 통과 기준을 모두 충족한다</div></li>
+    <li><input type="checkbox"><div>실패·건너뜀·미확인 항목이 정직하게 기록되어 있다</div></li>
+    <li><input type="checkbox"><div>기존 기능이 깨지지 않았다(회귀 확인)</div></li>
+  </ul>
+  <table style="margin-top:10px">
+    <tr><th style="width:150px">결정</th><td>(사람이 채움: 완료 / 보완 필요)</td></tr>
+    <tr><th>확인한 사람</th><td>(사람이 채움)</td></tr>
+    <tr><th>의견</th><td>(사람이 채움)</td></tr>
+  </table>
+</section>
+
+</div>
+<script>
+// 3장 검증 결과 표의 data-result 값으로 요약 숫자를 센다. (값을 손으로 적지 않기 위해)
+(function () {
+  var rows = document.querySelectorAll('#results tbody tr');
+  function count(v) { return Array.prototype.filter.call(rows, function (r) { return r.dataset.result === v; }).length; }
+  function put(id, text) { var el = document.getElementById(id); if (el) el.textContent = text; }
+  if (!rows.length) return;
+  var pass = count('pass');
+  put('c-pass', pass);
+  put('c-fail', count('fail'));
+  put('c-skip', count('skip'));
+  put('c-ac', pass + ' / ' + rows.length);
+})();
+</script>
+</body>
+</html>

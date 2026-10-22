@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.demo.JsonApiTests" tests="19" skipped="0" failures="0" errors="0" timestamp="2026-10-22T05:18:24.292Z" hostname="DESKTOP-2GEPPK4" time="4.169">
+  <properties/>
+  <testcase name="singleErrorHasNoErrorsList()" classname="com.example.demo.JsonApiTests" time="0.409"/>
+  <testcase name="missingOrderIsNotFoundNotServerError()" classname="com.example.demo.JsonApiTests" time="0.099"/>
+  <testcase name="missingOrderPageStillOpens()" classname="com.example.demo.JsonApiTests" time="0.11"/>
+  <testcase name="orderDetailHasStoredPlanHistoryAndVersion()" classname="com.example.demo.JsonApiTests" time="0.277"/>
+  <testcase name="masterSaveReturnsSavedFormInEok()" classname="com.example.demo.JsonApiTests" time="0.123"/>
+  <testcase name="cancelingAlreadyCanceledOrderIsNotFoundNotServerError()" classname="com.example.demo.JsonApiTests" time="0.159"/>
+  <testcase name="meReturnsLoginUser()" classname="com.example.demo.JsonApiTests" time="0.087"/>
+  <testcase name="statusChangeReturnsUpdatedOrderAndRejectsBadRequests()" classname="com.example.demo.JsonApiTests" time="0.152"/>
+  <testcase name="orderListHasCountsAndFilters()" classname="com.example.demo.JsonApiTests" time="0.181"/>
+  <testcase name="orderPageOpensForAnyNumericIdEvenOutOfRange()" classname="com.example.demo.JsonApiTests" time="0.085"/>
+  <testcase name="cancelKeepsStatusHistoryAfterOrderIsDeleted()" classname="com.example.demo.JsonApiTests" time="0.253"/>
+  <testcase name="pageUrlsServeStaticHtmlAndStayProtected()" classname="com.example.demo.JsonApiTests" time="0.153"/>
+  <testcase name="masterFormUsesEokAndInvalidSaveListsAllErrors()" classname="com.example.demo.JsonApiTests" time="0.124"/>
+  <testcase name="cancelFromInProgressDeletesOrder()" classname="com.example.demo.JsonApiTests" time="0.141"/>
+  <testcase name="cancelDeletesOrderAndReportsDeleted()" classname="com.example.demo.JsonApiTests" time="0.139"/>
+  <testcase name="malformedRequestsGetReasonInJson()" classname="com.example.demo.JsonApiTests" time="0.1"/>
+  <testcase name="nonNumericOrderPageIsNotFoundNotServerError()" classname="com.example.demo.JsonApiTests" time="0.1"/>
+  <testcase name="completedOrderCannotBeCanceled()" classname="com.example.demo.JsonApiTests" time="0.16"/>
+  <testcase name="cancelWithStaleVersionIsConflict()" classname="com.example.demo.JsonApiTests" time="0.125"/>
+  <system-out><![CDATA[2026-10-22T14:18:24.294+09:00  INFO 18932 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.example.demo.JsonApiTests]: JsonApiTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-10-22T14:18:24.303+09:00  INFO 18932 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.example.demo.DemoApplication for test class com.example.demo.JsonApiTests
+2026-10-22T14:18:24.306+09:00  INFO 18932 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.example.demo.JsonApiTests]: JsonApiTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-10-22T14:18:24.310+09:00  INFO 18932 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.example.demo.DemoApplication for test class com.example.demo.JsonApiTests
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.1.1)
+
+2026-10-22T14:18:24.361+09:00  INFO 18932 --- [    Test worker] com.example.demo.JsonApiTests            : Starting JsonApiTests using Java 17.0.20.1 with PID 18932 (started by 주상 in C:\work\battery)
+2026-10-22T14:18:24.361+09:00  INFO 18932 --- [    Test worker] com.example.demo.JsonApiTests            : No active profile set, falling back to 1 default profile: "default"
+2026-10-22T14:18:24.617+09:00  INFO 18932 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-10-22T14:18:24.638+09:00  INFO 18932 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 18 ms. Found 6 JPA repository interfaces.
+2026-10-22T14:18:24.845+09:00  INFO 18932 --- [    Test worker] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-10-22T14:18:24.895+09:00  INFO 18932 --- [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-10-22T14:18:24.898+09:00  INFO 18932 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Starting...
+2026-10-22T14:18:24.899+09:00  INFO 18932 --- [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-2 - Added connection conn10: url=jdbc:h2:mem:battery-test user=SA
+2026-10-22T14:18:24.900+09:00  INFO 18932 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Start completed.
+2026-10-22T14:18:24.901+09:00  INFO 18932 --- [    Test worker] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:h2:mem:battery-test]
+	Database driver: H2 JDBC Driver
+	Database dialect: H2Dialect
+	Database version: 2.4.240
+	Default catalog/schema: BATTERY-TEST/PUBLIC
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: 100
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-10-22T14:18:25.063+09:00  INFO 18932 --- [    Test worker] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-10-22T14:18:25.084+09:00  INFO 18932 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-10-22T14:18:25.211+09:00  WARN 18932 --- [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-10-22T14:18:25.335+09:00  INFO 18932 --- [    Test worker] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-10-22T14:18:25.336+09:00  INFO 18932 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-10-22T14:18:25.340+09:00  INFO 18932 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 2 ms
+2026-10-22T14:18:25.357+09:00  INFO 18932 --- [    Test worker] com.example.demo.JsonApiTests            : Started JsonApiTests in 1.038 seconds (process running for 10.745)
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

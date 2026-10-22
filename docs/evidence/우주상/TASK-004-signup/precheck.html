@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>사전 검토 (precheck)</title>
+<style>
+:root{
+  --bg:#f6f7f9; --card:#fff; --text:#1c2430; --muted:#5d6b7c; --line:#d8dee6;
+  --accent:#1f4e78; --ph:#fff4c2; --ph-line:#e6c84a;
+  --ok:#17803d; --ok-bg:#e3f4ea; --warn:#9a6700; --warn-bg:#fdf1d6; --bad:#b42318; --bad-bg:#fde7e4;
+  --guide-bg:#eaf1fa; --guide-line:#9db8d8; --code:#eef1f5;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#10151c; --card:#18202a; --text:#e6ebf2; --muted:#9aa8ba; --line:#2d3947;
+    --accent:#7db3e8; --ph:#4a3f12; --ph-line:#a88a1c;
+    --ok:#4cc27a; --ok-bg:#16301f; --warn:#f0b24b; --warn-bg:#35290f; --bad:#ff8a80; --bad-bg:#3a1a17;
+    --guide-bg:#1b2a3d; --guide-line:#3d5a80; --code:#212c39;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.7 -apple-system,"Segoe UI","Malgun Gothic",sans-serif}
+.wrap{max-width:960px;margin:0 auto;padding:24px 16px 80px}
+h1{font-size:26px;margin:4px 0 2px}
+h2{font-size:18px;margin:0 0 10px;color:var(--accent)}
+h2 .no{display:inline-block;background:var(--accent);color:#fff;border-radius:6px;padding:0 8px;margin-right:6px;font-size:14px}
+section{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:16px 0}
+.sub{color:var(--muted);margin:0 0 12px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+th{background:var(--bg);color:var(--muted);font-weight:600}
+.tablewrap{overflow-x:auto}
+.ph{background:var(--ph);border-bottom:1px dashed var(--ph-line);padding:0 3px;border-radius:3px}
+.guide{background:var(--guide-bg);border-left:4px solid var(--guide-line);padding:9px 13px;border-radius:6px;margin:0 0 12px;font-size:13.5px}
+.guide b{color:var(--accent)}
+.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px 16px}
+.meta div{border:1px solid var(--line);border-radius:8px;padding:6px 10px;background:var(--card)}
+.meta span{display:block;font-size:12px;color:var(--muted)}
+.badge{display:inline-block;border-radius:999px;padding:1px 10px;font-size:12.5px;font-weight:600}
+.b-ok{background:var(--ok-bg);color:var(--ok)} .b-warn{background:var(--warn-bg);color:var(--warn)} .b-bad{background:var(--bad-bg);color:var(--bad)}
+.check{list-style:none;padding:0;margin:0}
+.check li{display:flex;gap:10px;padding:6px 0;border-bottom:1px solid var(--line)}
+.check li:last-child{border-bottom:0}
+.check input{margin-top:5px}
+pre{background:var(--code);padding:10px 12px;border-radius:8px;overflow-x:auto;font:13px/1.55 Consolas,"D2Coding",monospace;margin:6px 0}
+.rules{font-size:13px;color:var(--muted)}
+.rules li{margin:2px 0}
+@media print{ body{background:#fff} .guide{display:none} section{break-inside:avoid} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="sub">Inner Loop · 사전 검토·세팅 단계의 증거(Evidence)</p>
+  <h1>사전 검토: 사용자 추가 기능 (회원 가입 후 로그인)</h1>
+  <div class="meta">
+    <div><span>작성자</span>joosang425 (AI 초안 작성, 사람 확인 전)</div>
+    <div><span>작성일</span>2026-10-22</div>
+    <div><span>브랜치</span>feature/signup</div>
+    <div><span>검토 상태</span><span class="badge b-warn">승인 대기</span></div>
+  </div>
+</header>
+
+<section>
+  <h2><span class="no">1</span>목표와 범위</h2>
+  <table>
+    <tr><th style="width:150px">만들 기능</th><td>기능 추가/변경 4 "사용자 추가": <b>회원 가입 후 로그인할 수 있다. 회원 가입으로 가입된 회원은 모두 admin과 같은 권한을 갖는다.</b></td></tr>
+    <tr><th>선택한 이유</th><td>사람(담당자)이 맡은 기능. 현재는 <code>admin</code>/<code>admin</code> 계정 하나가 코드에 정해져 있어 다른 사람이 들어올 방법이 없다.</td></tr>
+    <tr><th>기능 분류</th><td>Q1 저장 데이터 변경: <b>예</b>(사용자 정보를 저장하는 새 테이블) · Q2 되돌리기 어려운 동작: 아니오(코드 변경, 새 테이블이 남을 뿐) · Q3 기대 동작이 PRD에 정해져 있지 않음: <b>예</b>(가입 규칙, 가입 후 흐름, 비밀번호 저장 방식) · Q4 세 곳 이상 영향: <b>예</b>(로그인, 화면, 인터셉터, 초기 데이터, 테스트, 문서) · Q5 금액·권한·보안: <b>예</b>(계정과 비밀번호). 예 4개 + Q3 → <b>L3</b>. 사람이 기대 동작과 대안을 정한다.</td></tr>
+    <tr><th>이번에 포함</th><td>
+      ① 가입 화면(<code>/signup</code>)과 가입 API, 로그인 화면의 "회원가입" 링크<br>
+      ② 사용자 저장(새 테이블), 비밀번호는 해시로 저장<br>
+      ③ 로그인을 저장된 사용자 기준으로 변경(<code>admin</code>/<code>admin</code>은 그대로 로그인 가능)<br>
+      ④ 가입한 회원이 admin과 같은 전체 기능을 쓸 수 있음(현재 역할 구분이 없으므로 별도 권한 코드는 필요 없고, 이를 테스트로 확인)<br>
+      ⑤ 테스트 추가(JUnit, E2E), 문서 갱신(PRD, INTENT, CLAUDE.md는 로컬)<br>
+      ⑥ <b>코드 정리 1건</b>: 이전 작업(PR #21)의 주문 상세 화면 스크립트에 남은 반복 문자열을 상수로 정리(사람 결정: 문서 없이 코드 수정만, 별도 커밋)
+    </td></tr>
+    <tr><th>이번에 포함하지 않음</th><td>역할·권한 구분, 비밀번호 변경·찾기, 회원 탈퇴·수정·목록, 이메일 인증, 가입 횟수 제한(스팸 방지), 로그인 실패 횟수 제한, 자동 로그인(가입 직후 로그인 상태로 만들기), 서비스(주문·마스터·시뮬레이션)의 업무 규칙 변경, push·PR(사람이 요청할 때)</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2><span class="no">2</span>근거 자료 점검</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>구분</th><th>자료 / 위치</th><th>확인한 내용</th><th>확인 방법</th></tr></thead>
+    <tbody>
+      <tr><td>요구사항</td><td>담당자가 전달한 기능 설명</td><td>"회원 가입 후 로그인이 가능합니다. 회원 가입을 통해 가입된 회원은 모두 admin과 동일한 권한을 갖습니다."</td><td>대화에서 받음</td></tr>
+      <tr><td>요구사항(PRD)</td><td>docs/PRD.md FR-20, 3장(현재는 사용자 역할 구분 없음), 4장(권한 구분·계정 관리는 범위 밖), 열린 질문 Q3</td><td>계정이 하나이고 역할 구분이 없다. 계정 관리는 "포함하지 않음"으로 되어 있어 이번 기능은 이 범위 항목을 일부 바꾼다.</td><td>읽음</td></tr>
+      <tr><td>설계 의도</td><td>docs/INTENT.md 의도 8, 3장 6원칙, 4장 "로그인·권한 변경" 행</td><td>의도 8: 로그인한 사람만 쓰고 누가 했는지 남긴다. 로그인 처리와 주문·변경 기록의 작성자를 함께 확인하라고 안내.</td><td>읽음</td></tr>
+      <tr><td>관련 코드</td><td>AuthController(로그인 <code>admin</code>/<code>admin</code> 하드코딩, 성공 시 세션에 아이디 저장), LoginInterceptor·WebConfig(로그인·정적 파일 외 보호), DataInitializer, 주문의 작성자(<code>createdBy</code>)는 세션 아이디</td><td>역할 개념이 없어 모든 로그인 사용자가 같은 권한이다. 사용자 저장소가 없다.</td><td>코드 읽기</td></tr>
+      <tr><td>DB</td><td>application.properties</td><td><code>ddl-auto=update</code>라 새 테이블은 시작할 때 자동으로 생기고 기존 테이블은 바뀌지 않는다.</td><td>읽음</td></tr>
+      <tr><td>의존성</td><td>build.gradle.kts, Gradle 캐시</td><td>비밀번호 해시용 <code>spring-security-crypto</code>가 로컬 캐시에 있다(Spring Boot가 버전을 관리). Spring Security 전체는 쓰지 않는다.</td><td>캐시 확인</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2><span class="no">3</span>현재 상태 확인</h2>
+  <table>
+    <tr><th style="width:150px">확인한 방법</th><td>main(8c942bc)에서 딴 브랜치, 코드 변경 없음. <code>.\gradlew.bat test --rerun-tasks</code> 와 <code>cd e2e; npx playwright test --reporter=json</code></td></tr>
+    <tr><th>확인 결과</th><td>JUnit 41/41 통과, E2E 82 통과·1 건너뜀(<code>LST-04</code>)·실패 0. 가입 기능은 없다(<code>/signup</code>이 없어 로그인 화면으로 이동). 증거: results/before-junit/, results/before-e2e.json</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2><span class="no">4</span>영향 범위와 위험</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>영향받는 곳</th><th>어떻게 영향받는가</th><th>위험</th><th>대응 / 확인 방법</th></tr></thead>
+    <tbody>
+      <tr><td>새 파일: entity, repository, service, controller, 화면</td><td>사용자 엔티티·저장소, 가입·인증 서비스, 가입 컨트롤러, <code>signup.html</code>·<code>signup.js</code>, 로그인 화면에 링크</td><td><span class="badge b-warn">중</span> 새 코드가 기존 규칙(원칙 5·6)과 어긋나지 않아야 함</td><td>오류 응답 형식·검증 방식을 기존과 같게(전부 검증 후 저장, 이유를 한꺼번에 알림)</td></tr>
+      <tr><td>controller/AuthController 로그인</td><td>하드코딩 비교 → 저장된 사용자와 비밀번호 해시 비교. <code>admin</code>/<code>admin</code>은 시작할 때 사용자 테이블에 넣어 계속 로그인 가능하게 한다.</td><td><span class="badge b-warn">중</span> 기존 E2E·JUnit이 모두 <code>admin</code>으로 로그인하므로 깨지면 파급이 큼</td><td>기존 JUnit·E2E를 수정 없이 통과시키는 것을 기준으로 함(AC-8)</td></tr>
+      <tr><td>config/WebConfig, LoginInterceptor</td><td><code>/signup</code>, <code>/signup.html</code>, <code>/api/signup</code>을 로그인 없이 열어야 한다.</td><td><span class="badge b-warn">중</span> 제외 범위를 잘못 넓히면 비로그인 접근이 열림(원칙 8, FR-20)</td><td>정확한 경로만 제외하고, 비로그인 접근 E2E(AUTH-01~09)로 확인</td></tr>
+      <tr><td>config/DataInitializer</td><td>시작할 때 <code>admin</code> 사용자가 없으면 만든다(있으면 건드리지 않음).</td><td><span class="badge b-ok">낮</span> 기존 개발 DB 파일과 호환</td><td>새 테이블만 자동 생성되고 기존 테이블은 그대로. 이미 admin이 있으면 중복 생성 안 함(테스트로 확인)</td></tr>
+      <tr><td>build.gradle.kts</td><td>의존성 <code>spring-security-crypto</code> 한 줄 추가(해시용). Spring Security 설정은 쓰지 않는다.</td><td><span class="badge b-warn">중</span> 빌드 설정 변경(승인 필요)</td><td>게이트 ①에서 승인. 대안은 7장.</td></tr>
+      <tr><td>보안(Q5)</td><td>공개 가입이므로 <b>누구나 가입해 admin과 같은 권한(기준 정보 수정 포함)을 얻는다.</b> 요구사항이 정한 동작이며 PRD가 이미 지적한 "권한 없음" 한계를 넓힌다. 가입 횟수 제한·비밀번호 정책이 약하면 스팸·약한 비밀번호 위험.</td><td><span class="badge b-warn">중</span> 사람이 인지하고 수용해야 함</td><td>report와 PRD에 한계로 기록. 비밀번호는 해시로 저장하고 로그인 실패 메시지는 기존과 같게(아이디·비밀번호 중 무엇이 틀렸는지 알리지 않음).</td></tr>
+      <tr><td>INTENT 원칙 8, 3장</td><td>작성자·처리한 사람 기록이 가입한 아이디로 남아야 한다.</td><td><span class="badge b-ok">낮</span></td><td>가입 계정으로 주문 확정·상태 변경 후 기록 확인(AC-4)</td></tr>
+      <tr><td>기존 테스트</td><td>로그인·인증 관련 E2E(AUTH-*), JUnit(OrderFlowTests, JsonApiTests)은 모두 <code>admin</code>/<code>admin</code>을 쓴다. 로그인 화면의 <code>getByLabel('아이디')</code>·<code>getByLabel('비밀번호')</code>를 쓰는데 링크 하나가 추가될 뿐이다.</td><td><span class="badge b-ok">낮</span> 기존 테스트 수정은 필요 없을 것으로 예상</td><td>수정이 필요해지면 멈추고 사람에게 묻는다(범위 밖).</td></tr>
+      <tr><td>테스트 데이터</td><td>E2E는 같은 인메모리 DB를 쓰며 반복 실행(<code>--repeat-each</code>)도 한다. 가입 테스트는 실행마다 겹치지 않는 아이디를 써야 한다.</td><td><span class="badge b-ok">낮</span></td><td>가입 테스트는 무작위 접미사가 붙은 아이디 사용, 개발 DB는 건드리지 않음</td></tr>
+      <tr><td>docs/PRD.md, docs/INTENT.md, CLAUDE.md</td><td>"계정은 admin 하나", "계정 관리는 범위 밖", FR 목록, Q3 문구 등을 새 동작에 맞게 갱신</td><td><span class="badge b-ok">낮</span></td><td>기대 동작을 바꾸는 갱신이므로 게이트 ①에서 승인(CLAUDE.md는 로컬 파일, 커밋 제외)</td></tr>
+    </tbody>
+  </table></div>
+  <p class="sub" style="margin-top:10px">되돌릴 수 없는 작업이 포함되는가? 없음. 새 테이블이 생기지만 지우지 않는다. 병합 후 되돌리려면 병합 커밋을 revert하면 되고, 남는 <code>users</code> 테이블을 지우는 것은 데이터 삭제라 사람이 승인한 뒤에 한다. push·PR은 사람이 요청할 때 한다. 개발 DB(<code>./data/battery</code>)는 지우지 않고, E2E는 인메모리 DB(별도 포트)에서 실행한다.</p>
+</section>
+
+<section>
+  <h2><span class="no">5</span>환경·세팅 점검</h2>
+  <ul class="check">
+    <li><input type="checkbox" checked disabled><div><b>앱을 실행할 수 있다</b><br><small class="sub">확인 근거: </small>E2E가 <code>gradlew bootRun</code>으로 서버를 띄워 82개 통과</div></li>
+    <li><input type="checkbox" checked disabled><div><b>기존 테스트가 통과한다 (기준선)</b><br><small class="sub">확인 근거: </small>JUnit 41/41, E2E 82 통과·1 건너뜀·0 실패 (results/before-*)</div></li>
+    <li><input type="checkbox" checked disabled><div><b>작업 브랜치를 만들었다</b><br><small class="sub">확인 근거: </small>feature/signup (main 8c942bc에서 분기)</div></li>
+    <li><input type="checkbox" checked disabled><div><b>테스트 데이터·DB 상태를 알고 있다</b><br><small class="sub">확인 근거: </small>JUnit 메모리 H2(create-drop), E2E <code>jdbc:h2:mem:battery-e2e</code>. 개발 DB와 분리. 깨끗한 DB가 필요한 LST-04는 별도 포트(18081)로 보완.</div></li>
+    <li><input type="checkbox" checked disabled><div><b>필요한 도구·설정이 갖춰졌다</b><br><small class="sub">확인 근거: </small>Gradle wrapper 9.8.1, Playwright 설치됨, <code>spring-security-crypto</code>가 로컬 캐시에 있음(실제 의존성 해결은 구현 때 확인). 린트 도구 미설정 → 컴파일로 대체, JS 린트·타입 검사 도구 없음 → 미확인.</div></li>
+  </ul>
+</section>
+
+<section>
+  <h2><span class="no">6</span>통과 기준 (수용 기준)</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th style="width:60px">ID</th><th>Given / When / Then</th><th>검증 방법</th></tr></thead>
+    <tbody>
+      <tr><td>AC-1</td><td>Given 변경 후, When 컴파일하면, Then 에러 0이다.</td><td><code>gradlew.bat compileJava compileTestJava</code> 로그</td></tr>
+      <tr><td>AC-2</td><td>Given 로그아웃 상태에서 로그인 화면, When "회원가입"을 눌러 올바른 아이디·비밀번호·비밀번호 확인을 입력하고 가입하면, Then 가입 완료 안내와 로그인 링크가 보이고 자동으로 로그인되지는 않는다.</td><td>새 E2E, 새 JUnit(가입 API)</td></tr>
+      <tr><td>AC-3</td><td>Given 방금 가입한 계정, When 로그인 화면에서 로그인하면, Then 주문 목록으로 이동하고 상단에 그 아이디가 보인다. 잘못된 비밀번호는 기존과 같은 오류 문구다.</td><td>새 E2E, 새 JUnit</td></tr>
+      <tr><td>AC-4</td><td>Given 가입한 계정으로 로그인한 상태, When 주문 추가·확정, 상태 변경, 마스터 데이터 저장을 하면, Then admin과 똑같이 모두 가능하고 주문의 작성자·상태 변경 기록에 그 아이디가 남는다.</td><td>새 E2E, 새 JUnit</td></tr>
+      <tr><td>AC-5</td><td>Given 가입 화면, When 규칙에 맞지 않는 입력(빈 값, 아이디 형식·길이 위반, 비밀번호 8자 미만, 확인 불일치)을 넣으면, Then 가입되지 않고 틀린 이유를 한꺼번에 모두 보여 준다. 입력한 아이디는 화면에 남는다.</td><td>새 E2E, 새 JUnit(오류 목록)</td></tr>
+      <tr><td>AC-6</td><td>Given 이미 있는 아이디(<code>admin</code> 포함, 대소문자 구분 없이 같은 아이디), When 가입하면, Then 409와 "이미 사용 중인 아이디입니다"가 오고 가입되지 않는다. 같은 아이디를 동시에 가입해도 한 건만 만들어진다.</td><td>새 JUnit(중복, 동시 가입)</td></tr>
+      <tr><td>AC-7</td><td>Given 가입한 계정, When 저장된 값을 보면, Then 비밀번호가 평문이 아닌 해시로 저장되어 있다.</td><td>새 JUnit</td></tr>
+      <tr><td>AC-8</td><td>Given 변경 후, When 기존 테스트를 실행하면, Then <code>admin</code>/<code>admin</code> 로그인이 그대로 되고 기존 JUnit·E2E가 <b>수정 없이</b> 모두 통과하며 반복 실행에서도 간헐 실패가 없다. LST-04는 깨끗한 DB에서 통과한다. 기존 개발 DB처럼 admin이 이미 있는 DB에서 시작해도 중복 생성되지 않는다.</td><td><code>gradlew.bat test</code>, <code>npx playwright test</code>(3회 반복), LST-04 단독, 새 JUnit(admin 중복 생성 안 함)</td></tr>
+      <tr><td>AC-9</td><td>Given 로그아웃 상태, When <code>/signup</code>을 열면 로그인 없이 열리고, 다른 화면 주소와 <code>/api/*</code>(가입 API 제외)는 이전과 같이 로그인 이동·401이다. 로그인한 상태에서 <code>/signup</code>을 열면 주문 목록으로 이동한다.</td><td>기존 E2E AUTH-01~09, 새 E2E·JUnit</td></tr>
+      <tr><td>AC-10</td><td>Given 변경 후, When 서비스 코드를 보면, Then 주문·마스터·시뮬레이션 서비스에서 바뀐 줄이 없다(업무 규칙 그대로).</td><td><code>git diff main -- OrderService MasterService SimulationService</code> 결과 없음</td></tr>
+      <tr><td>AC-11</td><td>Given 변경 후, When 문서를 보면, Then PRD·INTENT가 새 동작(가입 가능, 가입자는 admin과 같은 권한, 알려진 한계)과 일치한다.</td><td>문서 diff</td></tr>
+    </tbody>
+  </table></div>
+  <p class="sub" style="margin-top:10px">새 TC는 구현 뒤 D1 단계에서 추가하고, 구현 이전 코드(현재 main)에서 실패하는지 확인한다. 새로 만든 클래스를 직접 참조하는 JUnit은 이전 코드에서 컴파일되지 않으므로 "구현 없이는 통과할 수 없다"로만 기록하고 동작 확인은 HTTP 수준(MockMvc) 테스트와 E2E로 한다.</p>
+</section>
+
+<section>
+  <h2><span class="no">7</span>대안 비교와 되돌리는 방법 (L3)</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>대안</th><th>내용</th><th>장점</th><th>단점·위험</th></tr></thead>
+    <tbody>
+      <tr><td><b>A. 사용자 테이블 + BCrypt 해시 (추천)</b></td><td>새 <code>users</code> 테이블에 아이디·비밀번호 해시를 저장하고, 비밀번호 해시는 <code>spring-security-crypto</code>의 BCrypt로 한다. admin은 시작할 때 이 테이블에 넣는다.</td><td>검증된 해시 구현을 쓴다. 가입자와 admin을 같은 방식으로 다룬다. 필요한 부분(해시)만 의존성으로 추가한다.</td><td>빌드에 의존성이 한 줄 늘어난다.</td></tr>
+      <tr><td>B. 사용자 테이블 + JDK PBKDF2</td><td>새 의존성 없이 JDK가 주는 PBKDF2로 해시를 직접 구현한다.</td><td>의존성 변화가 없다.</td><td>해시·소금값·비교 코드를 직접 만들고 검증해야 해서 실수 위험과 리뷰 부담이 크다.</td></tr>
+      <tr><td>C. 메모리·파일에 저장</td><td>데이터베이스를 쓰지 않고 메모리나 파일에 저장한다.</td><td>구현이 간단하다.</td><td>다시 시작하면 가입이 사라지거나(메모리), 기존 방식과 어긋난다. 요구("가입 후 로그인 가능")를 안정적으로 만족하지 못한다. 평문 저장은 어떤 대안에서도 하지 않는다.</td></tr>
+    </tbody>
+  </table></div>
+  <p class="sub" style="margin-top:10px"><b>추천: A.</b> <b>되돌리는 방법:</b> 병합 전에는 브랜치 폐기, 병합 후에는 병합 커밋 revert. 남는 <code>users</code> 테이블은 사람이 승인한 뒤 따로 지운다(지우지 않아도 동작에 영향 없음). <b>영향받는 문서:</b> docs/PRD.md(FR, 범위 항목, 한계, Q3), docs/INTENT.md(의도 8, 4장, 열린 질문), CLAUDE.md(로컬).</p>
+</section>
+
+<section>
+  <h2><span class="no">8</span>사람이 정할 기대 동작 (제안)</h2>
+  <div class="guide"><b>아래는 AI의 제안이며 확정이 아닙니다.</b> PRD에 정해진 내용이 없는 부분입니다(Q3). 게이트 ①에서 사람이 승인하거나 고칩니다.</div>
+  <div class="tablewrap"><table>
+    <thead><tr><th>#</th><th>항목</th><th>제안</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>가입 화면</td><td><code>/signup</code>(로그인 없이 열림). 입력: 아이디, 비밀번호, 비밀번호 확인. 로그인 화면에 "회원가입" 링크. 로그인한 사용자가 열면 주문 목록으로 이동(<code>/login</code>과 같음).</td></tr>
+      <tr><td>2</td><td>아이디 규칙</td><td>영문·숫자·밑줄(_) 4~20자. 대소문자 구분 없이 같은 아이디로 보고 소문자로 저장한다(예: <code>Admin</code>과 <code>admin</code>은 같음). 로그인할 때도 같은 방식으로 비교한다.</td></tr>
+      <tr><td>3</td><td>비밀번호 규칙</td><td>8~64자(공백 포함 가능, 앞뒤 공백은 그대로). 비밀번호와 확인이 같아야 한다. (기존 <code>admin</code>/<code>admin</code>은 이 규칙의 예외로 유지)</td></tr>
+      <tr><td>4</td><td>검증과 오류</td><td>틀린 값이 하나라도 있으면 가입하지 않고 이유를 <b>한꺼번에 모아</b> 보여 준다(기준 정보 저장과 같은 방식). 입력한 아이디는 남기고 비밀번호는 비운다. 중복 아이디는 409, "이미 사용 중인 아이디입니다".</td></tr>
+      <tr><td>5</td><td>가입 후</td><td>가입 완료 안내와 "로그인하러 가기" 링크를 보여 주고 <b>자동 로그인하지 않는다</b>(요구가 "가입 후 로그인이 가능"이라서).</td></tr>
+      <tr><td>6</td><td>권한</td><td>가입한 회원은 admin과 같은 전체 권한. 역할 구분 없음(현재와 같음). 주문 작성자·상태 변경 기록에는 가입한 아이디가 남는다.</td></tr>
+      <tr><td>7</td><td>admin 계정</td><td>그대로 <code>admin</code>/<code>admin</code>. 시작할 때 사용자 테이블에 없으면 만든다. 가입으로 <code>admin</code> 아이디를 쓸 수 없다.</td></tr>
+      <tr><td>8</td><td>로그인 실패</td><td>기존과 같은 문구와 401(아이디·비밀번호 중 무엇이 틀렸는지 알리지 않음).</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2><span class="no">9</span>반복 한도와 중단 조건</h2>
+  <table>
+    <tr><th style="width:180px">최대 반복 횟수</th><td>3회</td></tr>
+    <tr><th>성공으로 끝내는 조건</th><td>AC-1~11 모두 충족 + 게이트 ② 승인</td></tr>
+    <tr><th>중단하고 사람에게 넘기는 조건</th><td>3회 초과 / 같은 원인으로 2회 연속 실패 / 기존 테스트를 고쳐야 함 / 서비스 업무 규칙 변경이 필요해 보임 / 로그인 보호(원칙 8)가 약해질 가능성 / 되돌릴 수 없는 작업(개발 DB 삭제 등)이 필요해짐 / 환경 문제를 해결할 수 없음</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2><span class="no">10</span>미확인 사항과 열린 질문</h2>
+  <ul>
+    <li><b>질문 1 (결정 필요)</b> 8장의 가입 규칙·흐름 제안(아이디·비밀번호 규칙, 자동 로그인 안 함, 오류를 한꺼번에 표시, 대소문자 무시)을 승인할 것인가.</li>
+    <li><b>질문 2 (결정 필요)</b> 7장 대안 A(BCrypt)와 <b>빌드 설정에 의존성 <code>spring-security-crypto</code> 추가</b>를 승인할 것인가.</li>
+    <li><b>질문 3 (결정 필요)</b> 누구나 가입해 admin과 같은 권한(기준 정보 수정 포함)을 얻는 것을 인지하고 수용하는가. 가입 제한·비밀번호 정책 강화는 이번 범위 밖으로 둔다.</li>
+    <li><b>질문 4</b> 문서 갱신(PRD의 "계정 관리는 범위 밖" 항목, INTENT, CLAUDE.md 로컬)을 승인하는가.</li>
+    <li><b>결정 기록 (게이트 ① 전 대화에서 사람이 답함, 2026-10-22)</b>: 질문 1~4는 AI 추천대로 승인. 질문 5는 "문서를 남기지 말고 코드 수정만" 하기로 결정(6번 코드 정리만 수행). 11장 확인 칸은 사람이 직접 채운다.</li>
+    
+    <li>미확인: 가입 후 로그인할 때 세션 아이디를 새로 발급(세션 고정 방지)하는지는 기존 로그인도 하지 않는다. 이번 범위에는 넣지 않고 후속으로 기록한다. 가입·로그인 폼의 비밀번호는 HTTPS가 아니면 평문으로 전송된다(기존 로그인과 같음).</li>
+    <li>미확인: JS 린트·타입 검사 도구가 없어 JS는 E2E로만 확인한다. 화면을 사람이 직접 눈으로 보는 수동 확인(L3 필수)은 구현 후 사람에게 요청한다.</li>
+  </ul>
+</section>
+
+<section>
+  <h2><span class="no">11</span>사람 확인 (HITL)</h2>
+  <ul class="check">
+    <li><input type="checkbox"><div>목표와 범위가 적절하다</div></li>
+    <li><input type="checkbox"><div>통과 기준이 구체적이고 검증할 수 있다</div></li>
+    <li><input type="checkbox"><div>위험과 되돌릴 수 없는 작업을 확인했다</div></li>
+    <li><input type="checkbox"><div>기대 동작(8장)과 대안(7장)을 결정했다 (L3)</div></li>
+  </ul>
+  <table style="margin-top:10px">
+    <tr><th style="width:150px">결정</th><td>(사람이 채움: 승인 / 보완 필요 / 보류)</td></tr>
+    <tr><th>확인한 사람</th><td>(사람이 채움)</td></tr>
+    <tr><th>의견</th><td>(사람이 채움)</td></tr>
+  </table>
+</section>
+
+</div>
+</body>
+</html>
