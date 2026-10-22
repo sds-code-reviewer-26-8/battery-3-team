@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>사전 검토 (precheck)</title>
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--text:#1c2430;--muted:#5d6b7c;--line:#d8dee6;--accent:#1f4e78;--warn:#9a6700;--warn-bg:#fdf1d6;--ok:#17803d;--ok-bg:#e3f4ea;--code:#eef1f5}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#10151c;--card:#18202a;--text:#e6ebf2;--muted:#9aa8ba;--line:#2d3947;--accent:#7db3e8;--warn:#f0b24b;--warn-bg:#35290f;--ok:#4cc27a;--ok-bg:#16301f;--code:#212c39}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.7 -apple-system,"Segoe UI","Malgun Gothic",sans-serif}
+.wrap{max-width:960px;margin:0 auto;padding:24px 16px 80px}
+h1{font-size:26px;margin:4px 0 2px}
+h2{font-size:18px;margin:0 0 10px;color:var(--accent)}
+h2 .no{display:inline-block;background:var(--accent);color:#fff;border-radius:6px;padding:0 8px;margin-right:6px;font-size:14px}
+section{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:16px 0}
+.sub{color:var(--muted);margin:0 0 12px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+th{background:var(--bg);color:var(--muted);font-weight:600}
+.tablewrap{overflow-x:auto}
+.badge{display:inline-block;border-radius:999px;padding:1px 10px;font-size:12.5px;font-weight:600}
+.b-ok{background:var(--ok-bg);color:var(--ok)} .b-warn{background:var(--warn-bg);color:var(--warn)}
+code{background:var(--code);padding:0 4px;border-radius:4px;font:13px Consolas,"D2Coding",monospace}
+.check{list-style:none;padding:0;margin:0}
+.check li{display:flex;gap:10px;padding:6px 0;border-bottom:1px solid var(--line)}
+.check li:last-child{border-bottom:0}
+.check input{margin-top:5px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="sub">Inner Loop · 사전 검토 단계의 증거(Evidence) · TASK-005</p>
+  <h1>사전 검토: 필요 납기일 기입 기능 추가</h1>
+  <p class="sub">작성: 문형석 (AI 초안, 사람 확인 전) · 2026-10-22 · 브랜치 feat/required-delivery-date · 결과는 <a href="report.html">report.html</a></p>
+</header>
+
+<section>
+  <h2><span class="no">1</span>요청과 이해</h2>
+  <table>
+    <tr><th style="width:150px">요청</th><td>고객이 '필요 납기일'을 요청할 수 있게 한다. 체크박스를 체크하면 '가능한 빨리', 원하는 납기일이 있으면 5~50일 중에서 고른다. 주문할 때 납기일을 넘는 경로는 빨간색으로 표시한다.</td></tr>
+    <tr><th>목적</th><td>고객이 납기를 맞출 수 없는 경로를 확정하기 전에 알아보게 한다.</td></tr>
+    <tr><th>정하지 않은 부분과 가정</th><td>① '가능한 빨리' = 납기 제한 없음(값 없음)으로 본다. ② 납기를 넘는 경로도 확정은 허용하고 표시만 한다("빨간색으로 표시"). ③ 납기일은 주문에 저장하고 상세에도 보여 준다. 사용자가 따로 답하지 않아 이 가정으로 진행했고, 바꾸고 싶으면 알려 달라고 했다.</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2><span class="no">2</span>검토 영역과 근거</h2>
+  <p><span class="badge b-warn">Yellow</span> 주문 확정 흐름(서비스 검증, 저장, DB 컬럼 추가)과 주문 화면·상세 화면을 함께 건드리고, 화면 쪽 로직이 JS로 흩어져 있다.</p>
+  <ul>
+    <li>인증·결제·권한처럼 민감한 영역은 건드리지 않아 Red는 아니다.</li>
+    <li>하지만 확정·저장 규칙과 DB 스키마(컬럼 추가)가 바뀌고, 기존 주문과의 호환(납기일 없음 = 가능한 빨리)을 확인해야 해서 Green도 아니다.</li>
+    <li>그래서 Evidence를 꼼꼼히 보고, Diff 요약 리뷰와 테스트 보강 제안을 받는 Yellow로 둔다.</li>
+  </ul>
+</section>
+
+<section>
+  <h2><span class="no">3</span>위험 점검</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>위험</th><th>점검 / 대응</th></tr></thead>
+    <tbody>
+      <tr><td>기존 API 호환: 확정 요청에 <code>requiredDays</code>가 없어도 동작해야 한다</td><td>값이 없으면 '가능한 빨리'로 처리. 기존 E2E 헬퍼(<code>createOrderViaApi</code>)와 기존 JUnit이 그대로 통과해야 한다(→ 검증 AC-6).</td></tr>
+      <tr><td>DB 컬럼 추가</td><td>nullable 컬럼이라 <code>ddl-auto=update</code>로 안전하게 추가되고 기존 행은 '가능한 빨리'가 된다. 기존 DB 파일로의 기동은 직접 확인하지 못함(report 5장).</td></tr>
+      <tr><td>잘못된 입력(범위 밖, 빈 값, 소수)</td><td>서버가 5~50을 검증하고 화면도 확정 전에 막는다(→ DLN-06, 서버 JUnit). <b>정정(PR 리뷰 반영):</b> 처음에는 서버가 소수·문자열을 조용히 정수로 바꿔 받아들여 "소수는 서버가 검증"이라는 이 칸의 설명이 사실이 아니었다. 이제 서버가 정수만 허용한다. 빈 값은 화면만 거부하고 서버는 값이 없거나 <code>null</code>이면 '가능한 빨리'로 처리한다.</td></tr>
+      <tr><td>화면 표시와 서버 계산의 불일치</td><td>주문 추가 화면은 시뮬레이션 소요 일수와 비교하고, 상세는 서버가 저장된 소요 일수와 비교한다. 같은 경로를 확정하면 같은 결과가 나오는지 DLN-04가 확인한다.</td></tr>
+      <tr><td>기존 테스트 약화</td><td>기존 테스트를 고치지 않고 새 테스트만 추가한다.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2><span class="no">4</span>통과 기준 (핵심 체크리스트)</h2>
+  <ol>
+    <li>AC-2 기본은 '가능한 빨리', 빨간 경로 없음</li>
+    <li>AC-3 소요 일수가 납기일보다 긴 경로만 빨간색, 값을 바꾸면 바로 갱신</li>
+    <li>AC-4 납기를 넘는 경로도 확정되고 상세에 정확히 표시</li>
+    <li>AC-5 5~50 밖의 값은 화면과 서버 모두 거부</li>
+    <li>AC-6 기존 JUnit·E2E 전부 통과, 새 E2E 반복에서도 안정</li>
+    <li>AC-1·7·8 컴파일, 기존 테스트 변경 없음, 결과 파일에 개인 정보 없음</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="no">5</span>사람 확인 (HITL)</h2>
+  <ul class="check">
+    <li><input type="checkbox"><div>요청의 의도와 위 가정(특히 '가능한 빨리'와 확정 허용)이 맞다</div></li>
+    <li><input type="checkbox"><div>Yellow 영역 판단이 타당하다</div></li>
+  </ul>
+  <table style="margin-top:10px">
+    <tr><th style="width:150px">결정</th><td>(사람이 채움: 진행 / 보완 필요)</td></tr>
+    <tr><th>확인한 사람</th><td>(사람이 채움)</td></tr>
+  </table>
+</section>
+
+</div>
+</body>
+</html>
