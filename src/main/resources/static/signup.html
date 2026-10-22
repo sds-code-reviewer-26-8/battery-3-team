@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>회원가입 - 배터리 주문 관리</title>
+	<link rel="stylesheet" href="/css/app.css">
+</head>
+<body class="login-page">
+<main class="login-box">
+	<h1>회원가입</h1>
+	<p class="muted">영문·숫자·밑줄(_) 4~20자 아이디와 8자 이상 비밀번호를 입력하세요. 가입한 회원은 모두 같은 권한을 갖습니다.</p>
+	<div id="messages"></div>
+	<form action="/api/signup" method="post" class="stack" id="signupForm">
+		<label>아이디 <input type="text" name="username" autocomplete="username" autofocus></label>
+		<label>비밀번호 <input type="password" name="password" autocomplete="new-password"></label>
+		<label>비밀번호 확인 <input type="password" name="passwordConfirm" autocomplete="new-password"></label>
+		<button type="submit" class="primary">가입하기</button>
+	</form>
+	<p class="muted" id="loginLink">이미 계정이 있으신가요? <a href="/login">로그인</a></p>
+</main>
+<script src="/js/common.js"></script>
+<script src="/js/signup.js"></script>
+</body>
+</html>
