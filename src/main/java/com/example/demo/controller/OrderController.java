@@ -23,7 +23,8 @@ import tools.jackson.databind.ObjectMapper;
 @RequestMapping("/api/orders")
 public class OrderController {
 
-	public record ConfirmRequest(Map<Country, Integer> orders, String routeType, long masterVersion, String memo) {
+	public record ConfirmRequest(Map<Country, Integer> orders, String routeType, long masterVersion, String memo,
+			Integer requiredDays) {
 	}
 
 	private final OrderService orderService;
@@ -47,7 +48,7 @@ public class OrderController {
 	@PostMapping
 	public Map<String, Long> confirm(@RequestBody ConfirmRequest request, HttpSession session) {
 		Order order = orderService.confirm(request.orders(), request.routeType(), request.masterVersion(),
-				request.memo(), (String) session.getAttribute(LoginInterceptor.SESSION_USER));
+				request.memo(), request.requiredDays(), (String) session.getAttribute(LoginInterceptor.SESSION_USER));
 		return Map.of("id", order.getId());
 	}
 

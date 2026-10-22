@@ -22,6 +22,8 @@ import tools.jackson.databind.ObjectMapper;
 public class OrderService {
 
 	private static final int MAX_MEMO = 1000;
+	public static final int MIN_REQUIRED_DAYS = 5;
+	public static final int MAX_REQUIRED_DAYS = 50;
 
 	private final SimulationService simulationService;
 	private final OrderRepository orderRepository;
@@ -39,10 +41,14 @@ public class OrderService {
 	/**
 	 * 주문을 확정한다. 서버가 같은 입력으로 다시 계산해 계획을 만들고(클라이언트 값은 믿지 않는다),
 	 * 시뮬레이션 이후 마스터 데이터가 바뀌었으면 확정을 거부한다.
+	 * requiredDays 는 필요 납기일(일)이며 비어 있으면 '가능한 빨리'다. 납기를 넘는 경로도 확정은 되고 화면이 빨간색으로 알려 준다.
 	 */
 	@Transactional
 	public Order confirm(Map<Country, Integer> requested, String routeType, long masterVersion, String memo,
-			String user) {
+			Integer requiredDays, String user) {
+		if (requiredDays != null && (requiredDays < MIN_REQUIRED_DAYS || requiredDays > MAX_REQUIRED_DAYS)) {
+			throw new BusinessException("필요 납기일은 %d~%d일 사이로 입력하세요".formatted(MIN_REQUIRED_DAYS, MAX_REQUIRED_DAYS));
+		}
 		SimulationResult result = simulationService.simulate(requested);
 		if (result.master().version() != masterVersion) {
 			throw new BusinessException("시뮬레이션 이후 마스터 데이터가 바뀌었습니다. 다시 시뮬레이션해 주세요", true);
@@ -61,7 +67,7 @@ public class OrderService {
 		int totalK = result.orders().values().stream().mapToInt(Integer::intValue).sum();
 		LocalDateTime now = LocalDateTime.now();
 		Order order = orderRepository.save(new Order(now, user, totalK, plan.type(), plan.label(), plan.totalDays(),
-				plan.productionCost(), plan.shippingCost(), plan.totalCost(), note, json.writeValueAsString(stored)));
+				plan.productionCost(), plan.shippingCost(), plan.totalCost(), note, requiredDays, json.writeValueAsString(stored)));
 		orderStatusHistoryRepository.save(new OrderStatusHistory(order.getId(), null, OrderStatus.CONFIRMED, user, now));
 		return order;
 	}

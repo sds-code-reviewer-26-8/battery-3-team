@@ -23,6 +23,9 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultActions;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 
 /** 화면이 쓰는 JSON API(리팩토링 2)와 화면 주소(정적 HTML)를 확인한다. */
 @SpringBootTest
@@ -36,6 +39,8 @@ class JsonApiTests {
 	MockMvc mvc;
 	@Autowired
 	OrderStatusHistoryRepository histories;
+	@Autowired
+	ObjectMapper json;
 
 	private MockHttpSession login() throws Exception {
 		MockHttpSession session = new MockHttpSession();
@@ -362,5 +367,67 @@ class JsonApiTests {
 	@Test
 	void nonNumericOrderPageIsNotFoundNotServerError() throws Exception {
 		mvc.perform(get("/orders/abc").session(login())).andExpect(status().isNotFound());
+	}
+
+	/** requiredDaysJson(예: ",\"requiredDays\":10")을 덧붙여 주문 확정을 요청한다. */
+	private ResultActions confirmWith(MockHttpSession s, String requiredDaysJson) throws Exception {
+		MvcResult sim = mvc.perform(post("/api/simulate").session(s).contentType(MediaType.APPLICATION_JSON)
+				.content("{\"orders\":" + ORDERS + "}")).andReturn();
+		int version = JsonPath.read(sim.getResponse().getContentAsString(), "$.master.version");
+		return mvc.perform(post("/api/orders").session(s).contentType(MediaType.APPLICATION_JSON)
+				.content("{\"orders\":" + ORDERS + ",\"routeType\":\"COST\",\"masterVersion\":" + version
+						+ requiredDaysJson + "}"));
+	}
+
+	private JsonNode detail(MockHttpSession s, int id) throws Exception {
+		String body = mvc.perform(get("/api/orders/" + id).session(s)).andExpect(status().isOk()).andReturn()
+				.getResponse().getContentAsString();
+		return json.readTree(body);
+	}
+
+	@Test
+	void orderWithoutRequiredDaysMeansAsSoonAsPossible() throws Exception {
+		MockHttpSession s = login();
+		int id = confirm(s); // requiredDays 를 보내지 않는다
+
+		mvc.perform(get("/api/orders/" + id).session(s)).andExpect(status().isOk())
+				.andExpect(jsonPath("$.requiredDays").isEmpty())
+				.andExpect(jsonPath("$.late").value(false));
+	}
+
+	@Test
+	void requiredDaysIsStoredAndLateIsTrueOnlyWhenRouteTakesLonger() throws Exception {
+		MockHttpSession s = login();
+
+		int tight = JsonPath.read(confirmWith(s, ",\"requiredDays\":5").andExpect(status().isOk()).andReturn()
+				.getResponse().getContentAsString(), "$.id");
+		JsonNode d = detail(s, tight);
+		assertThat(d.get("requiredDays").asInt()).isEqualTo(5);
+		assertThat(d.get("late").asBoolean()).isEqualTo(d.get("totalDays").asInt() > 5);
+
+		int loose = JsonPath.read(confirmWith(s, ",\"requiredDays\":50").andExpect(status().isOk()).andReturn()
+				.getResponse().getContentAsString(), "$.id");
+		d = detail(s, loose);
+		assertThat(d.get("requiredDays").asInt()).isEqualTo(50);
+		assertThat(d.get("late").asBoolean()).isEqualTo(d.get("totalDays").asInt() > 50);
+	}
+
+	@Test
+	void lateRouteCanStillBeConfirmed() throws Exception {
+		MockHttpSession s = login();
+		int id = JsonPath.read(confirmWith(s, ",\"requiredDays\":5").andExpect(status().isOk()).andReturn()
+				.getResponse().getContentAsString(), "$.id");
+
+		// 이 입력(12,000K)의 소요 일수는 5일보다 길어 납기를 넘지만, 확정은 막지 않고 표시만 한다
+		mvc.perform(get("/api/orders/" + id).session(s)).andExpect(jsonPath("$.late").value(true));
+	}
+
+	@Test
+	void requiredDaysOutsideFiveToFiftyIsRejected() throws Exception {
+		MockHttpSession s = login();
+		for (String bad : List.of("4", "51", "0", "-1")) {
+			confirmWith(s, ",\"requiredDays\":" + bad).andExpect(status().isBadRequest())
+					.andExpect(jsonPath("$.error").value("필요 납기일은 5~50일 사이로 입력하세요"));
+		}
 	}
 }

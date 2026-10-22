@@ -12,8 +12,9 @@ import tools.jackson.databind.ObjectMapper;
  * plan 은 확정 당시 저장한 계획(Master 와 경로)이다.
  */
 public record OrderDetail(Long id, StatusInfo status, LocalDateTime confirmedAt, String createdBy, String routeType,
-		String routeLabel, String memo, int totalK, int totalDays, String totalCostEok, long version,
-		List<StatusInfo> next, List<HistoryItem> history, JsonNode plan) {
+		String routeLabel, String memo, Integer requiredDays, boolean late, int totalK,
+		int totalDays, String totalCostEok, long version, List<StatusInfo> next, List<HistoryItem> history,
+		JsonNode plan) {
 
 	public record HistoryItem(LocalDateTime changedAt, StatusInfo fromStatus, StatusInfo toStatus,
 			String changedBy) {
@@ -26,8 +27,9 @@ public record OrderDetail(Long id, StatusInfo status, LocalDateTime confirmedAt,
 
 	public static OrderDetail of(Order o, List<OrderStatusHistory> history, ObjectMapper json) {
 		return new OrderDetail(o.getId(), StatusInfo.of(o.getStatus()), o.getConfirmedAt(), o.getCreatedBy(),
-				o.getRouteType(), o.getRouteLabel(), o.getMemo(), o.getTotalK(), o.getTotalDays(),
-				o.getTotalCostEok(), o.getVersion(), o.getStatus().next().stream().map(StatusInfo::of).toList(),
+				o.getRouteType(), o.getRouteLabel(), o.getMemo(), o.getRequiredDays(), o.isLate(), o.getTotalK(),
+				o.getTotalDays(), o.getTotalCostEok(), o.getVersion(),
+				o.getStatus().next().stream().map(StatusInfo::of).toList(),
 				history.stream().map(HistoryItem::of).toList(), json.readTree(o.getPlanJson()));
 	}
 }

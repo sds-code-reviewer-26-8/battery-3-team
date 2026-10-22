@@ -28,6 +28,13 @@
 		<section class="card">
 			<h2>2. 시뮬레이션 결과</h2>
 			<p class="muted">시뮬레이션은 지금 시점의 마스터 데이터를 사용합니다.</p>
+			<div class="deadline">
+				<label class="check"><input type="checkbox" id="asap" checked> 가능한 빨리</label>
+				<label>필요 납기일(일)
+					<input type="number" id="requiredDays" min="5" max="50" step="1" value="30" disabled></label>
+				<p class="muted">원하는 납기일이 있으면 체크를 풀고 5~50일 사이로 입력하세요.
+					소요 일수가 납기일을 넘는 경로는 빨간색으로 표시됩니다(확정은 할 수 있습니다).</p>
+			</div>
 			<div id="options" class="options"></div>
 			<div id="summary"></div>
 		</section>

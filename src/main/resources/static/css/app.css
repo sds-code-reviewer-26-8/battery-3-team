@@ -129,6 +129,15 @@ details summary { cursor: pointer; color: var(--primary); margin: 4px 0 8px; }
 .option { text-align: left; padding: 12px 14px; display: flex; flex-direction: column; gap: 2px; border-width: 2px; }
 .option strong { font-size: 15px; }
 .option.selected { border-color: var(--primary); background: #f0f6ff; }
+.option.late, .option.late.selected { border-color: var(--danger); background: #fff1f0; }
+.option.late.selected { box-shadow: 0 0 0 2px var(--danger); }
+.option.late strong,.option.late span, .late-note { color: var(--danger); }
+.late-note { font-weight: 600; }
+.deadline { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; margin: 8px 0 12px; }
+.deadline label { display: flex; gap: 8px; align-items: center; }
+.deadline input[type="number"] { width: 90px; }
+.deadline p { margin: 0; }
+dd.late { color: var(--danger); font-weight: 600; }
 
 /* 애니메이션 */
 .anim-stage { position: relative; width: 100%; aspect-ratio: 1536 / 1024; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: #5bbcff; }
