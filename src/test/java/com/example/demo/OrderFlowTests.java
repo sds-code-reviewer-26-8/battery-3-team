@@ -9,7 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.example.demo.entity.OrderStatus;
 import com.example.demo.service.BusinessException;
-import com.example.demo.service.BatteryService;
+import com.example.demo.service.OrderService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,7 +32,7 @@ class OrderFlowTests {
 	@Autowired
 	MockMvc mvc;
 	@Autowired
-	BatteryService orderService;
+	OrderService orderService;
 
 	private MockHttpSession login() throws Exception {
 		MockHttpSession session = new MockHttpSession();
