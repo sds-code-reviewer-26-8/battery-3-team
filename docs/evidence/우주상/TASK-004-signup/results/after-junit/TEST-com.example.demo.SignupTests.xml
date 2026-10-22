@@ -1,42 +1,83 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.example.demo.SignupTests" tests="12" skipped="0" failures="0" errors="0" timestamp="2026-10-22T05:18:30.300Z" hostname="DESKTOP-2GEPPK4" time="1.573">
+<testsuite name="com.example.demo.SignupTests" tests="13" skipped="0" failures="0" errors="0" timestamp="2026-10-22T06:01:21.706Z" hostname="DESKTOP-2GEPPK4" time="11.18">
   <properties/>
-  <testcase name="passwordIsStoredAsHash()" classname="com.example.demo.SignupTests" time="0.088"/>
-  <testcase name="signedUpUserHasSameAccessAsAdmin()" classname="com.example.demo.SignupTests" time="0.281"/>
-  <testcase name="invalidInputIsRejectedWithAllReasons()" classname="com.example.demo.SignupTests" time="0.125"/>
-  <testcase name="wrongCredentialsAreRejectedWithTheSameMessage()" classname="com.example.demo.SignupTests" time="0.224"/>
-  <testcase name="signupCreatesAccountAndDoesNotLogIn()" classname="com.example.demo.SignupTests" time="0.105"/>
-  <testcase name="duplicateUsernameIsConflict()" classname="com.example.demo.SignupTests" time="0.085"/>
-  <testcase name="rejectedSignupDoesNotCreateAccount()" classname="com.example.demo.SignupTests" time="0.006"/>
-  <testcase name="sameUsernameSignedUpConcurrentlyCreatesOnlyOneAccount()" classname="com.example.demo.SignupTests" time="0.129"/>
-  <testcase name="adminIsSeededOnceAndStillLogsIn()" classname="com.example.demo.SignupTests" time="0.084"/>
-  <testcase name="usernameIsCaseInsensitive()" classname="com.example.demo.SignupTests" time="0.182"/>
-  <testcase name="signupPagesAreOpenOnlyBeforeLogin()" classname="com.example.demo.SignupTests" time="0.083"/>
-  <testcase name="signedUpUserCanLogIn()" classname="com.example.demo.SignupTests" time="0.154"/>
-  <system-out><![CDATA[2026-10-22T14:18:30.302+09:00  INFO 18932 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.example.demo.SignupTests]: SignupTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-10-22T14:18:30.307+09:00  INFO 18932 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.example.demo.DemoApplication for test class com.example.demo.SignupTests
-2026-10-22T14:18:30.309+09:00  INFO 18932 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.example.demo.SignupTests]: SignupTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-10-22T14:18:30.311+09:00  INFO 18932 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.example.demo.DemoApplication for test class com.example.demo.SignupTests
-2026-10-22T14:18:31.340+09:00  WARN 18932 --- [pool-2-thread-8] org.hibernate.orm.jdbc.error             : HHH000247: ErrorCode: 23505, SQLState: 23505
-2026-10-22T14:18:31.340+09:00  WARN 18932 --- [pool-2-thread-7] org.hibernate.orm.jdbc.error             : HHH000247: ErrorCode: 23505, SQLState: 23505
-2026-10-22T14:18:31.340+09:00  WARN 18932 --- [pool-2-thread-4] org.hibernate.orm.jdbc.error             : HHH000247: ErrorCode: 23505, SQLState: 23505
-2026-10-22T14:18:31.342+09:00  WARN 18932 --- [pool-2-thread-7] org.hibernate.orm.jdbc.error             : Unique index or primary key violation: "PUBLIC.CONSTRAINT_4D INDEX PUBLIC.CONSTRAINT_INDEX_4D ON PUBLIC.USERS(USERNAME NULLS FIRST) VALUES ( /* 8 */ 'user_9_17fw' )"; SQL statement:
+  <testcase name="passwordIsStoredAsHash()" classname="com.example.demo.SignupTests" time="1.184"/>
+  <testcase name="signedUpUserHasSameAccessAsAdmin()" classname="com.example.demo.SignupTests" time="0.51"/>
+  <testcase name="invalidInputIsRejectedWithAllReasons()" classname="com.example.demo.SignupTests" time="0.124"/>
+  <testcase name="wrongCredentialsAreRejectedWithTheSameMessage()" classname="com.example.demo.SignupTests" time="0.273"/>
+  <testcase name="signupCreatesAccountAndDoesNotLogIn()" classname="com.example.demo.SignupTests" time="0.096"/>
+  <testcase name="duplicateUsernameIsConflict()" classname="com.example.demo.SignupTests" time="0.105"/>
+  <testcase name="rejectedSignupDoesNotCreateAccount()" classname="com.example.demo.SignupTests" time="0.008"/>
+  <testcase name="sameUsernameSignedUpConcurrentlyCreatesOnlyOneAccount()" classname="com.example.demo.SignupTests" time="0.166"/>
+  <testcase name="adminIsSeededOnceAndStillLogsIn()" classname="com.example.demo.SignupTests" time="0.097"/>
+  <testcase name="usernameIsCaseInsensitive()" classname="com.example.demo.SignupTests" time="0.198"/>
+  <testcase name="passwordLongerThanBcryptLimitIsRejectedWithReasonNotServerError()" classname="com.example.demo.SignupTests" time="0.179"/>
+  <testcase name="signupPagesAreOpenOnlyBeforeLogin()" classname="com.example.demo.SignupTests" time="0.12"/>
+  <testcase name="signedUpUserCanLogIn()" classname="com.example.demo.SignupTests" time="0.233"/>
+  <system-out><![CDATA[15:01:21.994 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.example.demo.SignupTests]: SignupTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+15:01:22.130 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.example.demo.DemoApplication for test class com.example.demo.SignupTests
+15:01:22.237 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.example.demo.SignupTests]: SignupTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+15:01:22.241 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.example.demo.DemoApplication for test class com.example.demo.SignupTests
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.1.1)
+
+2026-10-22T15:01:22.702+09:00  INFO 16620 --- [    Test worker] com.example.demo.SignupTests             : Starting SignupTests using Java 17.0.20.1 with PID 16620 (started by 주상 in C:\work\battery)
+2026-10-22T15:01:22.703+09:00  INFO 16620 --- [    Test worker] com.example.demo.SignupTests             : No active profile set, falling back to 1 default profile: "default"
+2026-10-22T15:01:23.334+09:00  INFO 16620 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-10-22T15:01:23.408+09:00  INFO 16620 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 60 ms. Found 6 JPA repository interfaces.
+2026-10-22T15:01:24.407+09:00  INFO 16620 --- [    Test worker] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-10-22T15:01:24.532+09:00  INFO 16620 --- [    Test worker] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.4.5.Final
+2026-10-22T15:01:25.337+09:00  INFO 16620 --- [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-10-22T15:01:25.391+09:00  INFO 16620 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-10-22T15:01:25.651+09:00  INFO 16620 --- [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:battery-test user=SA
+2026-10-22T15:01:25.653+09:00  INFO 16620 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-10-22T15:01:25.734+09:00  INFO 16620 --- [    Test worker] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:h2:mem:battery-test]
+	Database driver: H2 JDBC Driver
+	Database dialect: H2Dialect
+	Database version: 2.4.240
+	Default catalog/schema: BATTERY-TEST/PUBLIC
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: 100
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-10-22T15:01:27.145+09:00  INFO 16620 --- [    Test worker] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-10-22T15:01:27.208+09:00  INFO 16620 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-10-22T15:01:27.327+09:00  INFO 16620 --- [    Test worker] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-10-22T15:01:28.017+09:00  WARN 16620 --- [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-10-22T15:01:28.579+09:00  INFO 16620 --- [    Test worker] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-10-22T15:01:28.579+09:00  INFO 16620 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-10-22T15:01:28.582+09:00  INFO 16620 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 1 ms
+2026-10-22T15:01:28.632+09:00  INFO 16620 --- [    Test worker] com.example.demo.SignupTests             : Started SignupTests in 6.289 seconds (process running for 8.283)
+2026-10-22T15:01:32.006+09:00  WARN 16620 --- [pool-2-thread-1] org.hibernate.orm.jdbc.error             : HHH000247: ErrorCode: 23505, SQLState: 23505
+2026-10-22T15:01:32.006+09:00  WARN 16620 --- [pool-2-thread-1] org.hibernate.orm.jdbc.error             : Unique index or primary key violation: "PUBLIC.CONSTRAINT_4D INDEX PUBLIC.CONSTRAINT_INDEX_4D ON PUBLIC.USERS(USERNAME NULLS FIRST) VALUES ( /* 8 */ 'user_9_1478' )"; SQL statement:
 insert into users (created_at,password_hash,username,id) values (?,?,?,default) [23505-240]
-2026-10-22T14:18:31.342+09:00  WARN 18932 --- [pool-2-thread-4] org.hibernate.orm.jdbc.error             : Unique index or primary key violation: "PUBLIC.CONSTRAINT_4D INDEX PUBLIC.CONSTRAINT_INDEX_4D ON PUBLIC.USERS(USERNAME NULLS FIRST) VALUES ( /* 8 */ 'user_9_17fw' )"; SQL statement:
+2026-10-22T15:01:32.006+09:00  WARN 16620 --- [pool-2-thread-7] org.hibernate.orm.jdbc.error             : HHH000247: ErrorCode: 23505, SQLState: 23505
+2026-10-22T15:01:32.007+09:00  WARN 16620 --- [pool-2-thread-7] org.hibernate.orm.jdbc.error             : Unique index or primary key violation: "PUBLIC.CONSTRAINT_4D INDEX PUBLIC.CONSTRAINT_INDEX_4D ON PUBLIC.USERS(USERNAME NULLS FIRST) VALUES ( /* 8 */ 'user_9_1478' )"; SQL statement:
 insert into users (created_at,password_hash,username,id) values (?,?,?,default) [23505-240]
-2026-10-22T14:18:31.342+09:00  WARN 18932 --- [pool-2-thread-8] org.hibernate.orm.jdbc.error             : Unique index or primary key violation: "PUBLIC.CONSTRAINT_4D INDEX PUBLIC.CONSTRAINT_INDEX_4D ON PUBLIC.USERS(USERNAME NULLS FIRST) VALUES ( /* 8 */ 'user_9_17fw' )"; SQL statement:
+2026-10-22T15:01:32.007+09:00  WARN 16620 --- [pool-2-thread-4] org.hibernate.orm.jdbc.error             : HHH000247: ErrorCode: 23505, SQLState: 23505
+2026-10-22T15:01:32.007+09:00  WARN 16620 --- [pool-2-thread-4] org.hibernate.orm.jdbc.error             : Unique index or primary key violation: "PUBLIC.CONSTRAINT_4D INDEX PUBLIC.CONSTRAINT_INDEX_4D ON PUBLIC.USERS(USERNAME NULLS FIRST) VALUES ( /* 8 */ 'user_9_1478' )"; SQL statement:
 insert into users (created_at,password_hash,username,id) values (?,?,?,default) [23505-240]
-2026-10-22T14:18:31.348+09:00  WARN 18932 --- [pool-2-thread-1] org.hibernate.orm.jdbc.error             : HHH000247: ErrorCode: 23505, SQLState: 23505
-2026-10-22T14:18:31.349+09:00  WARN 18932 --- [pool-2-thread-1] org.hibernate.orm.jdbc.error             : Unique index or primary key violation: "PUBLIC.CONSTRAINT_4D INDEX PUBLIC.CONSTRAINT_INDEX_4D ON PUBLIC.USERS(USERNAME NULLS FIRST) VALUES ( /* 8 */ 'user_9_17fw' )"; SQL statement:
+2026-10-22T15:01:32.020+09:00  WARN 16620 --- [pool-2-thread-6] org.hibernate.orm.jdbc.error             : HHH000247: ErrorCode: 23505, SQLState: 23505
+2026-10-22T15:01:32.020+09:00  WARN 16620 --- [pool-2-thread-6] org.hibernate.orm.jdbc.error             : Unique index or primary key violation: "PUBLIC.CONSTRAINT_4D INDEX PUBLIC.CONSTRAINT_INDEX_4D ON PUBLIC.USERS(USERNAME NULLS FIRST) VALUES ( /* 8 */ 'user_9_1478' )"; SQL statement:
 insert into users (created_at,password_hash,username,id) values (?,?,?,default) [23505-240]
-2026-10-22T14:18:31.351+09:00  WARN 18932 --- [pool-2-thread-6] org.hibernate.orm.jdbc.error             : HHH000247: ErrorCode: 23505, SQLState: 23505
-2026-10-22T14:18:31.352+09:00  WARN 18932 --- [pool-2-thread-6] org.hibernate.orm.jdbc.error             : Unique index or primary key violation: "PUBLIC.CONSTRAINT_4D INDEX PUBLIC.CONSTRAINT_INDEX_4D ON PUBLIC.USERS(USERNAME NULLS FIRST) VALUES ( /* 8 */ 'user_9_17fw' )"; SQL statement:
+2026-10-22T15:01:32.025+09:00  WARN 16620 --- [pool-2-thread-5] org.hibernate.orm.jdbc.error             : HHH000247: ErrorCode: 23505, SQLState: 23505
+2026-10-22T15:01:32.025+09:00  WARN 16620 --- [pool-2-thread-5] org.hibernate.orm.jdbc.error             : Unique index or primary key violation: "PUBLIC.CONSTRAINT_4D INDEX PUBLIC.CONSTRAINT_INDEX_4D ON PUBLIC.USERS(USERNAME NULLS FIRST) VALUES ( /* 8 */ 'user_9_1478' )"; SQL statement:
 insert into users (created_at,password_hash,username,id) values (?,?,?,default) [23505-240]
-2026-10-22T14:18:31.355+09:00  WARN 18932 --- [pool-2-thread-2] org.hibernate.orm.jdbc.error             : HHH000247: ErrorCode: 23505, SQLState: 23505
-2026-10-22T14:18:31.355+09:00  WARN 18932 --- [pool-2-thread-2] org.hibernate.orm.jdbc.error             : Unique index or primary key violation: "PUBLIC.CONSTRAINT_4D INDEX PUBLIC.CONSTRAINT_INDEX_4D ON PUBLIC.USERS(USERNAME NULLS FIRST) VALUES ( /* 8 */ 'user_9_17fw' )"; SQL statement:
+2026-10-22T15:01:32.025+09:00  WARN 16620 --- [pool-2-thread-2] org.hibernate.orm.jdbc.error             : HHH000247: ErrorCode: 23505, SQLState: 23505
+2026-10-22T15:01:32.026+09:00  WARN 16620 --- [pool-2-thread-2] org.hibernate.orm.jdbc.error             : Unique index or primary key violation: "PUBLIC.CONSTRAINT_4D INDEX PUBLIC.CONSTRAINT_INDEX_4D ON PUBLIC.USERS(USERNAME NULLS FIRST) VALUES ( /* 8 */ 'user_9_1478' )"; SQL statement:
 insert into users (created_at,password_hash,username,id) values (?,?,?,default) [23505-240]
-2026-10-22T14:18:31.358+09:00  WARN 18932 --- [pool-2-thread-5] org.hibernate.orm.jdbc.error             : HHH000247: ErrorCode: 23505, SQLState: 23505
-2026-10-22T14:18:31.358+09:00  WARN 18932 --- [pool-2-thread-5] org.hibernate.orm.jdbc.error             : Unique index or primary key violation: "PUBLIC.CONSTRAINT_4D INDEX PUBLIC.CONSTRAINT_INDEX_4D ON PUBLIC.USERS(USERNAME NULLS FIRST) VALUES ( /* 8 */ 'user_9_17fw' )"; SQL statement:
+2026-10-22T15:01:32.026+09:00  WARN 16620 --- [pool-2-thread-8] org.hibernate.orm.jdbc.error             : HHH000247: ErrorCode: 23505, SQLState: 23505
+2026-10-22T15:01:32.026+09:00  WARN 16620 --- [pool-2-thread-8] org.hibernate.orm.jdbc.error             : Unique index or primary key violation: "PUBLIC.CONSTRAINT_4D INDEX PUBLIC.CONSTRAINT_INDEX_4D ON PUBLIC.USERS(USERNAME NULLS FIRST) VALUES ( /* 8 */ 'user_9_1478' )"; SQL statement:
 insert into users (created_at,password_hash,username,id) values (?,?,?,default) [23505-240]
 ]]></system-out>
   <system-err><![CDATA[]]></system-err>

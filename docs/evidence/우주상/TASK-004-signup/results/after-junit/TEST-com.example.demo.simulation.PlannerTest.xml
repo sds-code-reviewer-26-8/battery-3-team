@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.example.demo.simulation.PlannerTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2026-10-22T05:18:31.874Z" hostname="DESKTOP-2GEPPK4" time="0.041">
+<testsuite name="com.example.demo.simulation.PlannerTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2026-10-22T06:01:39.050Z" hostname="DESKTOP-2GEPPK4" time="0.047">
   <properties/>
-  <testcase name="usesAtMostAvailableShips()" classname="com.example.demo.simulation.PlannerTest" time="0.005"/>
-  <testcase name="costOptionIsNotMoreExpensiveAndFastOptionIsNotSlower()" classname="com.example.demo.simulation.PlannerTest" time="0.005"/>
-  <testcase name="defaultOrderSummary()" classname="com.example.demo.simulation.PlannerTest" time="0.008"/>
-  <testcase name="productionCostIsCellsTimesUnitCost()" classname="com.example.demo.simulation.PlannerTest" time="0.0"/>
-  <testcase name="everyOptionCollectsExactlyWhatWasOrdered()" classname="com.example.demo.simulation.PlannerTest" time="0.01"/>
-  <testcase name="productionStopsAtStockLimitUntilPickup()" classname="com.example.demo.simulation.PlannerTest" time="0.0"/>
-  <testcase name="singleSmallOrderTakesProductionPlusRoundTrip()" classname="com.example.demo.simulation.PlannerTest" time="0.001"/>
-  <testcase name="eachCountryIsVisitedByOneShipOnly()" classname="com.example.demo.simulation.PlannerTest" time="0.003"/>
+  <testcase name="usesAtMostAvailableShips()" classname="com.example.demo.simulation.PlannerTest" time="0.009"/>
+  <testcase name="costOptionIsNotMoreExpensiveAndFastOptionIsNotSlower()" classname="com.example.demo.simulation.PlannerTest" time="0.003"/>
+  <testcase name="defaultOrderSummary()" classname="com.example.demo.simulation.PlannerTest" time="0.011"/>
+  <testcase name="productionCostIsCellsTimesUnitCost()" classname="com.example.demo.simulation.PlannerTest" time="0.001"/>
+  <testcase name="everyOptionCollectsExactlyWhatWasOrdered()" classname="com.example.demo.simulation.PlannerTest" time="0.008"/>
+  <testcase name="productionStopsAtStockLimitUntilPickup()" classname="com.example.demo.simulation.PlannerTest" time="0.001"/>
+  <testcase name="singleSmallOrderTakesProductionPlusRoundTrip()" classname="com.example.demo.simulation.PlannerTest" time="0.0"/>
+  <testcase name="eachCountryIsVisitedByOneShipOnly()" classname="com.example.demo.simulation.PlannerTest" time="0.004"/>
   <testcase name="rejectsEmptyOrder()" classname="com.example.demo.simulation.PlannerTest" time="0.001"/>
   <testcase name="shipDepartsLateSoItDoesNotWaitAtPort()" classname="com.example.demo.simulation.PlannerTest" time="0.001"/>
   <testcase name="visitsAreCeilOfOrderOverStockLimit()" classname="com.example.demo.simulation.PlannerTest" time="0.0"/>

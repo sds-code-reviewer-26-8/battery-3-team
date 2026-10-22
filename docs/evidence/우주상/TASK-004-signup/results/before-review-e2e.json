@@ -1,0 +1,487 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main6\\e2e\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "tests/signup.spec.ts",
+      "--reporter=json"
+    ],
+    "configFile": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main6\\e2e\\playwright.config.ts",
+    "rootDir": "C:/Users/<user>/AppData/Local/Temp/claude/C--work-battery/ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7/scratchpad/wt-main6/e2e/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/<user>/AppData/Local/Temp/claude/C--work-battery/ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7/scratchpad/wt-main6/e2e/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "C:/Users/<user>/AppData/Local/Temp/claude/C--work-battery/ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7/scratchpad/wt-main6/e2e/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main6\\e2e\\test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "chromium",
+        "testDir": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main6\\e2e\\tests",
+        "snapshotDir": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main6\\e2e\\tests",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 30000,
+        "use": {
+          "baseURL": "http://localhost:18083",
+          "trace": "retain-on-failure",
+          "screenshot": "only-on-failure",
+          "launchOptions": {
+            "slowMo": 0
+          },
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Safari/537.36",
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "screen": {
+            "width": 1920,
+            "height": 1080
+          },
+          "deviceScaleFactor": 1,
+          "isMobile": false,
+          "hasTouch": false,
+          "defaultBrowserType": "chromium"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "chromium"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.1",
+    "workers": 1,
+    "webServer": {
+      "command": ".\\gradlew.bat bootRun",
+      "cwd": "..",
+      "url": "http://localhost:18083/login",
+      "reuseExistingServer": true,
+      "timeout": 180000,
+      "env": {
+        "SERVER_PORT": "18083",
+        "SPRING_DATASOURCE_URL": "jdbc:h2:mem:battery-e2e;DB_CLOSE_DELAY=-1"
+      }
+    }
+  },
+  "suites": [
+    {
+      "title": "signup.spec.ts",
+      "file": "signup.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "회원 가입",
+          "file": "signup.spec.ts",
+          "line": 39,
+          "column": 6,
+          "specs": [
+            {
+              "title": "SGN-01 로그인 화면의 회원가입 링크로 가입 화면에 간다",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 545,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-22T06:10:00.407Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "e5334e3b62ca8fd4a4b6-e1affa6b4ed22b673768",
+              "file": "signup.spec.ts",
+              "line": 40,
+              "column": 7
+            },
+            {
+              "title": "SGN-02 가입하면 완료 안내가 나오고 자동으로 로그인되지는 않는다",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 829,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-22T06:10:01.206Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "e5334e3b62ca8fd4a4b6-adb56e7092a44ef3c677",
+              "file": "signup.spec.ts",
+              "line": 49,
+              "column": 7
+            },
+            {
+              "title": "SGN-03 가입한 계정으로 로그인하면 주문 목록으로 가고 상단에 아이디가 보인다",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 893,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-22T06:10:02.048Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "e5334e3b62ca8fd4a4b6-09a99b3d99ad1d06c150",
+              "file": "signup.spec.ts",
+              "line": 61,
+              "column": 7
+            },
+            {
+              "title": "SGN-04 가입한 계정도 admin 과 같은 기능을 쓸 수 있고 기록에 아이디가 남는다",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1990,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-22T06:10:02.951Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "e5334e3b62ca8fd4a4b6-e09a6326a23f2f2d455f",
+              "file": "signup.spec.ts",
+              "line": 73,
+              "column": 7
+            },
+            {
+              "title": "SGN-05 규칙에 맞지 않으면 가입되지 않고 이유를 모두 보여 준다",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 705,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-22T06:10:04.954Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "e5334e3b62ca8fd4a4b6-e482551866e4d16c57e9",
+              "file": "signup.spec.ts",
+              "line": 98,
+              "column": 7
+            },
+            {
+              "title": "SGN-09 한글 비밀번호가 너무 길면 서버 오류 대신 이유를 보여 준다",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 5436,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.alert.error li')\nTimeout: 5000ms\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Array [\u001b[22m\n\u001b[32m-   \"비밀번호가 너무 깁니다. UTF-8 기준 72바이트까지 가능합니다(영문·숫자 64자, 한글 24자)\",\u001b[39m\n\u001b[31m+   \"Internal Server Error\",\u001b[39m\n\u001b[2m  ]\u001b[22m\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" locator('.alert.error li') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.alert.error li')\u001b[22m\n\u001b[2m    - locator resolved to 0 elements\u001b[22m\n\u001b[2m    13 × locator resolved to 1 element\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.alert.error li')\nTimeout: 5000ms\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Array [\u001b[22m\n\u001b[32m-   \"비밀번호가 너무 깁니다. UTF-8 기준 72바이트까지 가능합니다(영문·숫자 64자, 한글 24자)\",\u001b[39m\n\u001b[31m+   \"Internal Server Error\",\u001b[39m\n\u001b[2m  ]\u001b[22m\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" locator('.alert.error li') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.alert.error li')\u001b[22m\n\u001b[2m    - locator resolved to 0 elements\u001b[22m\n\u001b[2m    13 × locator resolved to 1 element\u001b[22m\n\n    at C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main6\\e2e\\tests\\signup.spec.ts:123:51",
+                        "location": {
+                          "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main6\\e2e\\tests\\signup.spec.ts",
+                          "column": 51,
+                          "line": 123
+                        },
+                        "snippet": "  121 |     await page.getByRole('button', { name: '가입하기' }).click();\n  122 |\n> 123 |     await expect(page.locator('.alert.error li')).toHaveText([\n      |                                                   ^\n  124 |       '비밀번호가 너무 깁니다. UTF-8 기준 72바이트까지 가능합니다(영문·숫자 64자, 한글 24자)',\n  125 |     ]);\n  126 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main6\\e2e\\tests\\signup.spec.ts",
+                            "column": 51,
+                            "line": 123
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.alert.error li')\nTimeout: 5000ms\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Array [\u001b[22m\n\u001b[32m-   \"비밀번호가 너무 깁니다. UTF-8 기준 72바이트까지 가능합니다(영문·숫자 64자, 한글 24자)\",\u001b[39m\n\u001b[31m+   \"Internal Server Error\",\u001b[39m\n\u001b[2m  ]\u001b[22m\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" locator('.alert.error li') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.alert.error li')\u001b[22m\n\u001b[2m    - locator resolved to 0 elements\u001b[22m\n\u001b[2m    13 × locator resolved to 1 element\u001b[22m\n\n\n  121 |     await page.getByRole('button', { name: '가입하기' }).click();\n  122 |\n> 123 |     await expect(page.locator('.alert.error li')).toHaveText([\n      |                                                   ^\n  124 |       '비밀번호가 너무 깁니다. UTF-8 기준 72바이트까지 가능합니다(영문·숫자 64자, 한글 24자)',\n  125 |     ]);\n  126 |\n    at C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main6\\e2e\\tests\\signup.spec.ts:123:51"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-22T06:10:05.669Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main6\\e2e\\test-results\\signup-회원-가입-SGN-09-한글-비밀번호가-너무-길면-서버-오류-대신-이유를-보여-준다-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main6\\e2e\\test-results\\signup-회원-가입-SGN-09-한글-비밀번호가-너무-길면-서버-오류-대신-이유를-보여-준다-chromium\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main6\\e2e\\test-results\\signup-회원-가입-SGN-09-한글-비밀번호가-너무-길면-서버-오류-대신-이유를-보여-준다-chromium\\trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main6\\e2e\\tests\\signup.spec.ts",
+                        "column": 51,
+                        "line": 123
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "e5334e3b62ca8fd4a4b6-1b145a91b59710b290b1",
+              "file": "signup.spec.ts",
+              "line": 117,
+              "column": 7
+            },
+            {
+              "title": "SGN-06 이미 있는 아이디는 대소문자 구분 없이 가입할 수 없다",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1101,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-22T06:10:12.460Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "e5334e3b62ca8fd4a4b6-a8fcc4f56567ae0ed58a",
+              "file": "signup.spec.ts",
+              "line": 133,
+              "column": 7
+            },
+            {
+              "title": "SGN-07 로그인한 상태에서 가입 화면을 열면 주문 목록으로 간다",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 584,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-22T06:10:13.824Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "e5334e3b62ca8fd4a4b6-4c1524e098a634a9ba4d",
+              "file": "signup.spec.ts",
+              "line": 145,
+              "column": 7
+            },
+            {
+              "title": "SGN-08 로그인하지 않아도 가입 화면은 열리지만 다른 화면은 여전히 막혀 있다",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 556,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-22T06:10:14.420Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "e5334e3b62ca8fd4a4b6-4d1943a32ff7c9a99bc8",
+              "file": "signup.spec.ts",
+              "line": 151,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-22T06:09:51.551Z",
+    "duration": 24884.145,
+    "expected": 8,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

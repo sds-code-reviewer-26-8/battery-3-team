@@ -79,16 +79,16 @@ pre{background:var(--code);padding:10px 12px;border-radius:8px;overflow-x:auto;f
     <div class="tile bad"><b id="c-fail">-</b><small>실패</small></div>
     <div class="tile warn"><b id="c-skip">-</b><small>건너뜀·미확인</small></div>
     <div class="tile"><b id="c-ac">-</b><small>충족한 통과 기준</small></div>
-    <div class="tile"><b id="c-loop">2</b><small>반복 횟수</small></div>
+    <div class="tile"><b id="c-loop">3</b><small>반복 횟수</small></div>
   </div>
-  <p><b>한 줄 요약:</b> 로그인 화면에서 회원 가입을 할 수 있고, 가입한 계정으로 로그인하면 admin과 같은 기능을 모두 쓸 수 있다. 비밀번호는 BCrypt 해시로 저장한다. JUnit 53/53(기존 41 + 신규 12), E2E 90 통과(기존 82 + 신규 8), 건너뜀 1개는 깨끗한 DB에서 통과, 전체 3회 반복에서도 실패 0. 기존 테스트는 하나도 수정하지 않았다. 검증 중 결함 2개를 찾아 고쳤다(4장).</p>
+  <p><b>한 줄 요약:</b> 로그인 화면에서 회원 가입을 할 수 있고, 가입한 계정으로 로그인하면 admin과 같은 기능을 모두 쓸 수 있다. 비밀번호는 BCrypt 해시로 저장한다. JUnit 54/54(기존 41 + 신규 13), E2E 91 통과(기존 82 + 신규 9), 건너뜀 1개는 깨끗한 DB에서 통과, 전체 3회 반복에서도 실패 0. 기존 테스트는 하나도 수정하지 않았다. 검증 중 결함 2개를 찾아 고쳤고, PR 리뷰 지적 1건(긴 한글 비밀번호가 서버 오류를 내는 문제)도 반영했다(4장).</p>
   <p class="sub">※ 위 숫자는 3장 표(<code>id="results"</code>)의 행만 센다. 표 밖의 건너뜀·미확인은 집계되지 않으므로 5장을 함께 읽는다. "건너뜀·미확인 0"을 "문제 없음"으로 읽지 않는다.</p>
 </section>
 
 <section>
   <h2><span class="no">2</span>구현 요약</h2>
   <table>
-    <tr><th style="width:150px">구현한 것</th><td>① 로그인 화면의 "회원가입" 링크와 가입 화면(<code>/signup</code>, 로그인 없이 열림). 아이디(영문·숫자·밑줄 4~20자, 대소문자 구분 없음), 비밀번호(8~64자), 비밀번호 확인. ② 가입하면 완료 안내와 로그인 링크를 보여 주고 자동 로그인하지 않는다. ③ 틀린 값이 있으면 가입하지 않고 이유를 한꺼번에 모두 보여 주며, 이미 쓰는 아이디(<code>admin</code> 포함)는 409. ④ 로그인은 저장된 사용자와 비밀번호 해시를 비교하고, <code>admin</code>/<code>admin</code>은 시작할 때 없으면 만든다. ⑤ 가입한 회원은 역할 구분 없이 admin과 같은 기능을 쓴다.</td></tr>
+    <tr><th style="width:150px">구현한 것</th><td>① 로그인 화면의 "회원가입" 링크와 가입 화면(<code>/signup</code>, 로그인 없이 열림). 아이디(영문·숫자·밑줄 4~20자, 대소문자 구분 없음), 비밀번호(8~64자, 단 BCrypt 한계로 UTF-8 72바이트까지라 한글은 24자까지), 비밀번호 확인. ② 가입하면 완료 안내와 로그인 링크를 보여 주고 자동 로그인하지 않는다. ③ 틀린 값이 있으면 가입하지 않고 이유를 한꺼번에 모두 보여 주며, 이미 쓰는 아이디(<code>admin</code> 포함)는 409. ④ 로그인은 저장된 사용자와 비밀번호 해시를 비교하고, <code>admin</code>/<code>admin</code>은 시작할 때 없으면 만든다. ⑤ 가입한 회원은 역할 구분 없이 admin과 같은 기능을 쓴다.</td></tr>
     <tr><th>접근 방법</th><td>사전 검토의 대안 A. 새 <code>users</code> 테이블(아이디는 소문자로 정규화, 유일 제약)에 BCrypt 해시를 저장한다(<code>spring-security-crypto</code>만 추가, Spring Security 설정은 쓰지 않음). 같은 아이디의 동시 가입은 먼저 존재 여부를 확인하고, 마지막 방어선으로 유일 제약 위반을 409로 바꾼다. 가입 API는 기존 JSON API와 같은 오류 형식({error, conflict, errors})을 쓴다. 인터셉터는 <code>/signup</code>, <code>/signup.html</code>, <code>/api/signup</code> 세 경로만 추가로 열었다.</td></tr>
     <tr><th>함께 한 코드 정리</th><td>사람 결정(사전 검토 질문 5)에 따라 문서 없이 코드만 수정했다. 이전 작업(PR #21)의 주문 상세 화면 스크립트에서 반복되던 문자열을 상수로 정리했다(<code>order-detail.js</code>, 동작 변경 없음, 별도 커밋).</td></tr>
   </table>
@@ -117,13 +117,13 @@ pre{background:var(--code);padding:10px 12px;border-radius:8px;overflow-x:auto;f
     <thead><tr><th style="width:60px">AC</th><th>검증 항목</th><th>실행 명령 / 방법</th><th style="width:80px">결과</th><th>근거 (결과 파일·로그)</th></tr></thead>
     <tbody>
       <tr data-result="pass" data-ac="AC-1"><td>AC-1</td><td>컴파일 에러 0</td><td><code>.\gradlew.bat compileJava compileTestJava --rerun-tasks</code></td><td><span class="badge b-ok">통과</span></td><td>results/after-compile.log (BUILD SUCCESSFUL)</td></tr>
-      <tr data-result="pass" data-ac="AC-2"><td>AC-2</td><td>가입하면 완료 안내와 로그인 링크가 보이고 가입 양식은 감춰지며 자동 로그인되지 않음</td><td>E2E SGN-01·02, JUnit <code>signupCreatesAccountAndDoesNotLogIn</code></td><td><span class="badge b-ok">통과</span></td><td>results/after-e2e.json (expected 90, skipped 1, unexpected 0), results/after-junit/TEST-…SignupTests.xml (12/12)</td></tr>
+      <tr data-result="pass" data-ac="AC-2"><td>AC-2</td><td>가입하면 완료 안내와 로그인 링크가 보이고 가입 양식은 감춰지며 자동 로그인되지 않음</td><td>E2E SGN-01·02, JUnit <code>signupCreatesAccountAndDoesNotLogIn</code></td><td><span class="badge b-ok">통과</span></td><td>results/after-e2e.json (expected 91, skipped 1, unexpected 0), results/after-junit/TEST-…SignupTests.xml (13/13)</td></tr>
       <tr data-result="pass" data-ac="AC-3"><td>AC-3</td><td>가입한 계정으로 로그인하면 주문 목록으로 가고 상단에 아이디가 보임, 틀리면 기존과 같은 문구</td><td>E2E SGN-03, JUnit <code>signedUpUserCanLogIn</code>, <code>wrongCredentialsAreRejectedWithTheSameMessage</code>, <code>usernameIsCaseInsensitive</code></td><td><span class="badge b-ok">통과</span></td><td>results/after-e2e.json, results/after-junit/</td></tr>
       <tr data-result="pass" data-ac="AC-4"><td>AC-4</td><td>가입한 계정이 주문 확정·상태 변경·마스터 저장을 할 수 있고 작성자·변경 기록에 아이디가 남음</td><td>E2E SGN-04, JUnit <code>signedUpUserHasSameAccessAsAdmin</code></td><td><span class="badge b-ok">통과</span></td><td>results/after-e2e.json, results/after-junit/</td></tr>
-      <tr data-result="pass" data-ac="AC-5"><td>AC-5</td><td>규칙 위반(빈 값, 형식·길이, 비밀번호 짧음, 확인 불일치)은 가입되지 않고 이유를 모두 표시, 아이디는 남기고 비밀번호는 비움</td><td>E2E SGN-05, JUnit <code>invalidInputIsRejectedWithAllReasons</code>, <code>rejectedSignupDoesNotCreateAccount</code></td><td><span class="badge b-ok">통과</span></td><td>results/after-e2e.json, results/after-junit/</td></tr>
+      <tr data-result="pass" data-ac="AC-5"><td>AC-5</td><td>규칙 위반(빈 값, 형식·길이, 비밀번호 짧음, 확인 불일치)은 가입되지 않고 이유를 모두 표시, 아이디는 남기고 비밀번호는 비움</td><td>E2E SGN-05·09, JUnit <code>invalidInputIsRejectedWithAllReasons</code>, <code>rejectedSignupDoesNotCreateAccount</code>, <code>passwordLongerThanBcryptLimitIsRejectedWithReasonNotServerError</code>(한글 24자 가능, 25자는 500이 아니라 안내)</td><td><span class="badge b-ok">통과</span></td><td>results/after-e2e.json, results/after-junit/</td></tr>
       <tr data-result="pass" data-ac="AC-6"><td>AC-6</td><td>이미 있는 아이디(admin 포함, 대소문자 무시)는 409, 같은 아이디 동시 가입은 한 건만 성공</td><td>E2E SGN-06, JUnit <code>duplicateUsernameIsConflict</code>, <code>sameUsernameSignedUpConcurrentlyCreatesOnlyOneAccount</code>(8개 동시 요청 → 201 한 건, 409 일곱 건)</td><td><span class="badge b-ok">통과</span></td><td>results/after-junit/TEST-…SignupTests.xml</td></tr>
       <tr data-result="pass" data-ac="AC-7"><td>AC-7</td><td>비밀번호는 평문이 아닌 해시로 저장</td><td>JUnit <code>passwordIsStoredAsHash</code> (원문과 다르고 BCrypt 형식 <code>$2…</code>)</td><td><span class="badge b-ok">통과</span></td><td>results/after-junit/TEST-…SignupTests.xml</td></tr>
-      <tr data-result="pass" data-ac="AC-8"><td>AC-8</td><td>admin/admin 로그인 그대로, 기존 JUnit·E2E를 <b>수정 없이</b> 모두 통과, 반복 실행에서도 안정, LST-04는 깨끗한 DB에서 통과, admin 중복 생성 없음</td><td><code>gradlew.bat test</code>, <code>npx playwright test</code>, <code>--repeat-each=3</code>, LST-04 단독, JUnit <code>adminIsSeededOnceAndStillLogsIn</code></td><td><span class="badge b-ok">통과</span></td><td>results/after-junit/ (53/53), results/after-e2e.json (90 통과·1 건너뜀·0 실패), results/after-e2e-repeat3.json (전체 3회 반복: 270 통과·3 건너뜀·0 실패·flaky 0), results/after-e2e-clean-db.json (1/1). 기존 테스트 파일의 변경: 0건(git status에 기존 테스트 없음).</td></tr>
+      <tr data-result="pass" data-ac="AC-8"><td>AC-8</td><td>admin/admin 로그인 그대로, 기존 JUnit·E2E를 <b>수정 없이</b> 모두 통과, 반복 실행에서도 안정, LST-04는 깨끗한 DB에서 통과, admin 중복 생성 없음</td><td><code>gradlew.bat test</code>, <code>npx playwright test</code>, <code>--repeat-each=3</code>, LST-04 단독, JUnit <code>adminIsSeededOnceAndStillLogsIn</code></td><td><span class="badge b-ok">통과</span></td><td>results/after-junit/ (54/54), results/after-e2e.json (91 통과·1 건너뜀·0 실패), results/after-e2e-repeat3.json (전체 3회 반복: 273 통과·3 건너뜀·0 실패·flaky 0), results/after-e2e-clean-db.json (1/1). 기존 테스트 파일의 변경: 0건(git status에 기존 테스트 없음).</td></tr>
       <tr data-result="pass" data-ac="AC-9"><td>AC-9</td><td>가입 화면은 로그인 없이 열리고 다른 화면·API는 그대로 보호, 로그인한 사용자가 가입 화면을 열면 주문 목록으로</td><td>E2E SGN-07·08, 기존 AUTH-01~09, JUnit <code>signupPagesAreOpenOnlyBeforeLogin</code></td><td><span class="badge b-ok">통과</span></td><td>results/after-e2e.json, results/after-junit/</td></tr>
       <tr data-result="pass" data-ac="AC-10"><td>AC-10</td><td>주문·마스터·시뮬레이션 서비스의 업무 규칙 변경 없음</td><td><code>git diff main -- OrderService MasterService SimulationService BusinessException</code></td><td><span class="badge b-ok">통과</span></td><td>results/service-diff.txt (변경 0줄. 새 파일 <code>UserService</code>만 추가)</td></tr>
       <tr data-result="pass" data-ac="AC-11"><td>AC-11</td><td>PRD·INTENT가 새 동작과 일치</td><td>문서 diff</td><td><span class="badge b-ok">통과</span></td><td>PRD(FR-22~25, 범위, 한계, 인수 기준, Q3), INTENT(의도 8, 4장, 열린 질문, 부록) 갱신.</td></tr>
@@ -134,8 +134,8 @@ pre{background:var(--code);padding:10px 12px;border-radius:8px;overflow-x:auto;f
   <div class="tablewrap"><table>
     <thead><tr><th>통과 기준</th><th>추가한 TC</th><th>구현 이전 코드(main 8c942bc)에서의 결과</th></tr></thead>
     <tbody>
-      <tr><td>AC-2~9</td><td>JUnit <code>SignupTests</code> 12개</td><td><b>컴파일되지 않음</b>(새로 만든 <code>UserRepository</code>·<code>UserService</code>·<code>User</code>를 직접 참조하므로 "구현 없이는 통과할 수 없다"로만 기록). 동작 확인은 아래 E2E로 한다. results/before-new-junit.log</td></tr>
-      <tr><td>AC-2~9</td><td>E2E <code>signup.spec.ts</code> SGN-01~08 (8개)</td><td><b>8개 모두 실패</b> (가입 화면·API가 없음). results/before-new-e2e.json: unexpected 8</td></tr>
+      <tr><td>AC-2~9</td><td>JUnit <code>SignupTests</code> 13개</td><td><b>컴파일되지 않음</b>(새로 만든 <code>UserRepository</code>·<code>UserService</code>·<code>User</code>를 직접 참조하므로 "구현 없이는 통과할 수 없다"로만 기록). 동작 확인은 아래 E2E로 한다. results/before-new-junit.log</td></tr>
+      <tr><td>AC-2~9</td><td>E2E <code>signup.spec.ts</code> SGN-01~09 (9개)</td><td><b>8개 모두 실패</b> (가입 화면·API가 없음). results/before-new-e2e.json: unexpected 8</td></tr>
     </tbody>
   </table></div>
 
@@ -155,6 +155,11 @@ pre{background:var(--code);padding:10px 12px;border-radius:8px;overflow-x:auto;f
 <section>
   <h2><span class="no">4</span>반복(Feedback) 기록</h2>
   <ol class="timeline">
+    <li><b>3회차 (PR #22 리뷰 반영)</b> — 통과<br>
+      계기: 리뷰(GlennHKim)의 [필수] 지적. 한글 비밀번호가 길면 가입 중 500이 난다. 직접 재현: 한글 24자(72바이트)는 201, 25자와 30자는 500(<code>password cannot be more than 72 bytes</code>). 리뷰의 "24자부터"는 정확히는 25자부터였다.<br>
+      원인: <b>구현의 문제</b>. 검증은 글자 수(8~64자)만 보는데 BCrypt는 72바이트까지만 처리한다. 한글은 한 글자가 3바이트다. 사전 검토가 비밀번호의 글자 수와 바이트 수를 구분하지 못했다.<br>
+      조치: 글자 수 규칙을 통과한 비밀번호가 UTF-8 72바이트를 넘으면 안내("비밀번호가 너무 깁니다. UTF-8 기준 72바이트까지 가능합니다(영문·숫자 64자, 한글 24자)")하고 가입시키지 않는다(글자 수 오류가 이미 있으면 같은 이유를 두 번 알리지 않음). 새 JUnit 1개와 E2E SGN-09 추가, 가입 화면 안내 문구와 PRD FR-22에 한도를 적음. 리뷰의 [권장](가입 화면이 로그인 없이 열리는데 "로그인 화면 외에는 볼 수 없다"는 문구가 남음)도 반영해 PRD FR-20·인수 기준, INTENT 원칙 8과 그 인용, <code>LoginInterceptor</code> 주석을 "로그인·회원가입 화면"으로 고침.<br>
+      재검증: 컴파일 성공, JUnit 54/54, E2E 91 통과·1 건너뜀·0 실패, 전체 3회 반복 273 통과, LST-04 깨끗한 DB 통과. 새 TC는 리뷰 반영 전 코드(aa440d4)에서 실패(JUnit 1/13, E2E SGN-09)함을 확인(results/before-review-*).</li>
     <li><b>2회차</b> — 통과<br>
       실패 내용: E2E SGN-02 실패. 가입이 끝나도 가입 양식이 그대로 보임 (<code>toBeHidden</code> 기대 위반)<br>
       원인: <b>구현의 문제</b>. 양식을 <code>hidden</code> 속성으로 감췄는데, 기존 CSS의 <code>.stack { display: flex }</code>가 <code>hidden</code>의 기본 숨김을 덮어썼다.<br>
@@ -162,7 +167,7 @@ pre{background:var(--code);padding:10px 12px;border-radius:8px;overflow-x:auto;f
     <li><b>1회차</b> — 통과<br>
       실패 내용: JUnit <code>invalidInputIsRejectedWithAllReasons</code> 실패. 빈 입력 <code>{}</code>에서 이유가 2개일 것으로 기대했으나 3개가 나옴<br>
       원인: <b>구현의 문제</b>(테스트가 틀린 것이 아님). 비밀번호가 비어 있어도 "비밀번호 확인이 같지 않습니다"까지 보여 줘 불필요한 안내가 늘었다.<br>
-      조치: 비밀번호가 있을 때만 확인 일치를 검사하도록 수정 → 재검증 결과: 통과 (JUnit 53/53)</li>
+      조치: 비밀번호가 있을 때만 확인 일치를 검사하도록 수정 → 재검증 결과: 통과 (당시 JUnit 53/53)</li>
   </ol>
 </section>
 
@@ -173,6 +178,7 @@ pre{background:var(--code);padding:10px 12px;border-radius:8px;overflow-x:auto;f
     <li><b>기존 개발 DB 파일(<code>./data/battery</code>)로 실제로 시작해 보는 확인은 하지 않았다.</b> 개발 DB를 건드리지 않는 원칙에 따라, 새 테이블이 자동 생성되고 기존 테이블이 바뀌지 않는다는 점은 설정(<code>ddl-auto=update</code>)과 코드 읽기로만 확인했다. admin이 이미 있을 때 중복 생성되지 않는 것은 JUnit(<code>ensureAdmin</code> 두 번 호출)로 확인했다. 사람이 처음 개발 DB로 실행할 때 확인하길 권한다.</li>
     <li>화면을 사람이 직접 눈으로 보는 수동 확인(L3 필수)은 AI가 하지 못했고, <b>사람이 수동으로 확인했다고 알려 왔다</b>(2026-10-22 대화). 확인한 범위의 세부 기록은 없다.</li>
     <li>가입 후 로그인할 때 세션 아이디를 새로 발급(세션 고정 방지)하지 않는다. 기존 로그인도 하지 않았고 범위 밖이다. 가입·로그인 폼의 비밀번호는 HTTPS가 아니면 평문으로 전송된다(기존과 같음).</li>
+    <li>비밀번호 한도는 UTF-8 72바이트(영문·숫자 64자, 한글 24자)다. 이모지(4바이트) 등은 더 짧아질 수 있고 같은 안내가 나온다. 별도 테스트는 한글과 영문 혼합까지만 했다.</li>
     <li>JS 린트·타입 검사는 도구가 없어 미확인. Chromium 외 브라우저는 확인하지 않았다.</li>
     <li>E2E 전체 실행 시간이 약 87초에서 약 107초로 늘었다. 로그인마다 BCrypt로 해시를 비교하기 때문이다(보안을 위해 기본 강도 유지).</li>
     <li>이 문서는 승인 칸을 비워 두었다. 사람 확인 전이다.</li>
@@ -199,6 +205,7 @@ pre{background:var(--code);padding:10px 12px;border-radius:8px;overflow-x:auto;f
     <li>변경 후: results/after-compile.log, results/after-junit/, results/after-e2e.json, results/after-e2e-clean-db.json, results/after-e2e-repeat3.json</li>
     <li>새 TC의 구현 이전 코드(8c942bc) 대조: results/before-new-junit.log, results/before-new-e2e.json</li>
     <li>서비스 변경 없음 확인과 바뀐 main 코드 목록: results/service-diff.txt</li>
+    <li>리뷰 반영 전 코드(aa440d4)에서 새 TC 대조: results/before-review-junit.log, results/before-review-e2e.json</li>
     <li>결과 파일의 작성자 PC 사용자 계정 이름은 <code>&lt;user&gt;</code>로 치환했다.</li>
     <li>사전 검토: <a href="precheck.html">precheck.html</a></li>
   </ul>
