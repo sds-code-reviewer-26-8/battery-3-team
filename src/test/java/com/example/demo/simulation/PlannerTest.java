@@ -206,6 +206,27 @@ class PlannerTest {
 	}
 
 	@Test
+	void 비용최소는_운영비가_중간이면_운항비최소도_가장빠름도_아닌_안을_고른다() {
+		// 공장 4곳 모두 하루 0.5억: 세 안이 갈라지는 값이다(1억이면 비용 최소 = 가장 빠르게가 된다)
+		Map<Country, Integer> orders = orders(3000, 3000, 3000, 3000);
+		long op = 50_000_000L;
+		List<Plan> plans = Planner.plan(master(3, op, op, op, op), orders);
+		Plan cost = byType(plans, Planner.COST);
+		Plan fast = byType(plans, Planner.FAST);
+
+		// 비용 최소: 24일, 운항비+운영비 70억 (가장 빠르게 72억보다 작다)
+		assertThat(cost.totalDays()).isEqualTo(24);
+		assertThat(cost.shippingCost() + cost.operatingCost()).isEqualTo(7_000_000_000L);
+		assertThat(fast.totalDays()).isEqualTo(20);
+		assertThat(fast.shippingCost() + fast.operatingCost()).isEqualTo(7_200_000_000L);
+
+		// 운항비만 보던 기존 기준의 안(26일)은 같은 운영비로 따지면 72억이라 비용 최소가 아니다
+		Plan shippingOnly = byType(Planner.plan(master(3, 0, 0, 0, 0), orders), Planner.COST);
+		assertThat(shippingOnly.totalDays()).isEqualTo(26);
+		assertThat(shippingOnly.shippingCost() + 4 * op * shippingOnly.totalDays()).isEqualTo(7_200_000_000L);
+	}
+
+	@Test
 	void FAST는_totalDays_최소_운영비무관() {
 		Map<Country, Integer> orders = orders(3000, 3000, 3000, 3000);
 		List<Plan> cheap = Planner.plan(master(3, 0, 0, 0, 0), orders);
