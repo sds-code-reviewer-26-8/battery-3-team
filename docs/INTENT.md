@@ -118,7 +118,7 @@
 | 3. 기준이 바뀌면 확정 거부 | `Setting`의 변경 번호(`masterVersion`) 설명, `OrderService`의 주문 확정 처리와 오류 문구 |
 | 4. 동시 수정 방지 | `OrderService`의 상태 변경 처리 설명, 주문(`Order`)의 `@Version` |
 | 5. 전부 맞아야 저장 | `MasterService`의 기준 정보 저장 처리 설명 |
-| 6. 이유를 그대로 알려 준다 | `BusinessException` 설명, `ApiController`의 오류 변환 |
+| 6. 이유를 그대로 알려 준다 | `BusinessException` 설명, `ApiExceptionHandler`의 오류 변환 |
 | 7. 계산 결과 검산 | `Planner`의 일별 생산 재현(`simulateFactory`) 설명 |
 | 8. 로그인 필수와 기록 | `LoginInterceptor` 설명, `WebConfig`의 적용 경로 |
 | 9. 기준 정보 공유 | 기준 정보 화면(`master.html`)의 안내 문구 |
