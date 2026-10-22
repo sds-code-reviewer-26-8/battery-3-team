@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -9,7 +10,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.example.demo.entity.OrderStatus;
+import com.example.demo.entity.OrderStatusHistory;
+import com.example.demo.repository.OrderStatusHistoryRepository;
 import com.jayway.jsonpath.JsonPath;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,6 +34,8 @@ class JsonApiTests {
 
 	@Autowired
 	MockMvc mvc;
+	@Autowired
+	OrderStatusHistoryRepository histories;
 
 	private MockHttpSession login() throws Exception {
 		MockHttpSession session = new MockHttpSession();
@@ -268,5 +275,91 @@ class JsonApiTests {
 				.andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$.error").value("총 생산 필요 수는 1K 이상이어야 합니다"))
 				.andExpect(jsonPath("$.errors").doesNotExist());
+	}
+	// ---- 취소(삭제) 관련 추가 확인 (fix/cancel-error-page)
+
+	private long versionOf(MockHttpSession s, int id) throws Exception {
+		return ((Number) JsonPath.read(mvc.perform(get("/api/orders/" + id).session(s)).andReturn()
+				.getResponse().getContentAsString(), "$.version")).longValue();
+	}
+
+	/** 현재 version 으로 상태를 바꾸고 성공(200)을 확인한다. */
+	private void moveTo(MockHttpSession s, int id, String target) throws Exception {
+		mvc.perform(post("/api/orders/" + id + "/status").session(s).contentType(MediaType.APPLICATION_JSON)
+				.content(statusBody(target, versionOf(s, id)))).andExpect(status().isOk());
+	}
+
+	@Test
+	void cancelingAlreadyCanceledOrderIsNotFoundNotServerError() throws Exception {
+		MockHttpSession s = login();
+		int id = confirm(s);
+		long version = versionOf(s, id);
+		mvc.perform(post("/api/orders/" + id + "/status").session(s).contentType(MediaType.APPLICATION_JSON)
+				.content(statusBody("CANCELED", version))).andExpect(status().isOk());
+
+		// 이미 삭제된 주문에 다시 요청하면(두 번 클릭, 다른 사용자가 먼저 취소) 500 이 아니라 404 와 이유
+		mvc.perform(post("/api/orders/" + id + "/status").session(s).contentType(MediaType.APPLICATION_JSON)
+						.content(statusBody("CANCELED", version)))
+				.andExpect(status().isNotFound())
+				.andExpect(jsonPath("$.error").value("주문을 찾을 수 없습니다"))
+				.andExpect(jsonPath("$.conflict").value(false));
+	}
+
+	@Test
+	void cancelFromInProgressDeletesOrder() throws Exception {
+		MockHttpSession s = login();
+		int id = confirm(s);
+		moveTo(s, id, "IN_PROGRESS");
+
+		mvc.perform(post("/api/orders/" + id + "/status").session(s).contentType(MediaType.APPLICATION_JSON)
+						.content(statusBody("CANCELED", versionOf(s, id))))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.deleted").value(true))
+				.andExpect(jsonPath("$.order").doesNotExist());
+		mvc.perform(get("/api/orders/" + id).session(s)).andExpect(status().isNotFound());
+	}
+
+	@Test
+	void completedOrderCannotBeCanceled() throws Exception {
+		MockHttpSession s = login();
+		int id = confirm(s);
+		moveTo(s, id, "IN_PROGRESS");
+		moveTo(s, id, "COMPLETED");
+
+		mvc.perform(post("/api/orders/" + id + "/status").session(s).contentType(MediaType.APPLICATION_JSON)
+						.content(statusBody("CANCELED", versionOf(s, id))))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.error").value("완료 상태에서는 취소(으)로 바꿀 수 없습니다"));
+		mvc.perform(get("/api/orders/" + id).session(s)).andExpect(status().isOk())
+				.andExpect(jsonPath("$.status.name").value("COMPLETED"));
+	}
+
+	@Test
+	void cancelKeepsStatusHistoryAfterOrderIsDeleted() throws Exception {
+		MockHttpSession s = login();
+		int id = confirm(s);
+		mvc.perform(post("/api/orders/" + id + "/status").session(s).contentType(MediaType.APPLICATION_JSON)
+				.content(statusBody("CANCELED", versionOf(s, id)))).andExpect(status().isOk());
+
+		// 주문 행은 삭제되지만 이력(확정 → 취소)은 남는다
+		List<OrderStatusHistory> history = histories.findByOrderIdOrderByIdAsc((long) id);
+		assertThat(history).hasSize(2);
+		assertThat(history.get(0).getFromStatus()).isNull();
+		assertThat(history.get(0).getToStatus()).isEqualTo(OrderStatus.CONFIRMED);
+		assertThat(history.get(1).getFromStatus()).isEqualTo(OrderStatus.CONFIRMED);
+		assertThat(history.get(1).getToStatus()).isEqualTo(OrderStatus.CANCELED);
+	}
+
+	@Test
+	void orderPageOpensForAnyNumericIdEvenOutOfRange() throws Exception {
+		MockHttpSession s = login();
+		// 화면 주소는 주문 존재를 확인하지 않는다. 범위를 넘는 숫자여도 서버 오류가 아니라 화면이 열린다.
+		mvc.perform(get("/orders/99999999999999999999").session(s)).andExpect(status().isOk())
+				.andExpect(forwardedUrl("/order-detail.html"));
+	}
+
+	@Test
+	void nonNumericOrderPageIsNotFoundNotServerError() throws Exception {
+		mvc.perform(get("/orders/abc").session(login())).andExpect(status().isNotFound());
 	}
 }
