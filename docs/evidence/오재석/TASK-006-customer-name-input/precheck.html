@@ -58,7 +58,7 @@ pre{background:var(--code);padding:10px 12px;border-radius:8px;overflow-x:auto;f
     <div><span>작성자</span>Prepare 에이전트</div>
     <div><span>작성일</span>2026-10-22</div>
     <div><span>브랜치</span>feat/customer-name-input_jaesuk</div>
-    <div><span>검토 상태</span><span class="badge b-warn">승인 대기</span></div>
+    <div><span>검토 상태</span><span class="badge b-ok">승인</span></div>
     <div><span>영역 제안 (최종은 사람)</span><span class="badge b-warn">Yellow</span></div>
   </div>
 </header>
@@ -80,8 +80,8 @@ pre{background:var(--code);padding:10px 12px;border-radius:8px;overflow-x:auto;f
 </section>
 <section>
   <h2><span class="no">2</span>근거 자료 점검</h2>
-<div class="tablewrap"><table><thead><tr><th>구분</th><th>자료 / 위치</th><th>확인한 내용</th><th>확인 방법</th></tr></thead><tbody><tr><td>요구사항</td><td>docs/PRD.md</td><td>고객사 항목 없음(grep "고객" 결과 없음). 요구는 이번 작업 입력(요구·사람이 결정한 사항)이 근거.</td><td>grep 실행(결과 0건)</td></tr>
-<tr><td>설계 의도</td><td>docs/INTENT.md</td><td>고객사 관련 내용 없음. 설계 포인트는 CLAUDE.md(낙관적 잠금, 스냅샷 저장, 취소 시 행 삭제)를 근거로 함.</td><td>grep 실행(결과 0건), CLAUDE.md 읽음</td></tr>
+<div class="tablewrap"><table><thead><tr><th>구분</th><th>자료 / 위치</th><th>확인한 내용</th><th>확인 방법</th></tr></thead><tbody><tr><td>요구사항</td><td>docs/PRD.md</td><td>고객사 항목 없음(grep "고객" 결과 없음). 요구는 이번 작업 입력(요구·사람이 결정한 사항)이 근거. <b>PR #24 리뷰 반영</b>: PRD 4장 범위, FR-8, 새 FR-22, 8장 수용 기준 2건을 이 변경에서 갱신했다.</td><td>grep 실행(결과 0건), PR 에서 PRD diff 확인</td></tr>
+<tr><td>설계 의도</td><td>docs/INTENT.md</td><td>고객사 관련 내용 없음. 설계 포인트는 CLAUDE.md(낙관적 잠금, 스냅샷 저장, 취소 시 행 삭제)를 근거로 함. <b>PR #24 리뷰 반영(INTENT 확인 결과)</b>: 원칙 2(확정 주문은 확정 당시 그대로)는 계획·날짜·금액이 바뀌지 않아 어기지 않지만, 확정 후 바꿀 수 있는 값이 상태와 고객사 이름으로 늘었다. 원칙 4(동시 수정 확인)는 이름 수정도 같은 방식(version 비교와 낙관적 잠금 예외 409)을 쓴다. 원칙 8(누가 했는지 기록)은 수정 이력을 남기지 않아 부딪힐 수 있어 INTENT 6장 Q5 로 남겼고, INTENT 4장 표에 "확정 후 고칠 수 있는 값 추가" 행을 더했다.</td><td>grep 실행(결과 0건), CLAUDE.md 읽음</td></tr>
 <tr><td>관련 코드(서버)</td><td>controller/OrderController, service/OrderService, entity/Order, entity/OrderStatus, controller/dto/OrderDetail·OrderList, controller/ApiExceptionHandler, service/BusinessException</td><td>ConfirmRequest(orders, routeType, masterVersion, memo)에 고객사 없음. 메모는 strip 후 빈 값이면 null, 1000자 초과면 BusinessException(400): 같은 방식으로 구현 가능. changeStatus 가 version 불일치와 ObjectOptimisticLockingFailureException 을 conflict()(409)로 처리: 수정에도 재사용. getOrder 는 없으면 notFound(404). OrderStatus.next() 는 CONFIRMED/IN_PROGRESS 만 비어 있지 않은 전이를 가짐. 취소는 주문 행 삭제.</td><td>소스 읽음</td></tr>
 <tr><td>관련 코드(화면)</td><td>static/js/orders.js, order-detail.js, order-new.js, common.js, orders.html, order-new.html</td><td>목록은 colspan="8" 두 곳과 th 8개, 행은 esc() 로 이스케이프해 innerHTML 로 그림. 상세는 meta dl 에 메모 표시(null 이면 "-"), 상태 버튼은 d.next 로 결정. order-new.js 는 확정 시 memo 를 postJson 으로 전송. common.js 에 putJson 이미 있음.</td><td>소스 읽음</td></tr>
 <tr><td>기존 테스트</td><td>JsonApiTests, OrderFlowTests, e2e/tests/lst.spec.ts, order-confirm.spec.ts, order-detail.spec.ts, helpers.ts</td><td>lst.spec.ts:74 가 목록 th 8개를 고정 검증하므로 열을 추가하면 실패한다(갱신 필요). helpers.ts createOrderViaApi 는 memo 만 받음(고객사 옵션 추가 필요).</td><td>grep·소스 읽음</td></tr>
@@ -156,14 +156,14 @@ $ curl -X PUT .../api/orders/161/customer  -> HTTP 404 "No static resource api/o
   <h2><span class="no">9</span>사람 확인 (HITL)</h2>
   <div class="guide"><b>구현에 들어가도 되는지</b> 사람이 판단하는 자리입니다. AI는 이 칸을 임의로 채우지 않습니다.</div>
   <ul class="check">
-    <li><input type="checkbox"><div>목표와 범위가 적절하다</div></li>
-    <li><input type="checkbox"><div>통과 기준이 구체적이고 검증할 수 있다</div></li>
-    <li><input type="checkbox"><div>위험과 되돌릴 수 없는 작업을 확인했다</div></li>
+    <li><input type="checkbox" checked><div>목표와 범위가 적절하다</div></li>
+    <li><input type="checkbox" checked><div>통과 기준이 구체적이고 검증할 수 있다</div></li>
+    <li><input type="checkbox" checked><div>위험과 되돌릴 수 없는 작업을 확인했다</div></li>
   </ul>
   <table style="margin-top:10px">
-    <tr><th style="width:150px">결정</th><td><span class="ph">[승인 / 보완 필요 / 보류]</span></td></tr>
-    <tr><th>확인한 사람</th><td><span class="ph">[이름]</span> · <span class="ph">[YYYY-MM-DD]</span></td></tr>
-    <tr><th>의견</th><td><span class="ph">[보완할 점]</span></td></tr>
+    <tr><th style="width:150px">결정</th><td>승인</td></tr>
+    <tr><th>확인한 사람</th><td>오재석 · 2026-10-22</td></tr>
+    <tr><th>의견</th><td>범위, 통과 기준, 최종 영역(<b>Yellow</b>), 목록의 고객사 열 위치(맨 끝), 완료 상태 400 문구("완료된 주문은 고객사 이름을 수정할 수 없습니다")를 확인하고 구현을 승인했습니다(2026-10-22).</td></tr>
   </table>
 </section>
 
