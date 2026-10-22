@@ -53,8 +53,9 @@ public final class Planner {
 		}
 		Map<Country, int[]> amounts = amounts(master, orders, active);
 
-		long dailyOperating = dailyOperatingCost(master, active);
+		long dailyOperating = dailyOperatingCost(master, orders);
 		Candidate cost = null;
+		long costBest = 0; // cost 의 운항비+운영비
 		Candidate fast = null;
 		int maxShips = Math.min(master.shipCount(), active.size());
 		for (List<List<Country>> partition : partitions(active, maxShips)) {
@@ -62,10 +63,10 @@ public final class Planner {
 			for (List<List<List<Country>>> shipTrips : tripStructures(master, groups, amounts)) {
 				Candidate cand = schedule(master, orders, amounts, shipTrips);
 				long candCost = cand.shipping + dailyOperating * cand.totalDays;
-				long bestCost = cost == null ? 0 : cost.shipping + dailyOperating * cost.totalDays;
-				if (cost == null || candCost < bestCost
-						|| (candCost == bestCost && cand.totalDays < cost.totalDays)) {
+				if (cost == null || candCost < costBest
+						|| (candCost == costBest && cand.totalDays < cost.totalDays)) {
 					cost = cand;
+					costBest = candCost;
 				}
 				if (fast == null || cand.totalDays < fast.totalDays
 						|| (cand.totalDays == fast.totalDays && cand.shipping < fast.shipping)) {
@@ -84,10 +85,12 @@ public final class Planner {
 	// ---------------------------------------------------------------- 후보 생성
 
 	/** 주문 있는 공장들의 하루 운영비 합(원). 주문 없는 공장은 0원. */
-	private static long dailyOperatingCost(Master master, List<Country> active) {
+	private static long dailyOperatingCost(Master master, Map<Country, Integer> orders) {
 		long sum = 0;
-		for (Country c : active) {
-			sum += master.factory(c).operatingCostWon();
+		for (Country c : Country.factories()) {
+			if (orders.getOrDefault(c, 0) > 0) {
+				sum += master.factory(c).operatingCostWon();
+			}
 		}
 		return sum;
 	}
@@ -365,7 +368,6 @@ public final class Planner {
 		Map<Country, int[]> stock = new EnumMap<>(Country.class);
 		Map<Country, int[]> production = new EnumMap<>(Country.class);
 		long productionCost = 0;
-		long dailyOperating = 0;
 		for (Country c : Country.factories()) {
 			int q = orders.getOrDefault(c, 0);
 			int[] st = new int[cand.totalDays + 1];
@@ -373,12 +375,11 @@ public final class Planner {
 			if (q > 0) {
 				simulateFactory(master.factory(c), q, pickups(cand, c), st, pr);
 				productionCost += q * 1000L * master.factory(c).unitCost();
-				dailyOperating += master.factory(c).operatingCostWon();
 			}
 			stock.put(c, st);
 			production.put(c, pr);
 		}
-		long operatingCost = dailyOperating * cand.totalDays;
+		long operatingCost = dailyOperatingCost(master, orders) * cand.totalDays;
 		return new Plan(type, label, cand.totalDays, productionCost, cand.shipping, operatingCost,
 				productionCost + cand.shipping + operatingCost, cand.ships, stock, production);
 	}
