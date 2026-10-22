@@ -51,6 +51,10 @@ public class Order {
 	@Column(length = 1000)
 	private String memo;
 
+	/** 고객사 이름(선택). 기존 주문은 값 없음(null) */
+	@Column(length = 100)
+	private String customerName;
+
 	/** 고객이 요청한 필요 납기일(일). 비어 있으면 '가능한 빨리' */
 	private Integer requiredDays;
 
@@ -138,6 +142,14 @@ public class Order {
 
 	public String getMemo() {
 		return memo;
+	}
+
+	public String getCustomerName() {
+		return customerName;
+	}
+
+	public void setCustomerName(String customerName) {
+		this.customerName = customerName;
 	}
 
 	public Integer getRequiredDays() {

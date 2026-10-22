@@ -11,7 +11,7 @@ try {
 	renderRows(data.orders);
 } catch (e) {
 	document.getElementById('rows').innerHTML =
-		`<tr><td colspan="9" class="empty">${esc(e.message)}</td></tr>`;
+		`<tr><td colspan="10" class="empty">${esc(e.message)}</td></tr>`;
 }
 
 function renderFilters(data) {
@@ -27,7 +27,7 @@ function renderFilters(data) {
 function renderRows(orders) {
 	const tbody = document.getElementById('rows');
 	if (orders.length === 0) {
-		tbody.innerHTML = '<tr><td colspan="8" class="empty">주문이 없습니다.</td></tr>';
+		tbody.innerHTML = '<tr><td colspan="10" class="empty">주문이 없습니다.</td></tr>';
 		return;
 	}
 	tbody.innerHTML = orders.map(o => `<tr class="clickable" data-id="${o.id}">
@@ -40,6 +40,7 @@ function renderRows(orders) {
 		<td class="num">${o.totalCostEok}</td>
 		<td><span class="badge badge-${o.status.name}">${esc(o.status.label)}</span></td>
 		<td>${esc(o.createdBy)}</td>
+		<td>${o.customerName != null ? esc(o.customerName) : '-'}</td>
 	</tr>`).join('');
 	tbody.querySelectorAll('tr.clickable').forEach(tr =>
 		tr.addEventListener('click', () => { location.href = '/orders/' + tr.dataset.id; }));

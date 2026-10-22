@@ -194,6 +194,7 @@
 				routeType: selected,
 				masterVersion: result.master.version,
 				memo: document.getElementById('memo').value,
+				customerName: document.getElementById('customerName').value,
 				requiredDays: days
 			});
 			location.href = '/orders/' + res.id;

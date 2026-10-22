@@ -22,6 +22,7 @@ import tools.jackson.databind.ObjectMapper;
 public class OrderService {
 
 	private static final int MAX_MEMO = 1000;
+	private static final int MAX_CUSTOMER = 100;
 	private static final int MIN_REQUIRED_DAYS = 5;
 	private static final int MAX_REQUIRED_DAYS = 50;
 
@@ -45,7 +46,7 @@ public class OrderService {
 	 */
 	@Transactional
 	public Order confirm(Map<Country, Integer> requested, String routeType, long masterVersion, String memo,
-			Integer requiredDays, String user) {
+			Integer requiredDays, String customerName, String user) {
 		if (requiredDays != null && (requiredDays < MIN_REQUIRED_DAYS || requiredDays > MAX_REQUIRED_DAYS)) {
 			throw new BusinessException("필요 납기일은 %d~%d일 사이로 입력하세요".formatted(MIN_REQUIRED_DAYS, MAX_REQUIRED_DAYS));
 		}
@@ -62,13 +63,16 @@ public class OrderService {
 		if (note != null && note.isEmpty()) {
 			note = null;
 		}
+		String customer = normalizeCustomer(customerName);
 
 		StoredPlan stored = new StoredPlan(result.master(), result.orders(), result.visits(), plan);
 		int totalK = result.orders().values().stream().mapToInt(Integer::intValue).sum();
 		LocalDateTime now = LocalDateTime.now();
-		Order order = orderRepository.save(new Order(now, user, totalK, plan.type(), plan.label(), plan.totalDays(),
+		Order newOrder = new Order(now, user, totalK, plan.type(), plan.label(), plan.totalDays(),
 				plan.productionCost(), plan.shippingCost(), plan.totalCost(), note, requiredDays,
-				json.writeValueAsString(stored), plan.operatingCost()));
+				json.writeValueAsString(stored), plan.operatingCost());
+		newOrder.setCustomerName(customer);
+		Order order = orderRepository.save(newOrder);
 		orderStatusHistoryRepository.save(new OrderStatusHistory(order.getId(), null, OrderStatus.CONFIRMED, user, now));
 		return order;
 	}
@@ -121,6 +125,36 @@ public class OrderService {
 		if (target == OrderStatus.CANCELED) {
 			orderRepository.delete(order);
 		}
+	}
+
+	/**
+	 * 고객사 이름을 고친다. 확정·진행 상태에서만 가능하고(완료는 거부, 취소로 삭제된 주문은 404),
+	 * version 이 다르면 충돌로 거부한다. 수정 이력은 남기지 않는다.
+	 */
+	@Transactional
+	public void updateCustomer(Long id, String customerName, long expectedVersion) {
+		Order order = getOrder(id);
+		if (order.getStatus() != OrderStatus.CONFIRMED && order.getStatus() != OrderStatus.IN_PROGRESS) {
+			throw new BusinessException("완료된 주문은 고객사 이름을 수정할 수 없습니다");
+		}
+		if (order.getVersion() != expectedVersion) {
+			throw conflict();
+		}
+		order.setCustomerName(normalizeCustomer(customerName));
+		try {
+			orderRepository.saveAndFlush(order);
+		} catch (ObjectOptimisticLockingFailureException e) {
+			throw conflict();
+		}
+	}
+
+	/** 앞뒤 공백을 없애고, 비었으면 null, 100자를 넘으면 거부한다. */
+	private static String normalizeCustomer(String name) {
+		String v = name == null ? null : name.strip();
+		if (v != null && v.length() > MAX_CUSTOMER) {
+			throw new BusinessException("고객사 이름은 %d자 이하로 입력하세요".formatted(MAX_CUSTOMER));
+		}
+		return v == null || v.isEmpty() ? null : v;
 	}
 
 	private static BusinessException conflict() {

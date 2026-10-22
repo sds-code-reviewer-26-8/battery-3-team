@@ -1,0 +1,2 @@
+total 125 items 125 hasField true nonNullCustomer 0
+detail id 161 customerName null status COMPLETED

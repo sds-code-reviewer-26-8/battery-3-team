@@ -55,6 +55,14 @@ function render(d, ok, error) {
 				<button type="submit" class="${s.name === STATUS_CANCELED ? 'danger' : 'primary'}">${esc(s.label)}(으)로 변경</button>
 			</form>`).join('')}</div>`
 		: '<p class="muted">최종 상태라 더 바꿀 수 없습니다.</p>';
+	// 확정·진행 상태(다음 상태가 있는 주문)에서만 고객사 이름을 고칠 수 있다.
+	const customerForm = d.next.length > 0
+		? `<form class="customer-form" id="customerForm">
+				<label class="stack">고객사 이름 수정
+					<input type="text" name="customerName" maxlength="100" value="${esc(d.customerName ?? '')}"></label>
+				<button type="submit">고객사 저장</button>
+			</form>`
+		: '';
 	const history = d.history.map(h => `<tr>
 		<td>${fmtDateTime(h.changedAt, true)}</td>
 		<td>${h.fromStatus ? esc(h.fromStatus.label) : '-'}</td>
@@ -73,9 +81,11 @@ function render(d, ok, error) {
 			<div><dt>확정 일시</dt><dd>${fmtDateTime(d.confirmedAt)}</dd></div>
 			<div><dt>작성자</dt><dd>${esc(d.createdBy)}</dd></div>
 			<div><dt>경로</dt><dd>${esc(d.routeLabel)}</dd></div>
+			<div><dt>고객사</dt><dd>${d.customerName != null ? esc(d.customerName) : '-'}</dd></div>
 			<div><dt>필요 납기일</dt><dd${d.late ? ' class="late"' : ''}>${deadlineText(d)}</dd></div>
 			<div><dt>메모</dt><dd>${d.memo != null ? esc(d.memo) : '-'}</dd></div>
 		</dl>
+		${customerForm}
 		${actions}
 	</section>
 
@@ -100,6 +110,14 @@ function render(d, ok, error) {
 	PlanView.renderDetails(document.getElementById('details'), d.plan);
 	BatteryAnim.mount(document.getElementById('anim'), d.plan, {autoplay: false});
 
+	const customerFormEl = document.getElementById('customerForm');
+	if (customerFormEl) {
+		customerFormEl.addEventListener('submit', e => {
+			e.preventDefault();
+			saveCustomer(d, customerFormEl.elements.customerName.value);
+		});
+	}
+
 	main.querySelectorAll('.status-form').forEach(f => f.addEventListener('submit', e => {
 		e.preventDefault();
 		changeStatus(d, f.dataset.status, f.dataset.label);
@@ -116,6 +134,17 @@ async function changeStatus(d, status, label) {
 		} else {
 			render(result.order, `상태를 '${label}'(으)로 바꿨습니다`);
 		}
+	} catch (e) {
+		if (e.notFound) showLoadError(e);
+		else await load(null, e.message);
+	}
+}
+
+/** 고객사 이름을 저장한다. 충돌이면 이유를 보여 주고 최신 상태를 다시 불러온다. */
+async function saveCustomer(d, customerName) {
+	try {
+		render(await putJson(`/api/orders/${d.id}/customer`, {customerName, version: d.version}),
+			'고객사 이름을 저장했습니다');
 	} catch (e) {
 		if (e.notFound) showLoadError(e);
 		else await load(null, e.message);

@@ -1,0 +1,6 @@
+
+Running 1 test using 1 worker
+
+  ok 1 [chromium] › tests\mst.spec.ts:185:7 › 마스터 데이터 › MST-09 마스터 변경이 이미 확정한 주문의 계획에 영향을 주지 않는다 (1.8s)
+
+  1 passed (19.8s)

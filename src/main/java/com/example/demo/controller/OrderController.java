@@ -14,6 +14,7 @@ import java.util.Map;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,7 +28,7 @@ public class OrderController {
 
 	/** requiredDays 는 일부러 JsonNode 로 받는다. Integer 로 받으면 5.5 나 "10" 을 조용히 5, 10 으로 바꿔 받아들인다. */
 	public record ConfirmRequest(Map<Country, Integer> orders, String routeType, long masterVersion, String memo,
-			JsonNode requiredDays) {
+			JsonNode requiredDays, String customerName) {
 	}
 
 	private final OrderService orderService;
@@ -51,7 +52,7 @@ public class OrderController {
 	@PostMapping
 	public Map<String, Long> confirm(@RequestBody ConfirmRequest request, HttpSession session) {
 		Order order = orderService.confirm(request.orders(), request.routeType(), request.masterVersion(),
-				request.memo(), requiredDaysOf(request.requiredDays()),
+				request.memo(), requiredDaysOf(request.requiredDays()), request.customerName(),
 				(String) session.getAttribute(LoginInterceptor.SESSION_USER));
 		return Map.of("id", order.getId());
 	}
@@ -76,6 +77,25 @@ public class OrderController {
 			return new StatusChange.Result(true, null);
 		}
 		return new StatusChange.Result(false, detailOf(id));
+	}
+
+	@PutMapping("/{id}/customer")
+	public OrderDetail updateCustomer(@PathVariable Long id, @RequestBody JsonNode body) {
+		// version 은 화면에서 본 시점의 주문 version. customerName 키가 없으면 실수로 이름이 지워지지 않도록 거부한다
+		// (지우려면 빈 문자열이나 null 을 명시해서 보낸다).
+		JsonNode version = body.get("version");
+		if (version == null || !version.isIntegralNumber()) {
+			throw new BusinessException("주문 version 이 필요합니다");
+		}
+		if (!body.has("customerName")) {
+			throw new BusinessException("customerName 이 필요합니다. 지우려면 빈 문자열을 보내세요");
+		}
+		JsonNode name = body.get("customerName");
+		if (!name.isNull() && !name.isString()) {
+			throw new BusinessException("customerName 은 문자열이어야 합니다");
+		}
+		orderService.updateCustomer(id, name.isNull() ? null : name.asString(), version.asLong());
+		return detailOf(id);
 	}
 
 	private OrderDetail detailOf(Long id) {

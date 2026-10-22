@@ -1,0 +1,13 @@
+
+Running 8 tests using 1 worker
+
+  ok 1 [chromium] › tests\cus.spec.ts:26:7 › 고객사 이름 › CUS-01 주문 추가에서 고객사를 입력해 확정하면 상세와 목록에 보인다 (2.0s)
+  ok 2 [chromium] › tests\cus.spec.ts:40:7 › 고객사 이름 › CUS-02 고객사를 비워도 확정되고 상세와 목록에 - 로 보인다 (1.6s)
+  ok 3 [chromium] › tests\cus.spec.ts:52:7 › 고객사 이름 › CUS-03 확정 상태에서 고객사를 수정해 저장한다 (1.0s)
+  ok 4 [chromium] › tests\cus.spec.ts:66:7 › 고객사 이름 › CUS-04 진행 상태에서도 고객사를 수정할 수 있다 (955ms)
+  ok 5 [chromium] › tests\cus.spec.ts:81:7 › 고객사 이름 › CUS-05 완료 상태 상세에는 수정 입력과 저장 버튼이 없다 (916ms)
+  ok 6 [chromium] › tests\cus.spec.ts:92:7 › 고객사 이름 › CUS-06 다른 세션이 먼저 수정하면 충돌 안내가 나오고 최신 값으로 다시 불러온다 (2.1s)
+  ok 7 [chromium] › tests\cus.spec.ts:114:7 › 고객사 이름 › CUS-07 HTML 문자열 고객사는 목록과 상세에서 텍스트로만 보이고 실행되지 않는다 (1.0s)
+  ok 8 [chromium] › tests\cus.spec.ts:131:7 › 고객사 이름 › CUS-08 목록 머리글에 고객사가 있고 빈 행·오류 행 colspan 이 9 이다 (894ms)
+
+  8 passed (34.0s)

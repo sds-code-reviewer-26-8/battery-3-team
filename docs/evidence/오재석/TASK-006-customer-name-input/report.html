@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>검증 리포트 (report)</title>
+<style>
+:root{
+  --bg:#f6f7f9; --card:#fff; --text:#1c2430; --muted:#5d6b7c; --line:#d8dee6;
+  --accent:#1f4e78; --ph:#fff4c2; --ph-line:#e6c84a;
+  --ok:#17803d; --ok-bg:#e3f4ea; --warn:#9a6700; --warn-bg:#fdf1d6; --bad:#b42318; --bad-bg:#fde7e4;
+  --guide-bg:#eaf1fa; --guide-line:#9db8d8; --code:#eef1f5;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#10151c; --card:#18202a; --text:#e6ebf2; --muted:#9aa8ba; --line:#2d3947;
+    --accent:#7db3e8; --ph:#4a3f12; --ph-line:#a88a1c;
+    --ok:#4cc27a; --ok-bg:#16301f; --warn:#f0b24b; --warn-bg:#35290f; --bad:#ff8a80; --bad-bg:#3a1a17;
+    --guide-bg:#1b2a3d; --guide-line:#3d5a80; --code:#212c39;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.7 -apple-system,"Segoe UI","Malgun Gothic",sans-serif}
+.wrap{max-width:960px;margin:0 auto;padding:24px 16px 80px}
+h1{font-size:26px;margin:4px 0 2px}
+h2{font-size:18px;margin:0 0 10px;color:var(--accent)}
+h2 .no{display:inline-block;background:var(--accent);color:#fff;border-radius:6px;padding:0 8px;margin-right:6px;font-size:14px}
+section{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:16px 0}
+.sub{color:var(--muted);margin:0 0 12px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+th{background:var(--bg);color:var(--muted);font-weight:600}
+.tablewrap{overflow-x:auto}
+.ph{background:var(--ph);border-bottom:1px dashed var(--ph-line);padding:0 3px;border-radius:3px}
+.guide{background:var(--guide-bg);border-left:4px solid var(--guide-line);padding:9px 13px;border-radius:6px;margin:0 0 12px;font-size:13.5px}
+.guide b{color:var(--accent)}
+.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px 16px}
+.meta div{border:1px solid var(--line);border-radius:8px;padding:6px 10px;background:var(--card)}
+.meta span{display:block;font-size:12px;color:var(--muted)}
+.badge{display:inline-block;border-radius:999px;padding:1px 10px;font-size:12.5px;font-weight:600}
+.b-ok{background:var(--ok-bg);color:var(--ok)} .b-warn{background:var(--warn-bg);color:var(--warn)} .b-bad{background:var(--bad-bg);color:var(--bad)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:8px 0 4px}
+.tile{border:1px solid var(--line);border-radius:10px;padding:10px 12px;text-align:center}
+.tile b{display:block;font-size:26px;line-height:1.2}
+.tile small{color:var(--muted)}
+.tile.ok b{color:var(--ok)} .tile.bad b{color:var(--bad)} .tile.warn b{color:var(--warn)}
+.timeline{list-style:none;margin:0;padding:0 0 0 14px;border-left:3px solid var(--line)}
+.timeline li{position:relative;padding:0 0 16px 16px}
+.timeline li::before{content:"";position:absolute;left:-23px;top:6px;width:11px;height:11px;border-radius:50%;background:var(--accent)}
+.timeline li:last-child{padding-bottom:0}
+.check{list-style:none;padding:0;margin:0}
+.check li{display:flex;gap:10px;padding:6px 0;border-bottom:1px solid var(--line)}
+.check li:last-child{border-bottom:0}
+.check input{margin-top:5px}
+pre{background:var(--code);padding:10px 12px;border-radius:8px;overflow-x:auto;font:13px/1.55 Consolas,"D2Coding",monospace;margin:6px 0}
+.rules{font-size:13px;color:var(--muted)} .rules li{margin:2px 0}
+@media print{ body{background:#fff} .guide{display:none} section{break-inside:avoid} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="sub">Inner Loop · 검증·리포트 작성 단계의 증거(Evidence)</p>
+  <h1>검증 리포트: 고객사 이름 입력 (TASK-006)</h1>
+  <div class="guide">
+    <b>이 문서의 용도</b> — 구현과, 구현 <b>이후에 진행한 검증</b>을 요약한 증거입니다. 사람(HITL)이 이 문서를 보고 완료를 승인하거나, 부족하면 사전 검토로 되돌립니다(Feedback).<br>
+    <b>작성 규칙</b>
+    <ul class="rules">
+      <li>노란색 <span class="ph">[대괄호]</span> 는 채워 넣는 칸입니다. 다 채운 뒤 노란 배경(<code>class="ph"</code>)을 지웁니다.</li>
+      <li><b>실제 실행 결과만</b> 적습니다. 숫자는 테스트 리포트나 로그에서 그대로 옮기고, 추정으로 채우지 않습니다.</li>
+      <li><b>실패, 건너뜀, 확인하지 못한 것도 숨기지 않고</b> 적습니다. 정직한 기록이 있어야 사람이 판단할 수 있습니다.</li>
+      <li>사전 검토(precheck.html)의 <b>통과 기준(AC)</b>과 1:1로 대조합니다.</li>
+    </ul>
+  </div>
+  <div class="meta">
+    <div><span>작성자</span>Verify 에이전트</div>
+    <div><span>작성일</span>2026-10-22</div>
+    <div><span>브랜치 / PR</span>feat/customer-name-input_jaesuk · PR #24 (→ main)</div>
+    <div><span>사전 검토 문서</span><a href="precheck.html">precheck.html</a></div>
+    <div><span>최종 결과</span><span class="badge b-ok">완료</span> <small class="sub">(사람이 8장에서 인정)</small></div>
+  </div>
+</header>
+
+<section>
+  <h2><span class="no">1</span>한눈에 보기</h2>
+  <div class="guide">통과·실패·건너뜀 숫자는 <b>3장 검증 결과 표에서 자동으로 셉니다</b>(행의 <code>data-result</code> 값 기준). 손으로 고치지 않습니다.</div>
+  <div class="tiles">
+    <div class="tile ok"><b id="c-pass">-</b><small>통과</small></div>
+    <div class="tile bad"><b id="c-fail">-</b><small>실패</small></div>
+    <div class="tile warn"><b id="c-skip">-</b><small>건너뜀·미확인</small></div>
+    <div class="tile"><b id="c-ac">-</b><small>충족한 통과 기준</small></div>
+    <div class="tile"><b id="c-loop">1</b><small>반복 횟수</small></div>
+  </div>
+  <p><b>한 줄 요약:</b> 주문 확정 시 고객사 이름(선택, 최대 100자)을 저장하고, 확정·진행 상태에서만 수정하게 했다. 독립 재실행 결과 JUnit 50건 전부 통과(PR #24 리뷰 반영 후 52건), E2E 92 통과·1 skipped(LST-04)·실패 0(로컬 전용 login.spec.ts 2개 포함, 이 PR 에 포함된 테스트 기준 90 통과), 신규 CUS 8건 통과, 재시작한 8080 에서 기존 125건 GET 정상(customerName 전부 null). 영역 제안은 Yellow(최종은 사람).</p>
+</section>
+
+<section>
+  <h2><span class="no">2</span>구현 요약</h2>
+  <table>
+    <tr><th style="width:150px">구현한 것</th><td>주문 추가 화면에 고객사 입력칸이 생겼다. 주문 상세에 고객사가 표시되고 확정·진행 상태에서는 수정·저장할 수 있다(완료 상태는 수정 UI 없음, 서버도 400 으로 거부). 주문 목록 맨 끝에 고객사 열이 생겼고 값이 없으면 - 로 보인다.</td></tr>
+    <tr><th>접근 방법</th><td>Order 에 nullable customerName(길이 100) 추가, 서비스에서 앞뒤 공백 제거·공백만이면 null·100자 초과 400 으로 정규화. 수정은 PUT /api/orders/{id}/customer(본문 customerName, version), 상태 400 · 삭제/없는 id 404 · version 불일치 409, 이력은 남기지 않고 갱신된 상세를 응답. 화면은 모두 esc() 로 이스케이프. 기존 테스트 기준은 낮추지 않고 lst.spec.ts 헤더 기대값에 열만 추가.</td></tr>
+  </table>
+  <h3 style="font-size:15px;margin:14px 0 6px">바뀐 파일</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>파일</th><th>변경 내용</th><th>종류</th></tr></thead>
+    <tbody>
+      <tr><td>src/main/java/com/example/demo/entity/Order.java</td><td>customerName 컬럼·getter/setter</td><td>수정</td></tr>
+      <tr><td>src/main/java/com/example/demo/service/OrderService.java</td><td>confirm 파라미터, normalizeCustomer, updateCustomer</td><td>수정</td></tr>
+      <tr><td>src/main/java/com/example/demo/controller/OrderController.java</td><td>ConfirmRequest 확장, PUT /{id}/customer</td><td>수정</td></tr>
+      <tr><td>src/main/java/com/example/demo/controller/dto/OrderDetail.java</td><td>customerName 필드</td><td>수정</td></tr>
+      <tr><td>src/main/java/com/example/demo/controller/dto/OrderList.java</td><td>Item 에 customerName 필드</td><td>수정</td></tr>
+      <tr><td>src/main/resources/static/order-new.html, js/order-new.js</td><td>고객사 입력칸, 확정 요청에 포함</td><td>수정</td></tr>
+      <tr><td>src/main/resources/static/orders.html, js/orders.js</td><td>고객사 열, colspan 9</td><td>수정</td></tr>
+      <tr><td>src/main/resources/static/js/order-detail.js</td><td>고객사 표시, 수정 폼, saveCustomer</td><td>수정</td></tr>
+      <tr><td>src/test/java/com/example/demo/JsonApiTests.java</td><td>고객사 JUnit 9건 추가</td><td>수정</td></tr>
+      <tr><td>e2e/tests/helpers.ts</td><td>customerName 옵션, advanceViaApi</td><td>수정</td></tr>
+      <tr><td>e2e/tests/lst.spec.ts</td><td>헤더 기대값에 고객사 추가</td><td>수정</td></tr>
+      <tr><td>e2e/tests/cus.spec.ts</td><td>CUS-01~08 신규</td><td>추가</td></tr>
+      <tr><td>docs/evidence/오재석/TASK-006-customer-name-input/</td><td>precheck.html, report.html, results/</td><td>추가</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2><span class="no">3</span>검증 결과</h2>
+  <div class="guide">사전 검토의 <b>통과 기준(AC)</b>을 하나씩 대조합니다. <b>결과</b> 칸은 <code>pass</code> / <code>fail</code> / <code>skip</code> 중 하나를 행의 <code>data-result</code> 에 넣고, 같은 값을 표시 글자로도 적습니다. 근거는 <b>실행한 명령과 결과 파일 위치</b>입니다.</div>
+  <div class="tablewrap"><table id="results">
+    <thead><tr><th style="width:60px">AC</th><th>검증 항목</th><th>실행 명령 / 방법</th><th style="width:80px">결과</th><th>근거 (결과 파일·로그)</th></tr></thead>
+    <tbody>
+      <tr data-result="pass" data-ac="AC-1"><td>AC-1</td><td>POST /api/orders customerName "  ABC전자  " 확정 → 상세·목록 "ABC전자"</td><td>.\gradlew.bat test (JsonApiTests.customerNameTrimmedOnConfirm)</td><td><span class="badge b-ok">통과</span></td><td>docs/evidence/오재석/TASK-006-customer-name-input/results/verify-junit/TEST-com.example.demo.JsonApiTests.xml (JsonApiTests 28건 실패 0)</td></tr>
+      <tr data-result="pass" data-ac="AC-2"><td>AC-2</td><td>생략·null·공백 → null 성공, 100자 성공, 101자 400 이며 주문 미생성</td><td>JsonApiTests.customerNameOptionalOnConfirm, customerNameLengthBoundaryOnConfirm</td><td><span class="badge b-ok">통과</span></td><td>docs/evidence/오재석/TASK-006-customer-name-input/results/verify-junit/ (동일 파일)</td></tr>
+      <tr data-result="pass" data-ac="AC-3"><td>AC-3</td><td>확정·진행에서 PUT 200, version 증가, 공백→null, 100자 초과 400 값 유지</td><td>JsonApiTests.updateCustomerInConfirmedAndInProgress</td><td><span class="badge b-ok">통과</span></td><td>docs/evidence/오재석/TASK-006-customer-name-input/results/verify-junit/ (동일 파일)</td></tr>
+      <tr data-result="pass" data-ac="AC-4"><td>AC-4</td><td>완료 400(정확한 문구, 값·version 불변), 취소 삭제·없는 id 404</td><td>JsonApiTests.updateCustomerRejectedWhenCompleted, updateCustomerOnCanceledOrMissingIs404 (소스 488행에서 문구 단언 확인)</td><td><span class="badge b-ok">통과</span></td><td>docs/evidence/오재석/TASK-006-customer-name-input/results/verify-junit/ (동일 파일)</td></tr>
+      <tr data-result="pass" data-ac="AC-5"><td>AC-5</td><td>오래된 version 409 conflict=true 값 유지, 최신 version 성공 (JUnit + Playwright 두 번째 세션)</td><td>JsonApiTests.updateCustomerStaleVersionConflict, cus.spec.ts CUS-06</td><td><span class="badge b-ok">통과</span></td><td>docs/evidence/오재석/TASK-006-customer-name-input/results/verify-junit/, verify-cus-only.json (CUS-06 통과)</td></tr>
+      <tr data-result="pass" data-ac="AC-6"><td>AC-6</td><td>수정 전후 history 항목 수 동일</td><td>JsonApiTests.updateCustomerLeavesNoHistory</td><td><span class="badge b-ok">통과</span></td><td>docs/evidence/오재석/TASK-006-customer-name-input/results/verify-junit/ (동일 파일)</td></tr>
+      <tr data-result="pass" data-ac="AC-7"><td>AC-7</td><td>주문 추가 화면에서 입력·비움 확정 → 상세·목록에 이름 / -</td><td>cd e2e; npx playwright test cus.spec.ts (CUS-01, CUS-02)</td><td><span class="badge b-ok">통과</span></td><td>docs/evidence/오재석/TASK-006-customer-name-input/results/verify-cus-only.json, verify-cus-only-console.txt (8 passed)</td></tr>
+      <tr data-result="pass" data-ac="AC-8"><td>AC-8</td><td>확정·진행 수정 UI·저장·안내, 완료는 UI 없음, 충돌 안내</td><td>CUS-03, CUS-04, CUS-05, CUS-06</td><td><span class="badge b-ok">통과</span></td><td>docs/evidence/오재석/TASK-006-customer-name-input/results/verify-cus-only.json</td></tr>
+      <tr data-result="pass" data-ac="AC-9"><td>AC-9</td><td>HTML 문자열 이름이 텍스트로 보이고 스크립트 미실행, img 요소 없음</td><td>CUS-07 (window.__xss undefined, img 0개 확인)</td><td><span class="badge b-ok">통과</span></td><td>docs/evidence/오재석/TASK-006-customer-name-input/results/verify-cus-only.json</td></tr>
+      <tr data-result="pass" data-ac="AC-10"><td>AC-10</td><td>머리글 고객사 9열, 빈 행·오류 행 colspan 9, 기존 주문 -, lst.spec.ts 헤더만 갱신</td><td>CUS-08 + lst.spec.ts (전체 실행 통과). git diff 로 lst.spec.ts 변경이 헤더 1줄뿐임 확인</td><td><span class="badge b-ok">통과</span></td><td>docs/evidence/오재석/TASK-006-customer-name-input/results/verify-e2e.json, verify-cus-only.json</td></tr>
+      <tr data-result="pass" data-ac="AC-11"><td>AC-11</td><td>JUnit 전체와 E2E 전체: 기존 포함 전부 통과, E2E 기준선(82) 이상</td><td>.\gradlew.bat test → BUILD SUCCESSFUL, 50건(Demo 1, JsonApi 28, OrderFlow 9, Planner 12) 실패 0. cd e2e; npx playwright test → 92 passed, 1 skipped(LST-04, 빈 DB 필요), 실패 0. MST-09 는 전체 실행에서도 통과, 단독 실행도 1 passed</td><td><span class="badge b-ok">통과</span></td><td>docs/evidence/오재석/TASK-006-customer-name-input/results/verify-gradle-console.txt, verify-junit/, verify-e2e.json, verify-e2e-console.txt, verify-mst09-only.json</td></tr>
+      <tr data-result="pass" data-ac="AC-12"><td>AC-12</td><td>IDEA 재시작 후 8080 에서 기존 125건 목록·상세 GET 정상, customerName null</td><td>mcp__idea__build_project 성공 후 login 200, GET /api/orders 200 → 125건, 전 항목에 customerName 필드 있고 값 있는 항목 0건; GET /api/orders/161 200 customerName null; GET /orders 에 th 고객사 존재 (GET 만 사용, 로그인 POST 외 변경 요청 없음)</td><td><span class="badge b-ok">통과</span></td><td>docs/evidence/오재석/TASK-006-customer-name-input/results/verify-server-restart-get.txt</td></tr>
+      <tr data-result="pass" data-ac="REG-1"><td>REG-1</td><td>회귀: 기존 JUnit 41건(OrderFlowTests, PlannerTest, DemoApplicationTests, 기존 JsonApiTests 19건) 깨지지 않음</td><td>.\gradlew.bat test (전체 50건 중 신규 9건 제외)</td><td><span class="badge b-ok">통과</span></td><td>docs/evidence/오재석/TASK-006-customer-name-input/results/verify-junit/</td></tr>
+      <tr data-result="pass" data-ac="REG-2"><td>REG-2</td><td>회귀: 기존 E2E(신규 CUS 8건 제외 85건: 84 통과, LST-04 skipped) 깨지지 않음</td><td>cd e2e; npx playwright test</td><td><span class="badge b-ok">통과</span></td><td>docs/evidence/오재석/TASK-006-customer-name-input/results/verify-e2e.json</td></tr>
+      <tr data-result="pass" data-ac="REV-1"><td>REV-1</td><td>PR #24 리뷰 반영: PUT 에서 customerName 키가 없으면 400 이고 값 유지, null 을 명시하면 지움, 문자열이 아닌 이름·숫자가 아닌 version 은 400</td><td>JsonApiTests.updateCustomerWithoutNameKeyIsRejectedAndKeepsValue</td><td><span class="badge b-ok">통과</span></td><td>docs/evidence/오재석/TASK-006-customer-name-input/results/after-review-junit/, after-review-gradle-console.txt. 수정 전 코드에서는 이 테스트가 실패한다: docs/evidence/오재석/TASK-006-customer-name-input/results/before-review-new-junit.log</td></tr>
+      <tr data-result="pass" data-ac="REV-2"><td>REV-2</td><td>PR #24 리뷰 반영: 이름 수정이 version 을 올려 수정 전 화면의 상태 변경이 409 (회귀 방지용, 수정 전에도 통과)</td><td>JsonApiTests.updatingCustomerBumpsVersionSoStaleStatusChangeConflicts</td><td><span class="badge b-ok">통과</span></td><td>docs/evidence/오재석/TASK-006-customer-name-input/results/after-review-junit/</td></tr>
+      <tr data-result="pass" data-ac="REV-3"><td>REV-3</td><td>PR #24 리뷰 반영 후 전체 회귀: JUnit 52건 실패 0, E2E 92 통과·1 skipped(LST-04)·실패 0 (로컬 전용 login.spec.ts 2개 포함, 이 PR 에 포함된 테스트 기준 90)</td><td>cd e2e; npx playwright test, .\gradlew.bat clean build</td><td><span class="badge b-ok">통과</span></td><td>docs/evidence/오재석/TASK-006-customer-name-input/results/after-review-e2e.json, after-review-e2e-console.txt, after-review-gradle-console.txt, after-review-junit/</td></tr>
+      <tr data-result="pass" data-ac="REV-4"><td>REV-4</td><td>main(PR #22 회원 가입, PR #23 필요 납기일 병합, b75a8c5)을 이 브랜치에 병합한 최종 상태에서 전체 회귀: JUnit 72건 실패 0, E2E 105 통과·1 skipped(LST-04)·실패 0 (이 PR 에 포함된 테스트 기준)</td><td>.\gradlew.bat clean build, cd e2e; npx playwright test (병합 상태의 별도 작업 폴더에서 실행)</td><td><span class="badge b-ok">통과</span></td><td>docs/evidence/오재석/TASK-006-customer-name-input/results/after-merge-junit/, after-merge-gradle-console.txt, after-merge-e2e.json, after-merge-e2e-console.txt</td></tr>
+    </tbody>
+  </table></div>
+  <p class="sub" style="margin-top:10px">※ REG-1·REG-2 는 회귀 확인 행이다.</p>
+</section>
+
+<section>
+  <h2><span class="no">4</span>반복(Feedback) 기록</h2>
+  <div class="guide">검증에서 실패해 <b>되돌아간 회차마다</b> 적습니다. 무엇이 실패했고, 원인이 무엇이었고, 어떻게 고쳤는지. 처음부터 통과했다면 "1회차에 통과"만 적습니다.</div>
+  <ol class="timeline">
+    <li><b>PR #24 리뷰 반영</b> — 검증 실패로 되돌아간 것이 아니라 리뷰어(joosang425)의 요청으로 보완했다. 반복 횟수는 1 로 유지한다. 반영한 것: ① PRD(범위, FR-8, FR-26, 수용 기준)와 INTENT(4장 표, 6장 Q5) 갱신 ② results/ 를 이 PR 에 포함 ③ 낡은 문구 정정(PR 번호, E2E 92 와 90 의 차이, 사전 검토의 사람 확인) ④ PUT 에서 customerName 키 누락을 400 으로 막고 테스트 2개 추가. 나머지 제안(수정 이력, 수정 뒤 재조회 경합, editable 플래그)은 후속으로 남긴다. 승인 뒤에는 main(PR #22 회원 가입)과 병합하며 PRD·INTENT 충돌을 양쪽 줄을 모두 남기는 방식으로 풀고, 고객사 FR 번호를 FR-26 으로 바꿨다(main 에 FR-22~25 가 이미 있음). 그 사이 main 에 PR #23(필요 납기일)도 병합되어 한 번 더 병합했다. Order·OrderDetail·ConfirmRequest·OrderService.confirm·화면(order-new, order-detail)·JsonApiTests 가 두 기능에서 겹쳐 두 기능을 모두 남기는 방식으로 풀었고, 두 JsonApiTests 의 확정 헬퍼 이름이 겹쳐 이 PR 쪽을 confirmNamed 로 바꿨다. 최종 병합 상태에서 JUnit 72건, E2E 105 통과를 확인했다(REV-4).</li>
+    <li><b>1회차</b> — 통과. 1회차에 통과(되돌아간 회차 없음).<br>참고: 구현자는 신규 단독 실행에서 CUS-05 가 소켓 연결 오류로 한 번 실패했다고 보고했으나, 이번 독립 실행에서는 재현되지 않았다.</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="no">5</span>건너뛴 것과 확인하지 못한 것</h2>
+  <div class="guide">숨기지 않고 적는 자리입니다. 건너뛴 시나리오, 실행하지 못한 환경, 추정으로 남긴 부분 등.</div>
+  <ul>
+    <li>LST-04(주문이 없을 때 안내 문구) skipped 1건 — 깨끗한 DB 가 필요해 기존부터 건너뜀 설계. 이번 변경과 무관.</li>
+    <li>화면을 사람 눈으로 보는 확인(레이아웃, 8080 브라우저 화면에서의 - 표시)은 하지 않았다. 대신 Playwright 가 DOM·텍스트를 단언했고, 8080 은 GET 응답과 HTML 머리글만 확인했다. 시각 확인은 사람이 한다.</li>
+    <li>E2E "92 통과"는 이 PR 에 포함되지 않는 로컬 전용 login.spec.ts 2개를 포함한 수치다. 이 PR 에 포함된 테스트 기준으로는 90 통과(리뷰어도 90 으로 확인했다).</li>
+    <li>구현 전 기준선 파일(results/before-*)은 없다(기준선 파일 없음). 단 리뷰 반영의 새 테스트가 수정 전 코드에서 실패한 기록은 results/before-review-new-junit.log 에 있다. 기준선 수치(JUnit 41, E2E 82 통과)는 precheck 기록을 따랐다.</li>
+    <li>MST-09 는 이번 전체 실행에서 실패하지 않아 불안정 원인은 확인하지 못했다(미확인).</li>
+    <li>8080 에서 변경 요청(생성·수정·취소)은 하지 않았다. 개발 DB 에서의 수정 동작은 미확인이며 18080 인메모리 서버와 JUnit 으로 대신했다.</li>
+    <li>상태 검사가 version 검사보다 먼저라 완료 주문에 오래된 version 을 보내면 409 가 아니라 400 이다(설계상 허용 범위로 판단).</li>
+  </ul>
+</section>
+
+<section>
+  <h2><span class="no">6</span>남은 이슈와 후속 작업</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>이슈</th><th>심각도</th><th>제안</th></tr></thead>
+    <tbody>
+      <tr><td>MST-09 전체 실행 시 간헐 실패 가능성 원인 미확인(기존 이슈)</td><td><span class="badge b-warn">중</span></td><td>별도 이슈로 원인 조사 권장. 이번 작업 범위 아님</td></tr>
+      <tr><td>수정 이력(누가 언제 바꿨는지)을 남기지 않음</td><td><span class="badge b-ok">낮음</span></td><td>사람이 확정한 설계. 필요하면 후속 기능</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2><span class="no">7</span>증거 파일 목록</h2>
+  <div class="guide">이 리포트가 근거로 삼은 파일입니다. 사람이 직접 열어 확인할 수 있어야 합니다.</div>
+  <ul>
+    <li>실행 결과: docs/evidence/오재석/TASK-006-customer-name-input/results/verify-junit/, verify-gradle-console.txt, verify-e2e.json, verify-e2e-console.txt, verify-cus-only.json, verify-mst09-only.json, verify-server-restart-get.txt (구현자 실행분은 after-* 파일)</li>
+    <li>PR #24 리뷰 반영 후 실행 결과: docs/evidence/오재석/TASK-006-customer-name-input/results/after-review-junit/, after-review-gradle-console.txt, after-review-e2e.json, after-review-e2e-console.txt, before-review-new-junit.log (새 테스트가 수정 전 코드에서 실패한 기록)</li>
+    <li>스크린샷·로그: 없음. 로그는 위 console.txt 파일</li>
+    <li>사전 검토: docs/evidence/오재석/TASK-006-customer-name-input/precheck.html (영역 제안 Yellow: 인증·결제 아닌 일반 기능이나 XSS 이스케이프 직접 검증 필요, lst.spec.ts 기존 테스트 수정, MST-09 불안정. 최종은 사람)</li>
+  </ul>
+</section>
+
+<section>
+  <h2><span class="no">8</span>사람 확인 (HITL)</h2>
+  <div class="guide"><b>완료로 인정할지</b> 사람이 판단합니다. AI는 이 칸을 임의로 채우지 않습니다. 부족하면 "보완 필요"로 사전 검토에 되돌립니다.</div>
+  <ul class="check">
+    <li><input type="checkbox" checked><div>검증 결과가 통과 기준을 모두 충족한다</div></li>
+    <li><input type="checkbox" checked><div>실패·건너뜀·미확인 항목이 정직하게 기록되어 있다</div></li>
+    <li><input type="checkbox" checked><div>기존 기능이 깨지지 않았다(회귀 확인)</div></li>
+  </ul>
+  <table style="margin-top:10px">
+    <tr><th style="width:150px">결정</th><td>완료</td></tr>
+    <tr><th>확인한 사람</th><td>오재석 · 2026-10-22</td></tr>
+    <tr><th>의견</th><td>추가된 기능을 직접 확인했습니다. 최종 영역은 <b>Yellow</b> 로 확정했습니다. 완료 상태 주문에 오래된 version 으로 수정을 요청하면 409 가 아니라 400 이 되는 검사 순서는 현재대로 수용했습니다(6장 이슈 외 5장에 기록된 사항). 증거 결과 파일의 로컬 사용자명은 <code>&lt;user&gt;</code> 로 치환했습니다. MST-09 불안정 원인과 구현 전 기준선 파일 부재는 미확인으로 남습니다. PR #24 리뷰(joosang425) 반영: PRD·INTENT 갱신, results/ 포함, 낡은 문구 정정, PUT 의 customerName 키 누락 400 + 테스트 2개를 확인했습니다. 커밋·push 는 확인 후 진행합니다.</td></tr>
+  </table>
+</section>
+
+</div>
+<script>
+// 3장 검증 결과 표의 data-result 값으로 요약 숫자를 센다. (값을 손으로 적지 않기 위해)
+(function () {
+  var rows = document.querySelectorAll('#results tbody tr');
+  function count(v) { return Array.prototype.filter.call(rows, function (r) { return r.dataset.result === v; }).length; }
+  function put(id, text) { var el = document.getElementById(id); if (el) el.textContent = text; }
+  if (!rows.length) return;
+  var pass = count('pass');
+  put('c-pass', pass);
+  put('c-fail', count('fail'));
+  put('c-skip', count('skip'));
+  put('c-ac', pass + ' / ' + rows.length);
+})();
+</script>
+</body>
+</html>
