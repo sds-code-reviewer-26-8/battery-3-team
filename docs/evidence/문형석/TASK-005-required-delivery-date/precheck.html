@@ -63,7 +63,7 @@ code{background:var(--code);padding:0 4px;border-radius:4px;font:13px Consolas,"
     <tbody>
       <tr><td>기존 API 호환: 확정 요청에 <code>requiredDays</code>가 없어도 동작해야 한다</td><td>값이 없으면 '가능한 빨리'로 처리. 기존 E2E 헬퍼(<code>createOrderViaApi</code>)와 기존 JUnit이 그대로 통과해야 한다(→ 검증 AC-6).</td></tr>
       <tr><td>DB 컬럼 추가</td><td>nullable 컬럼이라 <code>ddl-auto=update</code>로 안전하게 추가되고 기존 행은 '가능한 빨리'가 된다. 기존 DB 파일로의 기동은 직접 확인하지 못함(report 5장).</td></tr>
-      <tr><td>잘못된 입력(범위 밖, 빈 값, 소수)</td><td>서버가 5~50을 검증하고 화면도 확정 전에 막는다(→ DLN-06, 서버 JUnit).</td></tr>
+      <tr><td>잘못된 입력(범위 밖, 빈 값, 소수)</td><td>서버가 5~50을 검증하고 화면도 확정 전에 막는다(→ DLN-06, 서버 JUnit). <b>정정(PR 리뷰 반영):</b> 처음에는 서버가 소수·문자열을 조용히 정수로 바꿔 받아들여 "소수는 서버가 검증"이라는 이 칸의 설명이 사실이 아니었다. 이제 서버가 정수만 허용한다. 빈 값은 화면만 거부하고 서버는 값이 없거나 <code>null</code>이면 '가능한 빨리'로 처리한다.</td></tr>
       <tr><td>화면 표시와 서버 계산의 불일치</td><td>주문 추가 화면은 시뮬레이션 소요 일수와 비교하고, 상세는 서버가 저장된 소요 일수와 비교한다. 같은 경로를 확정하면 같은 결과가 나오는지 DLN-04가 확인한다.</td></tr>
       <tr><td>기존 테스트 약화</td><td>기존 테스트를 고치지 않고 새 테스트만 추가한다.</td></tr>
     </tbody>
