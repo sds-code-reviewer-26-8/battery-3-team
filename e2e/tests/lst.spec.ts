@@ -61,6 +61,7 @@ test.describe('주문 목록', () => {
   // (data/ 를 지우고 앱을 새로 시작한 뒤 이 파일을 가장 먼저 실행해야 한다. 주문이 이미 있으면 건너뛴다.)
   test('LST-04 주문이 없을 때 안내 문구', async ({ page }) => {
     await page.goto('/orders');
+    await page.locator('tbody tr').first().waitFor(); // 목록(또는 '주문이 없습니다' 줄)이 그려질 때까지 기다린다
     const rows = await page.locator('tbody tr.clickable').count();
     test.skip(rows > 0, '주문이 이미 있어 빈 상태를 재현할 수 없음 (깨끗한 DB 에서만 실행)');
 
@@ -151,6 +152,7 @@ test.describe('주문 목록', () => {
     await api.dispose();
 
     await page.goto('/orders');
+    await page.locator('tbody tr.clickable').first().waitFor(); // 목록이 그려질 때까지 기다린다
     const numbers = (await page.locator('tbody tr.clickable td:first-child a').allTextContents()).map((t) => Number(t.replace('#', '')));
 
     expect(numbers[0]).toBe(second); // 나중에 만든 주문이 맨 위

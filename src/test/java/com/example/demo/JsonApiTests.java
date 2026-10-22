@@ -198,6 +198,45 @@ class JsonApiTests {
 	}
 
 	@Test
+	void malformedRequestsGetReasonInJson() throws Exception {
+		MockHttpSession s = login();
+		// 없는 상태 이름, 깨진 JSON, 알 수 없는 나라 키, 범위를 넘는 번호, 알 수 없는 상태 값
+		mvc.perform(get("/api/orders").param("status", "FOO").session(s))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.error").value("status 값이 올바르지 않습니다"))
+				.andExpect(jsonPath("$.conflict").value(false));
+		mvc.perform(post("/api/simulate").session(s).contentType(MediaType.APPLICATION_JSON).content("{bad"))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.error").value("요청 내용을 읽을 수 없습니다. 입력값을 확인해 주세요"));
+		mvc.perform(post("/api/simulate").session(s).contentType(MediaType.APPLICATION_JSON)
+						.content("{\"orders\":{\"MARS\":1}}"))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.error").exists());
+		mvc.perform(get("/api/orders/99999999999999999999").session(s))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.error").value("id 값이 올바르지 않습니다"));
+		mvc.perform(post("/api/orders/1/status").session(s).contentType(MediaType.APPLICATION_JSON)
+						.content("{\"status\":\"FOO\",\"version\":0}"))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.error").exists());
+		mvc.perform(put("/api/master").session(s).contentType(MediaType.APPLICATION_JSON).content("{bad"))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.conflict").value(false));
+	}
+
+	@Test
+	void masterSaveReturnsSavedFormInEok() throws Exception {
+		MockHttpSession s = login();
+		String current = mvc.perform(get("/api/master/form").session(s)).andReturn().getResponse()
+				.getContentAsString();
+		// 값을 바꾸지 않고 그대로 저장해도 정상 응답은 저장된 폼(억 원 문자열)이다
+		mvc.perform(put("/api/master").session(s).contentType(MediaType.APPLICATION_JSON).content(current))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.shipDailyCost").value((String) JsonPath.read(current, "$.shipDailyCost")))
+				.andExpect(jsonPath("$.shipCount").value((String) JsonPath.read(current, "$.shipCount")));
+	}
+
+	@Test
 	void singleErrorHasNoErrorsList() throws Exception {
 		mvc.perform(post("/api/simulate").session(login()).contentType(MediaType.APPLICATION_JSON)
 						.content("{\"orders\":{}}"))

@@ -74,6 +74,7 @@ export function historyRows(page: Page): Locator {
 /** 주문 목록 상단 칩의 건수 [전체, 확정, 진행, 완료, 취소] */
 export async function chipCounts(page: Page): Promise<number[]> {
   await page.goto('/orders');
+  await page.locator('.filters .chip .count').first().waitFor(); // 화면이 JSON API 로 칩을 그릴 때까지 기다린다
   const texts = await page.locator('.filters .chip .count').allTextContents();
   return texts.map((t) => Number(t.replace(/,/g, '').trim()));
 }

@@ -67,4 +67,19 @@ test.describe('정적 화면 전환', () => {
       await expect(page.locator('header .user span'), path).toHaveText('admin');
     }
   });
+  test('PGE-06 메모에 태그를 넣어도 글자 그대로 보이고 실행되지 않는다', async ({ page }) => {
+    // 서버가 HTML 을 만들 때는 자동으로 이스케이프됐지만, JS 가 그리게 되면서 화면 스크립트가 직접 이스케이프한다.
+    await login(page);
+    const memo = '<b>굵게</b><img src=x onerror="window.__xss=1">';
+    const id = await createOrderViaApi(page, { memo });
+    await page.goto(`/orders/${id}`);
+
+    await expect(page.locator('dl.meta dd', { hasText: '굵게' })).toHaveText(memo); // 태그가 문자 그대로 보인다
+    await expect(page.locator('dl.meta dd b, dl.meta dd img')).toHaveCount(0); // 요소로 만들어지지 않는다
+    expect(await page.evaluate(() => (window as unknown as { __xss?: number }).__xss)).toBeUndefined(); // 스크립트가 돌지 않았다
+
+    await page.goto('/orders'); // 목록에도 메모는 없지만, 같은 방식으로 그려지는 작성자·경로 칸이 깨지지 않는다
+    await expect(page.locator('tbody tr.clickable').first()).toBeVisible();
+    expect(await page.evaluate(() => (window as unknown as { __xss?: number }).__xss)).toBeUndefined();
+  });
 });
