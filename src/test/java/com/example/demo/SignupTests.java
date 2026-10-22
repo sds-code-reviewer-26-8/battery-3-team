@@ -136,6 +136,32 @@ class SignupTests {
 	}
 
 	@Test
+	void passwordLongerThanBcryptLimitIsRejectedWithReasonNotServerError() throws Exception {
+		String tooLong = "비밀번호가 너무 깁니다. UTF-8 기준 72바이트까지 가능합니다(영문·숫자 64자, 한글 24자)";
+
+		// 한글은 한 글자가 3바이트라 24자(72바이트)까지만 가능하다
+		signup(newUsername(), "가".repeat(24), "가".repeat(24)).andExpect(status().isCreated());
+		String username = newUsername();
+		// 이유가 하나뿐이면 error 에만 담긴다(errors 목록은 이유가 여럿일 때)
+		signup(username, "가".repeat(25), "가".repeat(25)).andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.error").value(tooLong))
+				.andExpect(jsonPath("$.errors").doesNotExist());
+		assertThat(users.existsByUsername(username)).isFalse();
+
+		// 글자 수는 64자 이하여도 바이트가 넘으면 같은 안내(영문 40자 + 한글 11자 = 73바이트)
+		String mixed = "a".repeat(40) + "가".repeat(11);
+		signup(newUsername(), mixed, mixed).andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.error").value(tooLong));
+
+		// 글자 수 규칙을 이미 어기면 같은 이유를 두 번 알리지 않는다(영문 65자)
+		signup(newUsername(), "p".repeat(65), "p".repeat(65)).andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.error").value("비밀번호는 8자 이상 64자 이하여야 합니다"));
+
+		// 영문 64자(64바이트)는 가능하다
+		signup(newUsername(), "p".repeat(64), "p".repeat(64)).andExpect(status().isCreated());
+	}
+
+	@Test
 	void rejectedSignupDoesNotCreateAccount() throws Exception {
 		String username = newUsername();
 		signup(username, "short", "short").andExpect(status().isBadRequest());

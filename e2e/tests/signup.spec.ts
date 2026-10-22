@@ -2,7 +2,7 @@ import { expect, test, type Page } from '@playwright/test';
 import { changeStatus, login, metaValue, runSimulation } from './helpers';
 
 /**
- * 회원 가입 (SGN-01 ~ SGN-08)
+ * 회원 가입 (SGN-01 ~ SGN-09)
  *
  * 로그인 화면에서 가입하고, 가입한 계정으로 로그인해 admin 과 같은 기능을 쓸 수 있는지 확인한다.
  * DB 변경: 가입 테스트마다 사용자 1명이 만들어진다(삭제 기능이 없다). 반복 실행에서도 겹치지 않게
@@ -112,6 +112,22 @@ test.describe('회원 가입', () => {
 
     await logInAs(page, 'ab', 'short'); // 가입되지 않았으므로 로그인도 안 된다
     await expect(page.locator('.alert.error')).toHaveText('아이디 또는 비밀번호가 올바르지 않습니다');
+  });
+
+  test('SGN-09 한글 비밀번호가 너무 길면 서버 오류 대신 이유를 보여 준다', async ({ page }) => {
+    await page.goto('/signup');
+    const tooLong = '가'.repeat(25); // 한글은 한 글자가 3바이트라 24자(72바이트)까지 가능하다
+    await fillSignup(page, newUsername(), tooLong, tooLong);
+    await page.getByRole('button', { name: '가입하기' }).click();
+
+    await expect(page.locator('.alert.error li')).toHaveText([
+      '비밀번호가 너무 깁니다. UTF-8 기준 72바이트까지 가능합니다(영문·숫자 64자, 한글 24자)',
+    ]);
+
+    const ok = '가'.repeat(24); // 24자는 가입된다
+    await fillSignup(page, newUsername(), ok, ok);
+    await page.getByRole('button', { name: '가입하기' }).click();
+    await expect(page.locator('.alert.ok')).toContainText('가입이 완료되었습니다');
   });
 
   test('SGN-06 이미 있는 아이디는 대소문자 구분 없이 가입할 수 없다', async ({ page }) => {
