@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.TreeSet;
 
 /**
- * 주문 수량으로부터 경로 3가지(운항비 최소 / 가장 빠르게 / 가까운 곳부터)를 계산한다.
+ * 주문 수량으로부터 경로 3가지(비용 최소 / 가장 빠르게 / 가까운 곳부터)를 계산한다.
  *
  * <p>규칙 요약
  * <ul>
@@ -53,16 +53,20 @@ public final class Planner {
 		}
 		Map<Country, int[]> amounts = amounts(master, orders, active);
 
+		long dailyOperating = dailyOperatingCost(master, orders);
 		Candidate cost = null;
+		long costBest = 0; // cost 의 운항비+운영비
 		Candidate fast = null;
 		int maxShips = Math.min(master.shipCount(), active.size());
 		for (List<List<Country>> partition : partitions(active, maxShips)) {
 			List<List<Country>> groups = sortGroups(master, partition);
 			for (List<List<List<Country>>> shipTrips : tripStructures(master, groups, amounts)) {
 				Candidate cand = schedule(master, orders, amounts, shipTrips);
-				if (cost == null || cand.shipping < cost.shipping
-						|| (cand.shipping == cost.shipping && cand.totalDays < cost.totalDays)) {
+				long candCost = cand.shipping + dailyOperating * cand.totalDays;
+				if (cost == null || candCost < costBest
+						|| (candCost == costBest && cand.totalDays < cost.totalDays)) {
 					cost = cand;
+					costBest = candCost;
 				}
 				if (fast == null || cand.totalDays < fast.totalDays
 						|| (cand.totalDays == fast.totalDays && cand.shipping < fast.shipping)) {
@@ -73,12 +77,23 @@ public final class Planner {
 		Candidate near = nearest(master, orders, amounts, active, maxShips);
 
 		return List.of(
-				toPlan(master, orders, COST, "운항비 최소", cost),
+				toPlan(master, orders, COST, "비용 최소", cost),
 				toPlan(master, orders, FAST, "가장 빠르게", fast),
 				toPlan(master, orders, NEAR, "가까운 곳부터", near));
 	}
 
 	// ---------------------------------------------------------------- 후보 생성
+
+	/** 주문 있는 공장들의 하루 운영비 합(원). 주문 없는 공장은 0원. */
+	private static long dailyOperatingCost(Master master, Map<Country, Integer> orders) {
+		long sum = 0;
+		for (Country c : Country.factories()) {
+			if (orders.getOrDefault(c, 0) > 0) {
+				sum += master.factory(c).operatingCostWon();
+			}
+		}
+		return sum;
+	}
 
 	/** 나라별 방문 때마다 싣는 양(K). 마지막 방문 전까지는 재고 상한, 마지막은 나머지. */
 	private static Map<Country, int[]> amounts(Master master, Map<Country, Integer> orders, List<Country> active) {
@@ -364,8 +379,9 @@ public final class Planner {
 			stock.put(c, st);
 			production.put(c, pr);
 		}
-		return new Plan(type, label, cand.totalDays, productionCost, cand.shipping, productionCost + cand.shipping,
-				cand.ships, stock, production);
+		long operatingCost = dailyOperatingCost(master, orders) * cand.totalDays;
+		return new Plan(type, label, cand.totalDays, productionCost, cand.shipping, operatingCost,
+				productionCost + cand.shipping + operatingCost, cand.ships, stock, production);
 	}
 
 	private static Map<Integer, Integer> pickups(Candidate cand, Country c) {

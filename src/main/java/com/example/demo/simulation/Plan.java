@@ -7,10 +7,12 @@ import java.util.Map;
 /**
  * 경로 하나에 대한 계획. 모든 시각은 주문일(0일차)부터 센 일수이다.
  *
+ * @param operatingCost 운영비(원) = 주문 있는 공장별 하루 운영비 합 x 총 소요 일수
  * @param stock      국가별 재고(K). index t 는 t일 시점(그 시각의 수거 반영 후)의 재고
  * @param production 국가별 생산량(K). index t 는 t일~t+1일 동안의 생산량
  */
-public record Plan(String type, String label, int totalDays, long productionCost, long shippingCost, long totalCost,
+public record Plan(String type, String label, int totalDays, long productionCost, long shippingCost,
+		long operatingCost, long totalCost,
 		List<ShipPlan> ships, Map<Country, int[]> stock, Map<Country, int[]> production) {
 
 	public record ShipPlan(int no, List<Trip> trips, int sailDays) {

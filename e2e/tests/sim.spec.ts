@@ -15,13 +15,18 @@ const FROM_LABEL: Record<string, Factory> = Object.fromEntries(FACTORIES.map((c)
 
 const OPTION_TYPES = ['COST', 'FAST', 'NEAR'] as const;
 type OptionType = (typeof OPTION_TYPES)[number];
-const OPTION_LABEL: Record<OptionType, string> = { COST: '운항비 최소', FAST: '가장 빠르게', NEAR: '가까운 곳부터' };
+const OPTION_LABEL: Record<OptionType, string> = { COST: '비용 최소', FAST: '가장 빠르게', NEAR: '가까운 곳부터' };
 
 // 기본 마스터 값 (BatteryService.initDefaults)
 const DEFAULT_MASTER = {
   shipCount: 3,
   shipDailyCostWon: 100_000_000,
-  factories: { CHINA: [400, 4000, 700], JAPAN: [800, 2000, 900], VIETNAM: [200, 10000, 550], INDONESIA: [300, 7000, 450] },
+  factories: {
+    CHINA: [400, 4000, 700, 100_000_000],
+    JAPAN: [800, 2000, 900, 100_000_000],
+    VIETNAM: [200, 10000, 550, 100_000_000],
+    INDONESIA: [300, 7000, 450, 100_000_000],
+  },
 };
 
 // ---------------------------------------------------------------- 도우미
@@ -42,9 +47,9 @@ async function expectDefaultMaster(page: Page) {
     shipCount: m.shipCount,
     shipDailyCostWon: m.shipDailyCostWon,
     factories: Object.fromEntries(
-      m.factories.map((f: { country: string; maxDaily: number; stockLimit: number; unitCost: number }) => [
+      m.factories.map((f: { country: string; maxDaily: number; stockLimit: number; unitCost: number; operatingCostWon: number }) => [
         f.country,
-        [f.maxDaily, f.stockLimit, f.unitCost],
+        [f.maxDaily, f.stockLimit, f.unitCost, f.operatingCostWon],
       ]),
     ),
   };
@@ -212,7 +217,7 @@ test.describe('주문 추가·시뮬레이션', () => {
     await runSimulation(page);
 
     const labels = await page.locator('#options .option strong').allInnerTexts();
-    expect(labels.map((s) => s.trim())).toEqual(['운항비 최소', '가장 빠르게', '가까운 곳부터']);
+    expect(labels.map((s) => s.trim())).toEqual(['비용 최소', '가장 빠르게', '가까운 곳부터']);
     for (const type of OPTION_TYPES) {
       const card = await readCard(page, type);
       expect(card.days, `${OPTION_LABEL[type]} 소요 일수`).toBeGreaterThan(0);
@@ -423,6 +428,17 @@ test.describe('주문 추가·시뮬레이션', () => {
     await expect(page.locator('#anim [data-play]')).toHaveText('재생');
     await page.locator('#anim [data-play]').click();
     await expect(page.locator('#anim [data-play]')).toHaveText(/일시정지|재생/);
+
+    // 비용 애니메이션의 끝 값(마지막 날)은 선택한 계획안의 총 비용(운영비 포함)과 같다
+    if ((await page.locator('#anim [data-play]').innerText()).trim() === '일시정지') {
+      await page.locator('#anim [data-play]').click();
+    }
+    await page.locator('#anim [data-slider]').evaluate((el: HTMLInputElement) => {
+      el.value = el.max;
+      el.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+    const total = await stat(page, '총 비용');
+    await expect(page.locator('#anim [data-cost]')).toHaveText(total.replace('억원', ''));
   });
 
   test('SIM-17 시뮬레이션 중 버튼 중복 클릭 방지', async ({ page }) => {
@@ -505,12 +521,13 @@ test.describe('주문 추가·시뮬레이션', () => {
       expect(card.ships, `${msg} 배 척수`).toBe(1);
       expect(card.days, `${msg} 소요 일수`).toBe(15);
       expect(card.shipping, `${msg} 운항비(억원)`).toBe(10);
-      expect(card.total, `${msg} 총 비용(억원)`).toBe(21);
+      expect(card.total, `${msg} 총 비용(억원)`).toBe(36); // 생산 11 + 운항 10 + 운영(1개 공장 x 1억 x 15일) 15
 
       expect(await stat(page, '소요 일수')).toBe('15일');
       expect(await stat(page, '생산 원가')).toBe('11.00억원');
       expect(await stat(page, '운항비')).toBe('10.00억원');
-      expect(await stat(page, '총 비용')).toBe('21.00억원');
+      expect(await stat(page, '운영비')).toBe('15.00억원');
+      expect(await stat(page, '총 비용')).toBe('36.00억원');
 
       const trips = await readTrips(page);
       expect(trips, `${msg} 왕복 1번`).toHaveLength(1);

@@ -51,8 +51,8 @@ test.describe('마스터 데이터', () => {
     for (const [name, value] of Object.entries(defaults)) {
       await expect(page.locator(`[name="${name}"]`), name).toHaveValue(value);
     }
-    // 공장 4개 × 3칸 + 배 2칸 + 항로 10칸
-    expect(Object.keys(defaults)).toHaveLength(COUNTRIES.length * 3 + 2 + ROUTE_KEYS.length);
+    // 공장 4개 × 4칸 + 배 2칸 + 항로 10칸
+    expect(Object.keys(defaults)).toHaveLength(COUNTRIES.length * 4 + 2 + ROUTE_KEYS.length);
   });
 
   test('MST-02 값 수정 후 저장하면 유지된다', async ({ page }) => {

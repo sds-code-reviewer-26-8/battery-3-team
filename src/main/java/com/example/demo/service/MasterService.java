@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MasterService {
 
 	public static final long WON_PER_EOK = 100_000_000L;
+	public static final long DEFAULT_OPERATING_COST_WON = WON_PER_EOK;
 	private static final int MAX_SHIPS = 4;
 
 	private final FactoryRepository factoryRepository;
@@ -41,10 +42,10 @@ public class MasterService {
 		if (settingRepository.count() > 0) {
 			return;
 		}
-		factoryRepository.save(new Factory(Country.CHINA, 400, 4000, 700));
-		factoryRepository.save(new Factory(Country.JAPAN, 800, 2000, 900));
-		factoryRepository.save(new Factory(Country.VIETNAM, 200, 10000, 550));
-		factoryRepository.save(new Factory(Country.INDONESIA, 300, 7000, 450));
+		factoryRepository.save(new Factory(Country.CHINA, 400, 4000, 700, DEFAULT_OPERATING_COST_WON));
+		factoryRepository.save(new Factory(Country.JAPAN, 800, 2000, 900, DEFAULT_OPERATING_COST_WON));
+		factoryRepository.save(new Factory(Country.VIETNAM, 200, 10000, 550, DEFAULT_OPERATING_COST_WON));
+		factoryRepository.save(new Factory(Country.INDONESIA, 300, 7000, 450, DEFAULT_OPERATING_COST_WON));
 
 		routeRepository.save(new Route(Country.KOREA, Country.CHINA, 1));
 		routeRepository.save(new Route(Country.KOREA, Country.JAPAN, 2));
@@ -66,7 +67,8 @@ public class MasterService {
 				.orElseThrow(() -> new IllegalStateException("마스터 데이터가 초기화되지 않았습니다"));
 		List<Master.FactoryParam> fs = factoryRepository.findAll().stream()
 				.sorted(Comparator.comparing(Factory::getCountry))
-				.map(f -> new Master.FactoryParam(f.getCountry(), f.getMaxDaily(), f.getStockLimit(), f.getUnitCost()))
+				.map(f -> new Master.FactoryParam(f.getCountry(), f.getMaxDaily(), f.getStockLimit(), f.getUnitCost(),
+						f.getDailyOperatingCostWon() == null ? DEFAULT_OPERATING_COST_WON : f.getDailyOperatingCostWon()))
 				.toList();
 		List<Master.RouteParam> rs = routeRepository.findAll().stream()
 				.sorted(Comparator.comparing(Route::getFromCountry).thenComparing(Route::getToCountry))
@@ -107,11 +109,13 @@ public class MasterService {
 
 		Map<Country, int[]> factoryValues = new EnumMap<>(Country.class);
 		Map<Country, Long> unitCosts = new EnumMap<>(Country.class);
+		Map<Country, Long> operatingCosts = new EnumMap<>(Country.class);
 		for (Country c : Country.factories()) {
 			String name = c.getLabel();
 			int max = parseInt(form, "maxDaily_" + c, name + " 하루 최대 생산량", 1, 1_000_000, errors);
 			int limit = parseInt(form, "stockLimit_" + c, name + " 재고 상한", 1, 1_000_000, errors);
 			int cost = parseInt(form, "unitCost_" + c, name + " 셀당 원가", 1, 100_000_000, errors);
+			operatingCosts.put(c, parseOperatingCost(form, "operatingCost_" + c, name + " 하루 운영비", errors));
 			factoryValues.put(c, new int[] {max, limit});
 			unitCosts.put(c, (long) cost);
 		}
@@ -135,6 +139,7 @@ public class MasterService {
 			f.setMaxDaily(factoryValues.get(c)[0]);
 			f.setStockLimit(factoryValues.get(c)[1]);
 			f.setUnitCost(unitCosts.get(c));
+			f.setDailyOperatingCostWon(operatingCosts.get(c));
 		}
 		for (Route r : routeRepository.findAll()) {
 			r.setDays(days.get(routeKey(r.getFromCountry(), r.getToCountry())));
@@ -143,6 +148,26 @@ public class MasterService {
 		s.setShipCount(shipCount);
 		s.setShipDailyCostWon(shipCostWon);
 		s.bumpMasterVersion();
+	}
+
+	/** 억 원 단위 소수 입력(0 이상, 원 단위로 떨어져야 함)을 원으로 바꾼다. 틀리면 errors 에 이유를 모은다. */
+	private static long parseOperatingCost(Map<String, String> form, String key, String label, List<String> errors) {
+		String text = form.getOrDefault(key, "").trim().replace(",", "");
+		try {
+			BigDecimal won = new BigDecimal(text).multiply(BigDecimal.valueOf(WON_PER_EOK));
+			if (won.signum() < 0) {
+				errors.add("%s(억 원)은(는) 0 이상이어야 합니다".formatted(label));
+			} else if (won.stripTrailingZeros().scale() > 0) {
+				errors.add("%s(억 원)은(는) 원 단위로 떨어지는 값이어야 합니다".formatted(label));
+			} else if (won.compareTo(BigDecimal.valueOf(Long.MAX_VALUE / 1_000_000L)) > 0) {
+				errors.add("%s(억 원)이(가) 너무 큽니다".formatted(label));
+			} else {
+				return won.longValueExact();
+			}
+		} catch (NumberFormatException e) {
+			errors.add("%s(억 원)은(는) 숫자로 입력하세요".formatted(label));
+		}
+		return 0;
 	}
 
 	private static int parseInt(Map<String, String> form, String key, String label, int min, int max,

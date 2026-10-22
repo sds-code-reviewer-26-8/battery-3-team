@@ -70,7 +70,7 @@ public class OrderService {
 		LocalDateTime now = LocalDateTime.now();
 		Order newOrder = new Order(now, user, totalK, plan.type(), plan.label(), plan.totalDays(),
 				plan.productionCost(), plan.shippingCost(), plan.totalCost(), note, requiredDays,
-				json.writeValueAsString(stored));
+				json.writeValueAsString(stored), plan.operatingCost());
 		newOrder.setCustomerName(customer);
 		Order order = orderRepository.save(newOrder);
 		orderStatusHistoryRepository.save(new OrderStatusHistory(order.getId(), null, OrderStatus.CONFIRMED, user, now));

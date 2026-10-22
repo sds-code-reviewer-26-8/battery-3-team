@@ -128,11 +128,11 @@ test.describe('고객사 이름', () => {
     expect(await page.evaluate(() => (window as any).__xss)).toBeUndefined();
   });
 
-  test('CUS-08 목록 머리글에 고객사가 있고 빈 행·오류 행 colspan 이 9 이다', async ({ page }) => {
+  test('CUS-08 목록 머리글에 고객사가 있고 빈 행·오류 행 colspan 이 열 수(10)와 같다', async ({ page }) => {
     const id = await createOrderViaApi(page); // 고객사 없는 주문
     await page.goto('/orders');
     await expect(page.locator('table.grid th').last()).toHaveText('고객사');
-    await expect(page.locator('table.grid th')).toHaveCount(9);
+    await expect(page.locator('table.grid th')).toHaveCount(10);
     await expect(customerCell(page, id)).toHaveText('-');
 
     // 빈 목록
@@ -143,13 +143,13 @@ test.describe('고객사 이름', () => {
     );
     await page.goto('/orders');
     await expect(page.locator('td.empty')).toHaveText('주문이 없습니다.');
-    await expect(page.locator('td.empty')).toHaveAttribute('colspan', '9');
+    await expect(page.locator('td.empty')).toHaveAttribute('colspan', '10');
 
     // 오류 행
     await page.unroute('**/api/orders');
     await page.route('**/api/orders', (route) => route.fulfill({ status: 500, json: { error: '목록 오류' } }));
     await page.goto('/orders');
     await expect(page.locator('td.empty')).toHaveText('목록 오류');
-    await expect(page.locator('td.empty')).toHaveAttribute('colspan', '9');
+    await expect(page.locator('td.empty')).toHaveAttribute('colspan', '10');
   });
 });

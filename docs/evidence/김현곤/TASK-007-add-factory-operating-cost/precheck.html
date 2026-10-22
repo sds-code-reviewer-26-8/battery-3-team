@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>사전 검토 (precheck)</title>
+<style>
+:root{
+  --bg:#f6f7f9; --card:#fff; --text:#1c2430; --muted:#5d6b7c; --line:#d8dee6;
+  --accent:#1f4e78; --ph:#fff4c2; --ph-line:#e6c84a;
+  --ok:#17803d; --ok-bg:#e3f4ea; --warn:#9a6700; --warn-bg:#fdf1d6; --bad:#b42318; --bad-bg:#fde7e4;
+  --guide-bg:#eaf1fa; --guide-line:#9db8d8; --code:#eef1f5;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#10151c; --card:#18202a; --text:#e6ebf2; --muted:#9aa8ba; --line:#2d3947;
+    --accent:#7db3e8; --ph:#4a3f12; --ph-line:#a88a1c;
+    --ok:#4cc27a; --ok-bg:#16301f; --warn:#f0b24b; --warn-bg:#35290f; --bad:#ff8a80; --bad-bg:#3a1a17;
+    --guide-bg:#1b2a3d; --guide-line:#3d5a80; --code:#212c39;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.7 -apple-system,"Segoe UI","Malgun Gothic",sans-serif}
+.wrap{max-width:960px;margin:0 auto;padding:24px 16px 80px}
+h1{font-size:26px;margin:4px 0 2px}
+h2{font-size:18px;margin:0 0 10px;color:var(--accent)}
+h2 .no{display:inline-block;background:var(--accent);color:#fff;border-radius:6px;padding:0 8px;margin-right:6px;font-size:14px}
+section{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:16px 0}
+.sub{color:var(--muted);margin:0 0 12px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+th{background:var(--bg);color:var(--muted);font-weight:600}
+.tablewrap{overflow-x:auto}
+.ph{background:var(--ph);border-bottom:1px dashed var(--ph-line);padding:0 3px;border-radius:3px}
+.guide{background:var(--guide-bg);border-left:4px solid var(--guide-line);padding:9px 13px;border-radius:6px;margin:0 0 12px;font-size:13.5px}
+.guide b{color:var(--accent)}
+.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px 16px}
+.meta div{border:1px solid var(--line);border-radius:8px;padding:6px 10px;background:var(--card)}
+.meta span{display:block;font-size:12px;color:var(--muted)}
+.badge{display:inline-block;border-radius:999px;padding:1px 10px;font-size:12.5px;font-weight:600}
+.b-ok{background:var(--ok-bg);color:var(--ok)} .b-warn{background:var(--warn-bg);color:var(--warn)} .b-bad{background:var(--bad-bg);color:var(--bad)}
+.check{list-style:none;padding:0;margin:0}
+.check li{display:flex;gap:10px;padding:6px 0;border-bottom:1px solid var(--line)}
+.check li:last-child{border-bottom:0}
+.check input{margin-top:5px}
+pre{background:var(--code);padding:10px 12px;border-radius:8px;overflow-x:auto;font:13px/1.55 Consolas,"D2Coding",monospace;margin:6px 0}
+.rules{font-size:13px;color:var(--muted)}
+.rules li{margin:2px 0}
+@media print{ body{background:#fff} .guide{display:none} section{break-inside:avoid} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="sub">Inner Loop · 사전 검토·세팅 단계의 증거(Evidence)</p>
+  <h1>사전 검토: 공장 운영비 추가 (비용 최소 안 재정의)</h1>
+  <div class="guide">
+    <b>이 문서의 용도</b> — 구현을 시작하기 <b>전에</b> 무엇을 점검했는지 남기는 증거입니다. 사람(HITL)이 이 문서를 보고 구현 착수를 승인합니다.<br>
+    <b>작성 규칙</b>
+    <ul class="rules">
+      <li>노란색 <span class="ph">[대괄호]</span> 는 채워 넣는 칸입니다. 다 채운 뒤 노란 배경(<code>class="ph"</code>)을 지웁니다.</li>
+      <li>점검한 내용은 <b>실제로 확인한 것만</b> 적습니다. 확인하지 못한 것은 지어내지 말고 "미확인"으로 적습니다.</li>
+      <li>"확인했다"는 말만 쓰지 말고 <b>확인 근거</b>(명령과 결과, 파일 위치, 문서 링크)를 함께 남깁니다.</li>
+      <li>파란색 안내 상자는 작성 후 지워도 됩니다(인쇄할 때는 자동으로 숨겨집니다).</li>
+    </ul>
+  </div>
+  <div class="meta">
+    <div><span>작성자</span>prepare 에이전트 (사용자: 김현곤)</div>
+    <div><span>작성일</span>2026-10-22</div>
+    <div><span>브랜치</span>feature/factory-operating-cost</div>
+    <div><span>검토 상태</span><span class="badge b-ok">자동 진행</span></div>
+    <div><span>리뷰 수준</span><span class="badge b-bad">Red</span></div>
+  </div>
+</header>
+
+<section>
+  <h2><span class="no">1</span>목표와 범위</h2>
+  <table>
+    <tr><th style="width:150px">만들 기능</th><td>공장별 하루 운영비(억 원, 소수 입력, 기본 1억)를 기준 정보로 두고, 운영비 = 주문 있는 공장 수 x 하루 운영비 x 계획안 총 소요 일수를 계산해 총비용(생산비+운항비+운영비)에 포함한다. "운항비 최소" 안은 "비용 최소"로 이름을 바꾸고 운항비+운영비 합이 최소인 안을 고른다.</td></tr>
+    <tr><th>배경 (요청)</th><td>현재 비용은 생산비+운항비뿐이라 공장 가동 비용이 반영되지 않는다. 근거: 요청</td></tr>
+    <tr><th>목적 (추론)</th><td>공장 가동 기간까지 포함한 총비용으로 계획안을 비교·확정하게 한다. 근거: 요청, 추론(공장 가동일 수가 비용에 영향)</td></tr>
+    <tr><th>이번에 포함</th><td>Planner 비용 계산·비용 최소 선택 / 공장 엔티티·마스터 화면·검증 / Order·StoredPlan 저장 / 주문 추가·상세·목록 표시 / 과거 주문 "-" 표시 / PRD 갱신(FR-2·3·5·17, 수용 기준, 계획안 이름)</td></tr>
+    <tr><th>이번에 포함하지 않음</th><td>운영비 세부 분류, FAST/NEAR 선택 기준 변경, 과거 주문 금액 재계산, INTENT 수정</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2><span class="no">2</span>근거 자료 점검</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>구분</th><th>자료 / 위치</th><th>확인한 내용</th><th>확인 방법</th></tr></thead>
+    <tbody>
+      <tr><td>요구사항</td><td>docs/PRD.md FR-2, FR-3, FR-5, FR-11, FR-17, 수용 기준</td><td>FR-5 비용=생산비+운항비, FR-2 계획안 이름 "운항비 최소". 수용 기준(운항비 최소 안의 운항비 &le; 가장 빠르게 안)은 새 선택 기준에서 보장되지 않을 수 있어 갱신 필요</td><td>읽음</td></tr>
+      <tr><td>설계 의도</td><td>docs/INTENT.md 3장 6원칙, 4장 표</td><td>6원칙 판정은 4장 참조. PRD Q1~Q4, 결함 후보, INTENT Q1~Q4 와 직접 관련 없음(추론). INTENT Q4(저장만 해도 변경 번호 상승) 동작은 유지</td><td>읽음</td></tr>
+      <tr><td>관련 코드</td><td>Planner(비용 선택·shipping 계산), Plan, Master, Factory, Order, StoredPlan, MasterService, OrderService, master/order 화면 JS</td><td>비용은 운항비 최소로 선택, Plan 에 운영비 항목 없음</td><td>Grep 일부 확인, 나머지 미확인</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2><span class="no">3</span>현재 상태 확인</h2>
+  <table>
+    <tr><th style="width:150px">확인한 방법</th><td>./gradlew test, Grep 으로 운영비 항목 부재 확인</td></tr>
+    <tr><th>확인 결과</th><td>새 기능이라 현재 운영비는 없음. 기준선 테스트 통과</td></tr>
+  </table>
+<pre>build/test-results: 1 + 19 + 9 + 12 = 41 tests, failures 0, errors 0, skipped 0</pre>
+</section>
+
+<section>
+  <h2><span class="no">4</span>영향 범위와 위험</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>영향받는 곳</th><th>어떻게 영향받는가</th><th>위험</th><th>대응 / 확인 방법</th></tr></thead>
+    <tbody>
+      <tr><td>Planner / Plan / Master</td><td>운영비 계산, 비용 최소 선택 기준과 label 변경</td><td><span class="badge b-bad">상</span> 계산 핵심, 검산 유지</td><td>PlannerTest 추가, simulateFactory 유지</td></tr>
+      <tr><td>Factory 엔티티 / DB(ddl-auto=update)</td><td>컬럼 추가, 기존 운영 DB 행은 null</td><td><span class="badge b-warn">중</span></td><td>null 처리 방식을 구현에서 결정(미확인)</td></tr>
+      <tr><td>MasterService / master 화면</td><td>입력·검증·masterVersion</td><td><span class="badge b-warn">중</span></td><td>통합 테스트</td></tr>
+      <tr><td>Order / StoredPlan / OrderService</td><td>운영비 저장, 과거 주문 호환</td><td><span class="badge b-bad">상</span> 과거 주문 불변</td><td>null/누락 JSON 으로 열기 테스트</td></tr>
+      <tr><td>order-new, order-detail, orders, planview, DTO</td><td>비용 표시, 과거 "-"</td><td><span class="badge b-warn">중</span></td><td>두 화면 동일 표시 확인</td></tr>
+      <tr><td>docs/PRD.md, 기존 테스트</td><td>이름·수용 기준 갱신, 기존 비용 단언 변경 가능</td><td><span class="badge b-warn">중</span></td><td>변경 사유 명시</td></tr>
+    </tbody>
+  </table></div>
+  <h3 style="font-size:15px">6원칙 판정</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>원칙</th><th>판정</th><th>근거</th></tr></thead>
+    <tbody>
+      <tr><td>1 서버 재계산 확정</td><td>주의</td><td>운영비·총비용을 서버 재계산값으로만 저장</td></tr>
+      <tr><td>2 확정 주문 불변</td><td>주의</td><td>과거 주문은 운영비 "-", 금액·날짜 유지</td></tr>
+      <tr><td>3 masterVersion</td><td>주의</td><td>새 기준 정보 항목의 저장 경로</td></tr>
+      <tr><td>4 Order.version</td><td>영향 없음</td><td>changeStatus 미접촉</td></tr>
+      <tr><td>5 전부 아니면 전부 저장 안 함</td><td>주의</td><td>운영비 검증 추가</td></tr>
+      <tr><td>6 검산 유지</td><td>주의</td><td>선택 기준만 바꾸고 simulateFactory 유지</td></tr>
+    </tbody>
+  </table></div>
+  <p class="sub" style="margin-top:10px">되돌릴 수 없는 작업(데이터 삭제, push, 배포)이 포함되는가? 없음 (운영 DB 컬럼 추가는 ddl-auto=update 로 자동, 삭제 없음)</p>
+</section>
+
+<section>
+  <h2><span class="no">5</span>환경·세팅 점검</h2>
+  <ul class="check">
+    <li><input type="checkbox"><div><b>앱을 실행할 수 있다</b><br><small class="sub">확인 근거: </small>미확인 (bootRun 실행 안 함)</div></li>
+    <li><input type="checkbox" checked><div><b>기존 테스트가 통과한다 (기준선)</b><br><small class="sub">확인 근거: </small>./gradlew test BUILD SUCCESSFUL, 41 tests, 실패 0 (결과 XML 합산)</div></li>
+    <li><input type="checkbox" checked><div><b>작업 브랜치를 만들었다</b><br><small class="sub">확인 근거: </small>git branch --show-current = feature/factory-operating-cost</div></li>
+    <li><input type="checkbox" checked><div><b>테스트 데이터·DB 상태를 알고 있다</b><br><small class="sub">확인 근거: </small>테스트는 인메모리 H2 create-drop (CLAUDE.md)</div></li>
+    <li><input type="checkbox" checked><div><b>필요한 도구·설정이 갖춰졌다</b><br><small class="sub">확인 근거: </small>gradlew 실행 성공 (Gradle 9.8.1)</div></li>
+  </ul>
+</section>
+
+<section>
+  <h2><span class="no">6</span>통과 기준 (수용 기준)</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th style="width:60px">ID</th><th>Given / When / Then</th><th>검증 방법</th></tr></thead>
+    <tbody>
+      <tr><td>CK-1</td><td>Given 구현 후, When 계획안을 계산하면, Then 운영비 = 주문 있는 공장 수 x 공장별 일 운영비 x totalDays(주문 0 공장 0원), 총비용 = 생산비+운항비+운영비, "비용 최소" 안은 운항비+운영비 최소, FAST/NEAR 기준 불변</td><td>PlannerTest 단언 실행</td></tr>
+      <tr><td>CK-2</td><td>Given 마스터 화면/API, When 공장별 운영비(억 원 소수, 기본 1억)를 저장하면, Then 반영되고 masterVersion 증가, 잘못된 값이 하나라도 있으면 전부 저장 안 됨</td><td>통합 테스트</td></tr>
+      <tr><td>CK-3</td><td>Given 확정, When 주문 저장·조회, Then 운영비가 서버 재계산값으로 저장·표시되고 운영비 없는 과거 주문은 "-" 이며 금액·날짜 불변</td><td>통합 테스트(과거 주문 JSON 시뮬레이션 포함)</td></tr>
+      <tr><td>AC-T</td><td>Given 변경 후, When gradlew.bat test 전체 실행, Then 전체 통과</td><td>./gradlew test</td></tr>
+      <tr><td>AC-P</td><td>Given 변경 후, When 변경 내용을 INTENT 3장 6원칙에 대조, Then 위반 없음</td><td>diff 검토</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2><span class="no">7</span>반복 한도와 중단 조건</h2>
+  <table>
+    <tr><th style="width:180px">최대 반복 횟수</th><td>3회</td></tr>
+    <tr><th>성공으로 끝내는 조건</th><td>6장의 모든 행이 통과(fail 0, skip 0)</td></tr>
+    <tr><th>중단하고 사람에게 넘기는 조건</th><td>prepare 가 HILP 반환 / implement 오류 / 3회 모두 검증 실패</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2><span class="no">8</span>미확인 사항과 열린 질문</h2>
+  <ul>
+    <li>경고: 여러 계층(계산·DB·화면·PRD)에 걸친 거대한 변경(Red). 요청에 규모가 명시되어 사용자가 인지한 것으로 보아 HILP 없이 진행.</li>
+    <li>PRD 수용 기준 "운항비 최소 안의 운항비 &le; 가장 빠르게 안" 은 새 선택 기준에서 깨질 수 있어 갱신 필요(요청에 포함).</li>
+    <li>미확인: 기존 운영 DB 의 Factory 행에 새 컬럼이 null 일 때 처리(기본 1억 적용 여부), 프런트 파일 전체 영향, 앱 실행.</li>
+    <li>Evidence 번호 TASK-007 은 사용자 지정. 기존 폴더는 TASK-001, 002 뿐.</li>
+  </ul>
+</section>
+
+<section>
+  <h2><span class="no">9</span>사람 확인 (HITL)</h2>
+  <div class="guide"><b>구현에 들어가도 되는지</b> 사람이 판단하는 자리입니다. AI는 이 칸을 임의로 채우지 않습니다.</div>
+  <ul class="check">
+    <li><input type="checkbox"><div>목표와 범위가 적절하다</div></li>
+    <li><input type="checkbox"><div>통과 기준이 구체적이고 검증할 수 있다</div></li>
+    <li><input type="checkbox"><div>위험과 되돌릴 수 없는 작업을 확인했다</div></li>
+  </ul>
+  <table style="margin-top:10px">
+    <tr><th style="width:150px">결정</th><td><span class="ph">[승인 / 보완 필요 / 보류]</span></td></tr>
+    <tr><th>확인한 사람</th><td><span class="ph">[이름]</span> · <span class="ph">[YYYY-MM-DD]</span></td></tr>
+    <tr><th>의견</th><td><span class="ph">[보완할 점]</span></td></tr>
+  </table>
+</section>
+
+<section>
+  <h2><span class="no">10</span>구현 계획</h2>
+  <h3 style="font-size:15px">시도 1/3</h3>
+  <p><span class="badge b-bad">Red</span> 반환값 <b>PLAN_REVIEW</b> — 첫 시도이고 리뷰 수준이 Red 이므로 사람이 계획을 확인합니다.</p>
+  <p class="sub">공장별 하루 운영비(억 원, 기본 1억)를 기준 정보에 추가하고, 운영비 = 주문 있는 공장 수 x 하루 운영비 x totalDays 로 계산해 총비용에 넣는다. COST 안은 "비용 최소"(운항비+운영비 최소)로 바꾸고 FAST/NEAR 기준은 유지한다. 과거 주문은 "-".</p>
+
+  <h3 style="font-size:15px">변경할 파일과 작업 순서</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>순서</th><th>파일</th><th>변경</th><th>이유</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>simulation/Master.java</td><td>FactoryParam 에 operatingCostWon 추가</td><td>계산 입력, StoredPlan 스냅샷</td></tr>
+      <tr><td>2</td><td>simulation/Plan.java</td><td>operatingCost 필드 추가</td><td>비용 표시</td></tr>
+      <tr><td>3</td><td>simulation/Planner.java</td><td>운영비 계산, COST 선택을 운항비+운영비 최소로, label "비용 최소", totalCost 합산. FAST/NEAR·schedule·simulateFactory 미수정</td><td>핵심 계산</td></tr>
+      <tr><td>4</td><td>entity/Factory.java</td><td>dailyOperatingCostWon 컬럼(nullable)</td><td>기준 정보 저장</td></tr>
+      <tr><td>5</td><td>service/MasterService.java</td><td>기본 1억, null 이면 1억 적용, operatingCost_{국가} 검증·저장(전부 아니면 저장 안 함, masterVersion 증가 경로 유지)</td><td>원칙 3, 5</td></tr>
+      <tr><td>6</td><td>controller/MasterController.java, master.html/master.js</td><td>폼 값·입력칸 추가</td><td>기준 정보 화면</td></tr>
+      <tr><td>7</td><td>entity/Order.java</td><td>operatingCost(nullable) 컬럼, getOperatingCostEok</td><td>과거 주문은 null</td></tr>
+      <tr><td>8</td><td>service/OrderService.java</td><td>confirm 에서 서버 재계산 Plan 의 운영비 저장</td><td>원칙 1</td></tr>
+      <tr><td>9</td><td>dto/OrderList.java, OrderDetail.java</td><td>operatingCostEok(null 허용)</td><td>목록·상세</td></tr>
+      <tr><td>10</td><td>planview.js, order-new.js, orders.js, anim.js(필요 시), order-detail</td><td>운영비 표시, 없으면 "-"</td><td>화면</td></tr>
+      <tr><td>11</td><td>docs/PRD.md</td><td>계획안 이름, FR-2·3·5·17, 수용 기준 갱신</td><td>요청</td></tr>
+      <tr><td>12</td><td>PlannerTest, OrderFlowTests, JsonApiTests</td><td>생성자·라벨 반영, 신규 테스트</td><td>CK 증명</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 style="font-size:15px">체크리스트 증명 방법</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>항목</th><th>증명할 것</th><th>테스트 또는 확인 방법</th></tr></thead>
+    <tbody>
+      <tr><td>CK-1</td><td>운영비 계산, 주문 0 공장 0원, 총비용 합</td><td>PlannerTest 신규 `운영비는_주문있는_공장수x일운영비xtotalDays`</td></tr>
+      <tr><td>CK-1</td><td>COST 가 운항비+운영비 최소, label "비용 최소"</td><td>PlannerTest 신규 `비용최소는_운항비와_운영비_합이_최소`</td></tr>
+      <tr><td>CK-1</td><td>FAST/NEAR 불변, 검산 유지</td><td>기존 단언 통과 + 신규 FAST 테스트, simulateFactory diff 없음</td></tr>
+      <tr><td>CK-2</td><td>기본 1억, 소수 저장, masterVersion 증가</td><td>신규 `기준정보_운영비_저장시_버전증가`</td></tr>
+      <tr><td>CK-2</td><td>잘못된 값 하나면 전부 저장 안 함</td><td>신규 `기준정보_운영비_잘못된값이면_전부_저장안됨`</td></tr>
+      <tr><td>CK-3</td><td>확정 시 서버 재계산 운영비 저장·표시</td><td>신규 `확정시_운영비_저장` + JS 코드 위치 확인</td></tr>
+      <tr><td>CK-3</td><td>과거 주문 "-", 금액·날짜 불변</td><td>신규 `운영비없는_과거주문은_빈값으로_열림`</td></tr>
+    </tbody>
+  </table></div>
+  <p class="sub">전체 테스트(AC-T)와 6원칙 대조(AC-P)는 별도로 확인합니다.</p>
+
+  <h3 style="font-size:15px">6원칙 "주의" 항목 대응</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>원칙</th><th>위험</th><th>대응</th><th>확인 방법</th></tr></thead>
+    <tbody>
+      <tr><td>1 서버 재계산</td><td>클라이언트 값 저장</td><td>confirm 의 simulate 결과에서만 저장</td><td>확정 테스트, diff</td></tr>
+      <tr><td>2 확정 주문 불변</td><td>과거 주문 변경·null 오류</td><td>Order.operatingCost null 유지, planJson 미수정, "-" 표시</td><td>과거 주문 테스트</td></tr>
+      <tr><td>3 masterVersion</td><td>버전 미증가</td><td>기존 bumpMasterVersion 경로 안에서 저장</td><td>CK-2 단언</td></tr>
+      <tr><td>5 전부 아니면 저장 안 함</td><td>개별 저장</td><td>기존 errors 수집 단계에 검증 추가</td><td>CK-2 잘못된 값 테스트</td></tr>
+      <tr><td>6 검산</td><td>일정·검산 훼손</td><td>선택 비교식·비용 합산만 수정</td><td>diff, PlannerTest 전체</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 style="font-size:15px">이번 작업에서 하지 않을 것</h3>
+  <ul>
+    <li>운영비 세부 분류, 공장별 이외 운영비 항목</li>
+    <li>FAST/NEAR 선택 기준, schedule·simulateFactory 수정</li>
+    <li>과거 주문 금액·planJson 재계산, 운영비 소급 채우기, 마이그레이션 스크립트</li>
+    <li>changeStatus·로그인·항로 입력 등 인접 로직 리팩토링, 무관 문구 정리</li>
+    <li>docs/INTENT.md 수정</li>
+  </ul>
+
+  <h3 style="font-size:15px">사람 확인 필요</h3>
+  <ul>
+    <li><span class="ph">기존 운영 DB 의 Factory 행(새 컬럼 null)을 기본 1억으로 간주(currentMaster 에서 null → 1억)하는 방침</span></li>
+    <li><span class="ph">운영비 입력 허용 범위: 0 이상 허용으로 계획(요청에 명시 없음)</span></li>
+    <li><span class="ph">anim.js 비용 애니메이션 누적에 운영비 포함 여부(포함으로 해석)</span></li>
+  </ul>
+
+  <h3 style="font-size:15px">시도 1/3 — 수정 1 <span class="badge b-bad">범위 변경</span></h3>
+  <p><span class="badge b-bad">Red</span> 반환값 <b>PLAN_REVIEW</b> — Red 이고 수정으로 범위가 늘었습니다(E2E 6개 파일, docs/INTENT.md 추가). 리뷰 수준 변동 없음.</p>
+  <p class="sub">반영한 입력: approval.md 수정 요청 2026-10-22 14:39 (verify_feedback.md 없음). 시도 1 의 세 가지 확인 질문은 답변대로 확정했습니다: null 운영비는 1억(폼에도 "1"), 0 허용, anim.js 에 운영비 포함(끝 값 = 계획안 총비용).</p>
+
+  <h3 style="font-size:15px">추가·변경되는 작업</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>순서</th><th>파일</th><th>변경</th><th>이유</th></tr></thead>
+    <tbody>
+      <tr><td>3 (보완)</td><td>simulation/Planner.java</td><td>16행 설명 주석을 "비용 최소"로</td><td>의견 (d)</td></tr>
+      <tr><td>10 (확정)</td><td>static/js/anim.js</td><td>비용 누적에 운영비 반영, 끝 값이 총비용과 일치</td><td>의견 (3)</td></tr>
+      <tr><td>12 (보완)</td><td>JsonApiTests, OrderFlowTests</td><td>마스터 저장 호출에 operatingCost_{국가} 추가, 라벨 단언 갱신</td><td>의견 (b)</td></tr>
+      <tr><td>13</td><td>e2e/tests/order-detail.spec.ts, sim.spec.ts</td><td>"운항비 최소" 단언을 "비용 최소"로(의미 약화 금지)</td><td>의견 (a)</td></tr>
+      <tr><td>13</td><td>e2e/tests/hg.helpers.ts, api.spec.ts, mst.spec.ts, sim.spec.ts</td><td>마스터 폼 키에 operatingCost_* 추가(기본 "1")</td><td>의견 (a), 필수 키</td></tr>
+      <tr><td>14</td><td>docs/INTENT.md</td><td>설계 의도 10번 이름 변경, 5장 "조정될 수 있는 값"에 공장 하루 운영비(0 이상, 원 단위, 억 원 입력, 기본 1억) 추가</td><td>의견 (c)</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 style="font-size:15px">체크리스트 증명 방법 보완</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>항목</th><th>증명할 것</th><th>테스트 또는 확인 방법</th></tr></thead>
+    <tbody>
+      <tr><td>CK-2</td><td>운영비 0 허용, null 은 폼에 "1"</td><td>`기준정보_운영비_저장시_버전증가` 에 "0" 케이스, 신규 `운영비_null이면_기본_1억`</td></tr>
+      <tr><td>CK-2</td><td>기존 통합 테스트가 새 키로 통과</td><td>gradlew.bat test</td></tr>
+      <tr><td>CK-1/3</td><td>"비용 최소" 라벨, anim.js 끝 값 = 총비용</td><td>E2E order-detail/sim/mst/api spec 실행, sim.spec.ts 에 끝 값 단언 추가(앱 기동 불가 시 그 사실 보고)</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 style="font-size:15px">6원칙 "주의" 항목 대응</h3>
+  <p class="sub">변동 없음(시도 1 표 그대로, 주의 5개).</p>
+
+  <h3 style="font-size:15px">이번 작업에서 하지 않을 것 (보완)</h3>
+  <ul>
+    <li>"docs/INTENT.md 수정 안 함"은 철회. 위 두 곳만 수정하고 열린 질문·6원칙은 건드리지 않음</li>
+    <li>위 E2E 외 파일(lst, auth, flow, pages, helpers.ts)은 새 키로 깨질 때만 최소 수정</li>
+    <li>E2E 단언 약화·삭제, 운영비와 무관한 E2E 시나리오 추가</li>
+  </ul>
+
+  <h3 style="font-size:15px">사람 확인 필요</h3>
+  <ul><li>없음(시도 1 질문 모두 답변 반영). 범위가 늘었으므로 변경 파일 목록만 다시 확인해 주세요.</li></ul>
+</section>
+
+</div>
+</body>
+</html>

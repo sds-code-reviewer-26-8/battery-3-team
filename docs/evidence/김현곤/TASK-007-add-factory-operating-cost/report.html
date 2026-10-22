@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>검증 리포트 (report)</title>
+<style>
+:root{
+  --bg:#f6f7f9; --card:#fff; --text:#1c2430; --muted:#5d6b7c; --line:#d8dee6;
+  --accent:#1f4e78; --ph:#fff4c2; --ph-line:#e6c84a;
+  --ok:#17803d; --ok-bg:#e3f4ea; --warn:#9a6700; --warn-bg:#fdf1d6; --bad:#b42318; --bad-bg:#fde7e4;
+  --guide-bg:#eaf1fa; --guide-line:#9db8d8; --code:#eef1f5;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#10151c; --card:#18202a; --text:#e6ebf2; --muted:#9aa8ba; --line:#2d3947;
+    --accent:#7db3e8; --ph:#4a3f12; --ph-line:#a88a1c;
+    --ok:#4cc27a; --ok-bg:#16301f; --warn:#f0b24b; --warn-bg:#35290f; --bad:#ff8a80; --bad-bg:#3a1a17;
+    --guide-bg:#1b2a3d; --guide-line:#3d5a80; --code:#212c39;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.7 -apple-system,"Segoe UI","Malgun Gothic",sans-serif}
+.wrap{max-width:960px;margin:0 auto;padding:24px 16px 80px}
+h1{font-size:26px;margin:4px 0 2px}
+h2{font-size:18px;margin:0 0 10px;color:var(--accent)}
+h2 .no{display:inline-block;background:var(--accent);color:#fff;border-radius:6px;padding:0 8px;margin-right:6px;font-size:14px}
+section{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:16px 0}
+.sub{color:var(--muted);margin:0 0 12px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+th{background:var(--bg);color:var(--muted);font-weight:600}
+.tablewrap{overflow-x:auto}
+.ph{background:var(--ph);border-bottom:1px dashed var(--ph-line);padding:0 3px;border-radius:3px}
+.guide{background:var(--guide-bg);border-left:4px solid var(--guide-line);padding:9px 13px;border-radius:6px;margin:0 0 12px;font-size:13.5px}
+.guide b{color:var(--accent)}
+.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px 16px}
+.meta div{border:1px solid var(--line);border-radius:8px;padding:6px 10px;background:var(--card)}
+.meta span{display:block;font-size:12px;color:var(--muted)}
+.badge{display:inline-block;border-radius:999px;padding:1px 10px;font-size:12.5px;font-weight:600}
+.b-ok{background:var(--ok-bg);color:var(--ok)} .b-warn{background:var(--warn-bg);color:var(--warn)} .b-bad{background:var(--bad-bg);color:var(--bad)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:8px 0 4px}
+.tile{border:1px solid var(--line);border-radius:10px;padding:10px 12px;text-align:center}
+.tile b{display:block;font-size:26px;line-height:1.2}
+.tile small{color:var(--muted)}
+.tile.ok b{color:var(--ok)} .tile.bad b{color:var(--bad)} .tile.warn b{color:var(--warn)}
+.timeline{list-style:none;margin:0;padding:0 0 0 14px;border-left:3px solid var(--line)}
+.timeline li{position:relative;padding:0 0 16px 16px}
+.timeline li::before{content:"";position:absolute;left:-23px;top:6px;width:11px;height:11px;border-radius:50%;background:var(--accent)}
+.timeline li:last-child{padding-bottom:0}
+.check{list-style:none;padding:0;margin:0}
+.check li{display:flex;gap:10px;padding:6px 0;border-bottom:1px solid var(--line)}
+.check li:last-child{border-bottom:0}
+.check input{margin-top:5px}
+pre{background:var(--code);padding:10px 12px;border-radius:8px;overflow-x:auto;font:13px/1.55 Consolas,"D2Coding",monospace;margin:6px 0}
+.rules{font-size:13px;color:var(--muted)} .rules li{margin:2px 0}
+@media print{ body{background:#fff} .guide{display:none} section{break-inside:avoid} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="sub">Inner Loop · 검증·리포트 작성 단계의 증거(Evidence)</p>
+  <h1>검증 리포트: 공장별 하루 운영비 추가와 비용 최소 계획안</h1>
+  <div class="meta">
+    <div><span>작성자</span>verify 에이전트 (사용자: 김현곤)</div>
+    <div><span>작성일</span>2026-10-22</div>
+    <div><span>브랜치 / PR</span>feature/factory-operating-cost · 없음</div>
+    <div><span>사전 검토 문서</span><a href="precheck.html">precheck.html</a></div>
+    <div><span>최종 결과</span><span class="badge b-ok">완료</span></div>
+  </div>
+</header>
+
+<section>
+  <h2><span class="no">1</span>한눈에 보기</h2>
+  <div class="tiles">
+    <div class="tile ok"><b id="c-pass">-</b><small>통과</small></div>
+    <div class="tile bad"><b id="c-fail">-</b><small>실패</small></div>
+    <div class="tile warn"><b id="c-skip">-</b><small>건너뜀·미확인</small></div>
+    <div class="tile"><b id="c-ac">-</b><small>충족한 통과 기준</small></div>
+    <div class="tile"><b id="c-loop">1</b><small>반복 횟수</small></div>
+  </div>
+  <p><b>한 줄 요약:</b> 공장별 하루 운영비(기본 1억)를 기준 정보에 추가하고 운영비 = 주문 공장 일 운영비 합 x 총 소요 일수를 총비용에 포함했다. COST 안은 "비용 최소"(운항비+운영비 최소)로 바뀌었다. 전체 테스트 49건이 모두 통과했고 계획 대비 실제도 통과했다.</p>
+</section>
+
+<section>
+  <h2><span class="no">2</span>구현 요약</h2>
+  <table>
+    <tr><th style="width:150px">구현한 것</th><td>기준 정보 화면에 공장별 하루 운영비(억 원, 소수 입력, 0 허용) 입력칸이 생겼다. 계획안·확정 주문·주문 목록·상세에 운영비가 표시되고 총비용 = 생산비+운항비+운영비이다. 운영비 도입 전 주문은 "-" 로 표시된다.</td></tr>
+    <tr><th>접근 방법</th><td>Planner 후보 탐색에서 운항비 + 일 운영비 합 x totalDays 로 비용 최소를 고르고, toPlan 에서 운영비·총비용을 계산한다(schedule·simulateFactory 는 수정 없음). 확정은 서버 재계산 plan 값을 Order 에 저장한다. Factory/Order 의 새 컬럼은 nullable 이고 null 은 기본 1억으로 간주한다.</td></tr>
+  </table>
+  <h3 style="font-size:15px;margin:14px 0 6px">바뀐 파일 (git diff HEAD --name-status 로 확인, 모두 수정)</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>파일</th><th>변경 내용</th><th>종류</th></tr></thead>
+    <tbody>
+      <tr><td>simulation/Master.java, Plan.java, Planner.java</td><td>operatingCostWon·operatingCost 추가, 비용 최소 선택식·라벨, 총비용 합산</td><td>수정</td></tr>
+      <tr><td>entity/Factory.java, Order.java</td><td>dailyOperatingCostWon, operatingCost 컬럼(nullable)</td><td>수정</td></tr>
+      <tr><td>service/MasterService.java, OrderService.java</td><td>운영비 검증·저장·기본값, 확정 시 서버 재계산값 저장</td><td>수정</td></tr>
+      <tr><td>controller/MasterController.java, dto/OrderList.java, dto/OrderDetail.java</td><td>폼·목록·상세에 운영비</td><td>수정</td></tr>
+      <tr><td>static/js/anim.js, master.js, order-new.js, orders.js, planview.js, master.html, orders.html</td><td>운영비 표시·입력·애니메이션 누적, 없으면 "-"</td><td>수정</td></tr>
+      <tr><td>docs/PRD.md, docs/INTENT.md</td><td>이름·기준 정보·값 범위 갱신</td><td>수정</td></tr>
+      <tr><td>src/test: PlannerTest.java, OrderFlowTests.java</td><td>신규 8개 테스트와 새 키 반영</td><td>수정</td></tr>
+      <tr><td>e2e/tests: hg.helpers.ts, lst.spec.ts, mst.spec.ts, order-detail.spec.ts, sim.spec.ts</td><td>"비용 최소" 라벨, operatingCost_* 키</td><td>수정</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2><span class="no">3</span>검증 결과</h2>
+  <div class="tablewrap"><table id="results">
+    <thead><tr><th style="width:60px">AC</th><th>검증 항목</th><th>실행 명령 / 방법</th><th style="width:80px">결과</th><th>근거 (결과 파일·로그)</th></tr></thead>
+    <tbody>
+      <tr data-result="pass" data-ac="CK-1"><td>CK-1</td><td>운영비 계산·비용 최소 선택·FAST/NEAR 불변·검산 유지</td><td>gradlew test --rerun, 코드 확인</td><td><span class="badge b-ok">통과</span></td><td>Planner.java 의 비용 비교식(candCost)·toPlan 합산, PlannerTest 29~31행대 신규 3건(169, 188, 209행) 통과. schedule·simulateFactory 는 diff 에 없음.</td></tr>
+      <tr data-result="pass" data-ac="CK-2"><td>CK-2</td><td>기준 정보 운영비 저장·버전 증가·잘못된 값이면 전부 저장 안 됨</td><td>gradlew test --rerun</td><td><span class="badge b-ok">통과</span></td><td>OrderFlowTests 220, 242, 262행 통과. MasterService.parseOperatingCost 가 errors 수집 단계에 추가됨.</td></tr>
+      <tr data-result="pass" data-ac="CK-3"><td>CK-3</td><td>확정 시 서버 재계산 운영비 저장·표시, 과거 주문 "-"</td><td>gradlew test --rerun, 코드 확인</td><td><span class="badge b-ok">통과</span></td><td>OrderFlowTests 274, 292행 통과. OrderService 가 plan.operatingCost() 저장. orders.js·planview.js 의 null 이면 "-" 분기 확인.</td></tr>
+      <tr data-result="pass" data-ac="AC-T"><td>AC-T</td><td>전체 테스트</td><td>./gradlew test --rerun</td><td><span class="badge b-ok">통과</span></td><td>BUILD SUCCESSFUL, 4개 결과 파일 합계 49건(1+19+14+15), 실패·오류·건너뜀 0 (build/test-results/test/*.xml).</td></tr>
+      <tr data-result="pass" data-ac="AC-P"><td>AC-P</td><td>6원칙 전체</td><td>git diff HEAD 검토</td><td><span class="badge b-ok">통과</span></td><td>1 서버 재계산 값만 저장(OrderService diff). 2 과거 주문 재작성 없음, null 허용. 3 updateMaster 의 기존 버전 증가 경로 사용. 4 changeStatus 미변경(해당 없음). 5 검증 오류를 errors 에 모아 일괄 저장 전 차단. 6 simulateFactory·schedule 미수정.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2><span class="no">4</span>반복(Feedback) 기록</h2>
+  <ol class="timeline">
+    <li><b>1회차</b> — 통과 (verify_feedback.md 없음). 사람 수정 요청(approval.md 14:39)은 plan 단계에서 PLAN.md 수정 1 로 반영된 뒤 14:43 승인됨.</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="no">5</span>건너뛴 것과 확인하지 못한 것</h2>
+  <ul>
+    <li>E2E(Playwright)는 verify 가 직접 실행하지 않았다. 구현자가 82건 통과라고 적었으나 판정 근거로 쓰지 않았고, E2E 변경은 diff 로만 확인했다.</li>
+    <li>JsonApiTests·api.spec.ts 는 계획에 있었으나 수정되지 않았다(미수행, 실패 아님).</li>
+  </ul>
+</section>
+
+<section>
+  <h2><span class="no">6</span>남은 이슈와 후속 작업</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>이슈</th><th>심각도</th><th>제안</th></tr></thead>
+    <tbody>
+      <tr><td>E2E 직접 재실행 안 함</td><td><span class="badge b-warn">낮음</span></td><td>사람 확인 시 npx playwright test 로 재확인</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2><span class="no">7</span>증거 파일 목록</h2>
+  <ul>
+    <li>실행 결과: build/test-results/test/*.xml (gradlew test --rerun)</li>
+    <li>checklist: checklist.md, PLAN.md, approval.md, implement_notes.md, self-check.md (같은 폴더)</li>
+    <li>verify_feedback.md: 없음(1회차 통과)</li>
+    <li>사전 검토: <a href="precheck.html">precheck.html</a></li>
+  </ul>
+</section>
+
+<section>
+  <h2><span class="no">8</span>사람 확인 (HITL)</h2>
+  <div class="guide"><b>완료로 인정할지</b> 사람이 판단합니다. AI는 이 칸을 임의로 채우지 않습니다. 부족하면 "보완 필요"로 사전 검토에 되돌립니다.</div>
+  <ul class="check">
+    <li><input type="checkbox"><div>검증 결과가 통과 기준을 모두 충족한다</div></li>
+    <li><input type="checkbox"><div>실패·건너뜀·미확인 항목이 정직하게 기록되어 있다</div></li>
+    <li><input type="checkbox"><div>기존 기능이 깨지지 않았다(회귀 확인)</div></li>
+  </ul>
+  <table style="margin-top:10px">
+    <tr><th style="width:150px">결정</th><td><span class="ph">[완료 / 보완 필요(사전 검토로 되돌림)]</span></td></tr>
+    <tr><th>확인한 사람</th><td><span class="ph">[이름]</span> · <span class="ph">[YYYY-MM-DD]</span></td></tr>
+    <tr><th>의견</th><td><span class="ph">[보완할 점]</span></td></tr>
+  </table>
+</section>
+
+<section>
+  <h2><span class="no">9</span>계획 대비 실제</h2>
+  <p><span class="badge b-ok">PLAN-DIFF 통과</span> 계획 밖 파일(orders.html, lst.spec.ts)은 implement_notes.md 시도 1/3 에 이유가 적혀 있고, "하지 않을 것"과 부딪히는 변경은 없다.</p>
+  <p class="sub">계획 목록: PLAN.md 시도 1/3 및 시도 1/3 수정 1 을 합친 것.</p>
+  <div class="tablewrap"><table>
+    <thead><tr><th>파일</th><th>분류</th><th>이유가 적혀 있나</th><th>비고</th></tr></thead>
+    <tbody>
+      <tr><td>src/main 의 Master, Plan, Planner, Factory, Order, MasterService, OrderService, MasterController, OrderList, OrderDetail (java 10개)</td><td>계획대로</td><td>해당 없음</td><td></td></tr>
+      <tr><td>static/js/anim.js, master.js, order-new.js, orders.js, planview.js, master.html</td><td>계획대로</td><td>해당 없음</td><td></td></tr>
+      <tr><td>src/main/resources/static/orders.html</td><td>계획 밖</td><td>있음</td><td>구현자 주장: 목록 컬럼 헤더라서 orders.js 와 한 묶음으로 수정</td></tr>
+      <tr><td>docs/PRD.md, docs/INTENT.md</td><td>계획대로</td><td>해당 없음</td><td></td></tr>
+      <tr><td>PlannerTest.java, OrderFlowTests.java</td><td>계획대로</td><td>해당 없음</td><td></td></tr>
+      <tr><td>e2e/tests/hg.helpers.ts, mst.spec.ts, order-detail.spec.ts, sim.spec.ts</td><td>계획대로</td><td>해당 없음</td><td></td></tr>
+      <tr><td>e2e/tests/lst.spec.ts</td><td>계획 밖</td><td>있음</td><td>구현자 주장: 목록에 컬럼을 추가해 헤더 단언에 '운영비(억원)' 추가 (계획 4'에 깨지면 최소 수정 허용)</td></tr>
+      <tr><td>JsonApiTests.java, e2e/tests/api.spec.ts, order-detail.js/html</td><td>미수행</td><td>해당 없음</td><td>계획에는 있으나 바뀌지 않음 (JsonApiTests 는 노트에 사유 기록)</td></tr>
+    </tbody>
+  </table></div>
+  <p>계획의 "하지 않을 것"과 부딪히는 변경: 없음.</p>
+</section>
+
+<section>
+  <h2><span class="no">10</span>승인 기록</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th style="width:150px">항목</th><th>내용</th></tr></thead>
+    <tbody>
+      <tr><td>결정</td><td>수정 요청(2026-10-22 14:39, 시도 1/3) 후 승인(2026-10-22 14:43, 시도 1/3)</td></tr>
+      <tr><td>승인한 사람</td><td>김현곤</td></tr>
+      <tr><td>일시</td><td>수정 요청 2026-10-22 14:39 / 승인 2026-10-22 14:43</td></tr>
+      <tr><td>수정 의견</td><td>(1) null 운영비는 기본 1억으로 간주, 화면에도 1 표시 (2) 운영비 0 허용 (3) anim.js 비용 애니메이션에 운영비 포함, 끝 값이 총비용과 같게 (a) E2E 갱신 (b) JsonApiTests·OrderFlowTests 새 키 (c) INTENT.md 수정 (d) Planner.java 16행 주석. 반영 위치: PLAN.md "시도 1/3 — 수정 1" 절에 표로 반영됨.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+</div>
+<script>
+(function () {
+  var rows = document.querySelectorAll('#results tbody tr');
+  function count(v) { return Array.prototype.filter.call(rows, function (r) { return r.dataset.result === v; }).length; }
+  function put(id, text) { var el = document.getElementById(id); if (el) el.textContent = text; }
+  if (!rows.length) return;
+  var pass = count('pass');
+  put('c-pass', pass);
+  put('c-fail', count('fail'));
+  put('c-skip', count('skip'));
+  put('c-ac', pass + ' / ' + rows.length);
+})();
+</script>
+</body>
+</html>

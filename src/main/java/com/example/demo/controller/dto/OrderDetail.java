@@ -13,8 +13,8 @@ import tools.jackson.databind.ObjectMapper;
  */
 public record OrderDetail(Long id, StatusInfo status, LocalDateTime confirmedAt, String createdBy, String routeType,
 		String routeLabel, String memo, String customerName, Integer requiredDays, boolean late, int totalK,
-		int totalDays, String totalCostEok, long version, List<StatusInfo> next, List<HistoryItem> history,
-		JsonNode plan) {
+		int totalDays, String totalCostEok, String operatingCostEok, long version, List<StatusInfo> next,
+		List<HistoryItem> history, JsonNode plan) {
 
 	public record HistoryItem(LocalDateTime changedAt, StatusInfo fromStatus, StatusInfo toStatus,
 			String changedBy) {
@@ -28,7 +28,7 @@ public record OrderDetail(Long id, StatusInfo status, LocalDateTime confirmedAt,
 	public static OrderDetail of(Order o, List<OrderStatusHistory> history, ObjectMapper json) {
 		return new OrderDetail(o.getId(), StatusInfo.of(o.getStatus()), o.getConfirmedAt(), o.getCreatedBy(),
 				o.getRouteType(), o.getRouteLabel(), o.getMemo(), o.getCustomerName(), o.getRequiredDays(), o.isLate(),
-				o.getTotalK(), o.getTotalDays(), o.getTotalCostEok(), o.getVersion(),
+				o.getTotalK(), o.getTotalDays(), o.getTotalCostEok(), o.getOperatingCostEok(), o.getVersion(),
 				o.getStatus().next().stream().map(StatusInfo::of).toList(),
 				history.stream().map(HistoryItem::of).toList(), json.readTree(o.getPlanJson()));
 	}
