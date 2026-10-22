@@ -56,7 +56,7 @@ pre{background:var(--code);padding:10px 12px;border-radius:8px;overflow-x:auto;f
   <p class="sub">Inner Loop · 사전 검토·세팅 단계의 증거(Evidence)</p>
   <h1>사전 검토: 대형 파일 분리 리팩토링 (Controller·Service·Repository)</h1>
   <div class="meta">
-    <div><span>작성자</span>AI 초안 (사람 확인 전)</div>
+    <div><span>작성자</span>joosang425 (AI 초안 작성, 사람 확인 전)</div>
     <div><span>작성일</span>2026-10-22</div>
     <div><span>브랜치</span>refactor/split-large-files</div>
     <div><span>검토 상태</span><span class="badge b-warn">승인 대기</span></div>
@@ -108,6 +108,8 @@ pre{background:var(--code);padding:10px 12px;border-radius:8px;overflow-x:auto;f
     <tbody>
       <tr><td>controller/AppController (외부 참조 0곳)</td><td>4개 컨트롤러 + 공통 모델 클래스로 분리. SimulateRequest·ConfirmRequest 레코드는 ApiController로 이동.</td><td><span class="badge b-warn">중</span> 공통 모델 loginUser가 모든 화면에 적용되어야 함</td><td>@ControllerAdvice로 옮겨 전 컨트롤러에 적용. E2E auth·lst·mst 시나리오로 상단 아이디 표시 확인.</td></tr>
       <tr><td>service/BatteryService (참조: AppController, DataInitializer, OrderFlowTests)</td><td>3개 서비스로 분리. confirm이 simulate를 호출하므로 OrderService → SimulationService → MasterService 순으로 의존.</td><td><span class="badge b-warn">중</span> 같은 클래스 안 호출이 빈 사이에 프록시를 거치게 됨(트랜잭션 경계 변화)</td><td>confirm은 쓰기 트랜잭션 하나 안에서 실행되고 안쪽 호출은 거기에 합류하므로 확정·저장은 한 트랜잭션으로 유지됨. OrderFlowTests(확정·상태 변경·낙관적 락)로 검증.</td></tr>
+      <tr><td>/api/simulate 경로 (SimulationService.simulate 단독 호출)</td><td>전에는 같은 클래스 안 호출이라 읽기 전용 트랜잭션 없이 실행, 분리 후에는 MasterService 프록시를 거쳐 읽기 전용 트랜잭션이 열림. (PR 리뷰에서 지적, 사전 검토가 확정 경로만 분석함)</td><td><span class="badge b-ok">낮</span> 공장·항로·설정을 한 트랜잭션에서 읽게 됨</td><td>JUnit·E2E(sim, api) 통과로 확인. 코드 읽기 기반 추정.</td></tr>
+      <tr><td>loginUser 공통 모델 (LoginUserAdvice)</td><td>AppController 안에서만 적용되던 @ModelAttribute가 @ControllerAdvice로 전역 적용(/error 컨트롤러 포함)</td><td><span class="badge b-ok">낮</span></td><td>E2E auth·lst·mst로 확인. 적용 범위가 넓어진 점을 report에 명시.</td></tr>
       <tr><td>INTENT 원칙 1·3·4·5</td><td>해당 코드를 그대로 옮기고 로직은 바꾸지 않음.</td><td><span class="badge b-warn">중</span> 이동 중 검증·masterVersion 증가·재계산 단계 누락</td><td>이동 전후 diff 검토, OrderFlowTests·E2E(order-confirm, mst, api)로 확인.</td></tr>
       <tr><td>repository/*Repositories (참조: BatteryService import 5줄)</td><td>중첩 인터페이스 → 최상위 인터페이스 5개. 패키지가 같아 JpaConfig 스캔 범위 변화 없음.</td><td><span class="badge b-ok">낮</span> 스프링 데이터 등록 누락</td><td>DemoApplicationTests(컨텍스트 로딩), 전체 테스트.</td></tr>
       <tr><td>config/DataInitializer</td><td>initDefaults 호출 대상이 MasterService로 바뀜(1줄+import). <b>범위 밖 파일이지만 컴파일에 필수</b>.</td><td><span class="badge b-ok">낮</span></td><td>게이트 ①에서 범위 포함 승인 요청.</td></tr>
@@ -163,6 +165,7 @@ pre{background:var(--code);padding:10px 12px;border-radius:8px;overflow-x:auto;f
     <li><b>질문 2 (범위)</b> DataInitializer(config) 1곳 수정을 범위에 넣어도 되는가. 컴파일에 필수.</li>
     <li><b>질문 3 (범위)</b> CLAUDE.md(아직 커밋 전 파일)와 docs/INTENT.md 부록의 클래스 이름을 같은 변경에서 갱신해도 되는가. CLAUDE.md를 이번 커밋에 포함시킬지도 확인 필요.</li>
     <li>JpaConfig의 considerNestedRepositories=true는 분리 후 불필요해지지만 그대로 둔다(동작 영향 없음, config 최소 변경). 정리하고 싶으면 알려 달라.</li>
+    <li><b>결정 기록 (게이트 ① 전 대화에서 사람이 답함, 2026-10-22)</b>: 질문 1 → ⓐ(OrderFlowTests의 주입·import만 변경), 질문 2 → 범위 포함(DataInitializer 수정), 질문 3 → 포함(CLAUDE.md, INTENT.md 이름 갱신) 후 구현 시작을 승인. 아래 9장 확인 칸은 사람이 직접 채운다.</li>
     <li>린트: 도구 미설정, 컴파일로 대체(E2E TypeScript 타입 검사는 미확인, 이번엔 E2E 코드 변경 없음).</li>
   </ul>
 </section>
