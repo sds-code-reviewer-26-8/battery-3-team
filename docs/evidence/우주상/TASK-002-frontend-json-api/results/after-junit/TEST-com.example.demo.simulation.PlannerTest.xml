@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.demo.simulation.PlannerTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2026-10-22T01:35:42.499Z" hostname="DESKTOP-2GEPPK4" time="0.05">
+  <properties/>
+  <testcase name="usesAtMostAvailableShips()" classname="com.example.demo.simulation.PlannerTest" time="0.009"/>
+  <testcase name="costOptionIsNotMoreExpensiveAndFastOptionIsNotSlower()" classname="com.example.demo.simulation.PlannerTest" time="0.004"/>
+  <testcase name="defaultOrderSummary()" classname="com.example.demo.simulation.PlannerTest" time="0.011"/>
+  <testcase name="productionCostIsCellsTimesUnitCost()" classname="com.example.demo.simulation.PlannerTest" time="0.002"/>
+  <testcase name="everyOptionCollectsExactlyWhatWasOrdered()" classname="com.example.demo.simulation.PlannerTest" time="0.009"/>
+  <testcase name="productionStopsAtStockLimitUntilPickup()" classname="com.example.demo.simulation.PlannerTest" time="0.001"/>
+  <testcase name="singleSmallOrderTakesProductionPlusRoundTrip()" classname="com.example.demo.simulation.PlannerTest" time="0.0"/>
+  <testcase name="eachCountryIsVisitedByOneShipOnly()" classname="com.example.demo.simulation.PlannerTest" time="0.004"/>
+  <testcase name="rejectsEmptyOrder()" classname="com.example.demo.simulation.PlannerTest" time="0.001"/>
+  <testcase name="shipDepartsLateSoItDoesNotWaitAtPort()" classname="com.example.demo.simulation.PlannerTest" time="0.001"/>
+  <testcase name="visitsAreCeilOfOrderOverStockLimit()" classname="com.example.demo.simulation.PlannerTest" time="0.001"/>
+  <testcase name="overStockLimitOrderIsCollectedInSeveralRoundTrips()" classname="com.example.demo.simulation.PlannerTest" time="0.002"/>
+  <system-out><![CDATA[운항비 최소: 26일, 생산 78.00억, 운항 20.00억, 합계 98.00억, 배 1척
+  1호 출항 1 → [일본(3일,2000)] → 귀환 5
+  1호 출항 10 → [중국(11일,3000), 베트남(15일,3000), 인도네시아(17일,3000), 일본(24일,1000)] → 귀환 26
+가장 빠르게: 20일, 생산 78.00억, 운항 32.00억, 합계 110.00억, 배 3척
+  1호 출항 10 → [중국(11일,3000), 베트남(15일,3000)] → 귀환 20
+  2호 출항 1 → [일본(3일,2000)] → 귀환 5
+  2호 출항 5 → [일본(7일,1000)] → 귀환 9
+  3호 출항 3 → [인도네시아(10일,3000)] → 귀환 17
+가까운 곳부터: 21일, 생산 78.00억, 운항 32.00억, 합계 110.00억, 배 3척
+  1호 출항 7 → [중국(8일,3000), 인도네시아(14일,3000)] → 귀환 21
+  2호 출항 1 → [일본(3일,2000)] → 귀환 5
+  2호 출항 5 → [일본(7일,1000)] → 귀환 9
+  3호 출항 10 → [베트남(15일,3000)] → 귀환 20
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

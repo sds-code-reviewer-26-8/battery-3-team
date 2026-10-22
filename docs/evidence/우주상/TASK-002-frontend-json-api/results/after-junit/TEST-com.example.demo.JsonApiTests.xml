@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.demo.JsonApiTests" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-22T01:35:39.804Z" hostname="DESKTOP-2GEPPK4" time="1.727">
+  <properties/>
+  <testcase name="singleErrorHasNoErrorsList()" classname="com.example.demo.JsonApiTests" time="0.272"/>
+  <testcase name="missingOrderIsNotFoundNotServerError()" classname="com.example.demo.JsonApiTests" time="0.019"/>
+  <testcase name="orderDetailHasStoredPlanHistoryAndVersion()" classname="com.example.demo.JsonApiTests" time="0.288"/>
+  <testcase name="meReturnsLoginUser()" classname="com.example.demo.JsonApiTests" time="0.007"/>
+  <testcase name="statusChangeReturnsUpdatedOrderAndRejectsBadRequests()" classname="com.example.demo.JsonApiTests" time="0.105"/>
+  <testcase name="orderListHasCountsAndFilters()" classname="com.example.demo.JsonApiTests" time="0.092"/>
+  <testcase name="pageUrlsServeStaticHtmlAndStayProtected()" classname="com.example.demo.JsonApiTests" time="0.039"/>
+  <testcase name="masterFormUsesEokAndInvalidSaveListsAllErrors()" classname="com.example.demo.JsonApiTests" time="0.027"/>
+  <testcase name="cancelDeletesOrderAndReportsDeleted()" classname="com.example.demo.JsonApiTests" time="0.044"/>
+  <system-out><![CDATA[2026-10-22T10:35:39.806+09:00  INFO 19468 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.example.demo.JsonApiTests]: JsonApiTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-10-22T10:35:39.816+09:00  INFO 19468 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.example.demo.DemoApplication for test class com.example.demo.JsonApiTests
+2026-10-22T10:35:39.818+09:00  INFO 19468 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.example.demo.JsonApiTests]: JsonApiTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-10-22T10:35:39.819+09:00  INFO 19468 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.example.demo.DemoApplication for test class com.example.demo.JsonApiTests
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.1.1)
+
+2026-10-22T10:35:39.854+09:00  INFO 19468 --- [    Test worker] com.example.demo.JsonApiTests            : Starting JsonApiTests using Java 17.0.20.1 with PID 19468 (started by 주상 in C:\work\battery)
+2026-10-22T10:35:39.854+09:00  INFO 19468 --- [    Test worker] com.example.demo.JsonApiTests            : No active profile set, falling back to 1 default profile: "default"
+2026-10-22T10:35:40.054+09:00  INFO 19468 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-10-22T10:35:40.068+09:00  INFO 19468 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 11 ms. Found 5 JPA repository interfaces.
+2026-10-22T10:35:40.193+09:00  INFO 19468 --- [    Test worker] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-10-22T10:35:40.227+09:00  INFO 19468 --- [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-10-22T10:35:40.229+09:00  INFO 19468 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Starting...
+2026-10-22T10:35:40.229+09:00  INFO 19468 --- [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-2 - Added connection conn10: url=jdbc:h2:mem:battery-test user=SA
+2026-10-22T10:35:40.229+09:00  INFO 19468 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Start completed.
+2026-10-22T10:35:40.231+09:00  INFO 19468 --- [    Test worker] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:h2:mem:battery-test]
+	Database driver: H2 JDBC Driver
+	Database dialect: H2Dialect
+	Database version: 2.4.240
+	Default catalog/schema: BATTERY-TEST/PUBLIC
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: 100
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-10-22T10:35:40.336+09:00  INFO 19468 --- [    Test worker] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-10-22T10:35:40.351+09:00  INFO 19468 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-10-22T10:35:40.479+09:00  WARN 19468 --- [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-10-22T10:35:40.587+09:00  INFO 19468 --- [    Test worker] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-10-22T10:35:40.588+09:00  INFO 19468 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-10-22T10:35:40.591+09:00  INFO 19468 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 1 ms
+2026-10-22T10:35:40.609+09:00  INFO 19468 --- [    Test worker] com.example.demo.JsonApiTests            : Started JsonApiTests in 0.785 seconds (process running for 9.159)
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

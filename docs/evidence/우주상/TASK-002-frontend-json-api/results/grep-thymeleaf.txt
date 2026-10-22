@@ -1,0 +1,8 @@
+$ grep -rniE "thymeleaf|th:(text|href|each|if|replace|action|value|name|classappend)" src build.gradle.kts
+(종료 코드 1 , 1이면 0건)
+
+$ grep -rn "org.springframework.ui.Model\|return \"[a-z-]*\";" src/main/java
+(종료 코드 1)
+
+$ ls src/main/resources/templates
+ls: cannot access 'src/main/resources/templates': No such file or directory
