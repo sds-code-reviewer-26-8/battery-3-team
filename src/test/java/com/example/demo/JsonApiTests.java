@@ -538,4 +538,48 @@ class JsonApiTests {
 				.andExpect(jsonPath("$.customerName").value(nullValue()));
 		assertThat(customerOfListItem(s, id)).isNull();
 	}
+	@Test
+	void updateCustomerWithoutNameKeyIsRejectedAndKeepsValue() throws Exception {
+		MockHttpSession s = login();
+		int id = confirmWith(s, "유지될 이름");
+		long version = versionOf(s, id);
+
+		// customerName 키가 없으면 이름이 지워지지 않고 400 (지우려면 빈 문자열이나 null 을 명시한다)
+		mvc.perform(put("/api/orders/" + id + "/customer").session(s).contentType(MediaType.APPLICATION_JSON)
+						.content("{\"version\":" + version + "}"))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.error").value("customerName 이 필요합니다. 지우려면 빈 문자열을 보내세요"));
+		// 문자열이 아닌 이름, 숫자가 아닌 version 도 400
+		mvc.perform(put("/api/orders/" + id + "/customer").session(s).contentType(MediaType.APPLICATION_JSON)
+						.content("{\"customerName\":5,\"version\":" + version + "}"))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.error").value("customerName 은 문자열이어야 합니다"));
+		mvc.perform(put("/api/orders/" + id + "/customer").session(s).contentType(MediaType.APPLICATION_JSON)
+						.content("{\"customerName\":\"x\",\"version\":\"abc\"}"))
+				.andExpect(status().isBadRequest());
+		mvc.perform(get("/api/orders/" + id).session(s)).andExpect(jsonPath("$.customerName").value("유지될 이름"))
+				.andExpect(jsonPath("$.version").value(version));
+
+		// null 을 명시하면 지운다
+		updateCustomer(s, id, null, version).andExpect(status().isOk())
+				.andExpect(jsonPath("$.customerName").value(nullValue()));
+	}
+
+	@Test
+	void updatingCustomerBumpsVersionSoStaleStatusChangeConflicts() throws Exception {
+		MockHttpSession s = login();
+		int id = confirmWith(s, "처음 이름");
+		long version = versionOf(s, id);
+
+		updateCustomer(s, id, "바뀐 이름", version).andExpect(status().isOk())
+				.andExpect(jsonPath("$.version").value(org.hamcrest.Matchers.greaterThan((int) version)));
+
+		// 이름을 바꾸기 전 화면의 version 으로 상태를 바꾸려 하면 충돌(409), 상태와 이름은 그대로
+		mvc.perform(post("/api/orders/" + id + "/status").session(s).contentType(MediaType.APPLICATION_JSON)
+						.content(statusBody("IN_PROGRESS", version)))
+				.andExpect(status().isConflict())
+				.andExpect(jsonPath("$.conflict").value(true));
+		mvc.perform(get("/api/orders/" + id).session(s)).andExpect(jsonPath("$.status.name").value("CONFIRMED"))
+				.andExpect(jsonPath("$.customerName").value("바뀐 이름"));
+	}
 }

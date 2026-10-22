@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 
 @RestController
@@ -27,10 +28,6 @@ public class OrderController {
 
 	public record ConfirmRequest(Map<Country, Integer> orders, String routeType, long masterVersion, String memo,
 			String customerName) {
-	}
-
-	/** version 은 화면에서 본 시점의 주문 version */
-	public record UpdateCustomerRequest(String customerName, Long version) {
 	}
 
 	private final OrderService orderService;
@@ -70,11 +67,21 @@ public class OrderController {
 	}
 
 	@PutMapping("/{id}/customer")
-	public OrderDetail updateCustomer(@PathVariable Long id, @RequestBody UpdateCustomerRequest request) {
-		if (request.version() == null) {
+	public OrderDetail updateCustomer(@PathVariable Long id, @RequestBody JsonNode body) {
+		// version 은 화면에서 본 시점의 주문 version. customerName 키가 없으면 실수로 이름이 지워지지 않도록 거부한다
+		// (지우려면 빈 문자열이나 null 을 명시해서 보낸다).
+		JsonNode version = body.get("version");
+		if (version == null || !version.isIntegralNumber()) {
 			throw new BusinessException("주문 version 이 필요합니다");
 		}
-		orderService.updateCustomer(id, request.customerName(), request.version());
+		if (!body.has("customerName")) {
+			throw new BusinessException("customerName 이 필요합니다. 지우려면 빈 문자열을 보내세요");
+		}
+		JsonNode name = body.get("customerName");
+		if (!name.isNull() && !name.isString()) {
+			throw new BusinessException("customerName 은 문자열이어야 합니다");
+		}
+		orderService.updateCustomer(id, name.isNull() ? null : name.asString(), version.asLong());
 		return detailOf(id);
 	}
 
