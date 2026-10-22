@@ -5,7 +5,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-/** 로그인하지 않으면 로그인 화면만 볼 수 있다. API 는 401 을 돌려준다. */
+/** 로그인하지 않으면 로그인·회원가입 화면만 볼 수 있다. API 는 401 을 돌려준다(가입 API 제외). */
 public class LoginInterceptor implements HandlerInterceptor {
 
 	public static final String SESSION_USER = "loginUser";

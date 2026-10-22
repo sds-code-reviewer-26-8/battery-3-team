@@ -1,0 +1,685 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "tests/signup.spec.ts",
+      "--reporter=json"
+    ],
+    "configFile": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\playwright.config.ts",
+    "rootDir": "C:/Users/<user>/AppData/Local/Temp/claude/C--work-battery/ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7/scratchpad/wt-main5/e2e/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/<user>/AppData/Local/Temp/claude/C--work-battery/ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7/scratchpad/wt-main5/e2e/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "C:/Users/<user>/AppData/Local/Temp/claude/C--work-battery/ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7/scratchpad/wt-main5/e2e/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "chromium",
+        "testDir": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\tests",
+        "snapshotDir": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\tests",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 30000,
+        "use": {
+          "baseURL": "http://localhost:18083",
+          "trace": "retain-on-failure",
+          "screenshot": "only-on-failure",
+          "launchOptions": {
+            "slowMo": 0
+          },
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Safari/537.36",
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "screen": {
+            "width": 1920,
+            "height": 1080
+          },
+          "deviceScaleFactor": 1,
+          "isMobile": false,
+          "hasTouch": false,
+          "defaultBrowserType": "chromium"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "chromium"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.1",
+    "workers": 1,
+    "webServer": {
+      "command": ".\\gradlew.bat bootRun",
+      "cwd": "..",
+      "url": "http://localhost:18083/login",
+      "reuseExistingServer": true,
+      "timeout": 180000,
+      "env": {
+        "SERVER_PORT": "18083",
+        "SPRING_DATASOURCE_URL": "jdbc:h2:mem:battery-e2e;DB_CLOSE_DELAY=-1"
+      }
+    }
+  },
+  "suites": [
+    {
+      "title": "signup.spec.ts",
+      "file": "signup.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "회원 가입",
+          "file": "signup.spec.ts",
+          "line": 39,
+          "column": 6,
+          "specs": [
+            {
+              "title": "SGN-01 로그인 화면의 회원가입 링크로 가입 화면에 간다",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "timedOut",
+                      "duration": 30199,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\tests\\signup.spec.ts",
+                            "column": 52,
+                            "line": 42
+                          },
+                          "message": "Error: locator.click: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('link', { name: '회원가입' })\u001b[22m\n\n\n  40 |   test('SGN-01 로그인 화면의 회원가입 링크로 가입 화면에 간다', async ({ page }) => {\n  41 |     await page.goto('/login');\n> 42 |     await page.getByRole('link', { name: '회원가입' }).click();\n     |                                                    ^\n  43 |\n  44 |     await expect(page).toHaveURL(/\\/signup$/);\n  45 |     await expect(page.getByRole('heading', { name: '회원가입' })).toBeVisible();\n    at C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\tests\\signup.spec.ts:42:52"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-22T05:26:25.183Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\test-results\\signup-회원-가입-SGN-01-로그인-화면의-회원가입-링크로-가입-화면에-간다-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\test-results\\signup-회원-가입-SGN-01-로그인-화면의-회원가입-링크로-가입-화면에-간다-chromium\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\test-results\\signup-회원-가입-SGN-01-로그인-화면의-회원가입-링크로-가입-화면에-간다-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "e5334e3b62ca8fd4a4b6-e1affa6b4ed22b673768",
+              "file": "signup.spec.ts",
+              "line": 40,
+              "column": 7
+            },
+            {
+              "title": "SGN-02 가입하면 완료 안내가 나오고 자동으로 로그인되지는 않는다",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "timedOut",
+                      "duration": 30236,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\tests\\signup.spec.ts",
+                            "column": 36,
+                            "line": 21
+                          },
+                          "message": "Error: locator.fill: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByLabel('비밀번호 확인')\u001b[22m\n\n\n  19 |   await page.getByLabel('아이디').fill(username);\n  20 |   await page.getByLabel('비밀번호', { exact: true }).fill(password);\n> 21 |   await page.getByLabel('비밀번호 확인').fill(confirm);\n     |                                    ^\n  22 | }\n  23 |\n  24 | /** 가입 화면에서 가입을 끝낸다. 끝나면 가입 완료 안내가 보인다. */\n    at fillSignup (C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\tests\\signup.spec.ts:21:36)\n    at signUp (C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\tests\\signup.spec.ts:27:3)\n    at C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\tests\\signup.spec.ts:51:5"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-22T05:26:57.328Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\test-results\\signup-회원-가입-SGN-02-가입하면-완료-안내가-나오고-자동으로-로그인되지는-않는다-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\test-results\\signup-회원-가입-SGN-02-가입하면-완료-안내가-나오고-자동으로-로그인되지는-않는다-chromium\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\test-results\\signup-회원-가입-SGN-02-가입하면-완료-안내가-나오고-자동으로-로그인되지는-않는다-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "e5334e3b62ca8fd4a4b6-adb56e7092a44ef3c677",
+              "file": "signup.spec.ts",
+              "line": 49,
+              "column": 7
+            },
+            {
+              "title": "SGN-03 가입한 계정으로 로그인하면 주문 목록으로 가고 상단에 아이디가 보인다",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "timedOut",
+                      "duration": 30186,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\tests\\signup.spec.ts",
+                            "column": 36,
+                            "line": 21
+                          },
+                          "message": "Error: locator.fill: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByLabel('비밀번호 확인')\u001b[22m\n\n\n  19 |   await page.getByLabel('아이디').fill(username);\n  20 |   await page.getByLabel('비밀번호', { exact: true }).fill(password);\n> 21 |   await page.getByLabel('비밀번호 확인').fill(confirm);\n     |                                    ^\n  22 | }\n  23 |\n  24 | /** 가입 화면에서 가입을 끝낸다. 끝나면 가입 완료 안내가 보인다. */\n    at fillSignup (C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\tests\\signup.spec.ts:21:36)\n    at signUp (C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\tests\\signup.spec.ts:27:3)\n    at C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\tests\\signup.spec.ts:63:5"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-22T05:27:29.339Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\test-results\\signup-회원-가입-SGN-03-가입한-계정으로-로그인하면-주문-목록으로-가고-상단에-아이디가-보인다-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\test-results\\signup-회원-가입-SGN-03-가입한-계정으로-로그인하면-주문-목록으로-가고-상단에-아이디가-보인다-chromium\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\test-results\\signup-회원-가입-SGN-03-가입한-계정으로-로그인하면-주문-목록으로-가고-상단에-아이디가-보인다-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "e5334e3b62ca8fd4a4b6-09a99b3d99ad1d06c150",
+              "file": "signup.spec.ts",
+              "line": 61,
+              "column": 7
+            },
+            {
+              "title": "SGN-04 가입한 계정도 admin 과 같은 기능을 쓸 수 있고 기록에 아이디가 남는다",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "timedOut",
+                      "duration": 30230,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\tests\\signup.spec.ts",
+                            "column": 36,
+                            "line": 21
+                          },
+                          "message": "Error: locator.fill: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByLabel('비밀번호 확인')\u001b[22m\n\n\n  19 |   await page.getByLabel('아이디').fill(username);\n  20 |   await page.getByLabel('비밀번호', { exact: true }).fill(password);\n> 21 |   await page.getByLabel('비밀번호 확인').fill(confirm);\n     |                                    ^\n  22 | }\n  23 |\n  24 | /** 가입 화면에서 가입을 끝낸다. 끝나면 가입 완료 안내가 보인다. */\n    at fillSignup (C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\tests\\signup.spec.ts:21:36)\n    at signUp (C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\tests\\signup.spec.ts:27:3)\n    at C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\tests\\signup.spec.ts:75:5"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-22T05:28:01.102Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\test-results\\signup-회원-가입-SGN-04-가입한-계정-a877f--같은-기능을-쓸-수-있고-기록에-아이디가-남는다-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\test-results\\signup-회원-가입-SGN-04-가입한-계정-a877f--같은-기능을-쓸-수-있고-기록에-아이디가-남는다-chromium\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\test-results\\signup-회원-가입-SGN-04-가입한-계정-a877f--같은-기능을-쓸-수-있고-기록에-아이디가-남는다-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "e5334e3b62ca8fd4a4b6-e09a6326a23f2f2d455f",
+              "file": "signup.spec.ts",
+              "line": 73,
+              "column": 7
+            },
+            {
+              "title": "SGN-05 규칙에 맞지 않으면 가입되지 않고 이유를 모두 보여 준다",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "timedOut",
+                      "duration": 30184,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\tests\\signup.spec.ts",
+                            "column": 36,
+                            "line": 21
+                          },
+                          "message": "Error: locator.fill: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByLabel('비밀번호 확인')\u001b[22m\n\n\n  19 |   await page.getByLabel('아이디').fill(username);\n  20 |   await page.getByLabel('비밀번호', { exact: true }).fill(password);\n> 21 |   await page.getByLabel('비밀번호 확인').fill(confirm);\n     |                                    ^\n  22 | }\n  23 |\n  24 | /** 가입 화면에서 가입을 끝낸다. 끝나면 가입 완료 안내가 보인다. */\n    at fillSignup (C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\tests\\signup.spec.ts:21:36)\n    at C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\tests\\signup.spec.ts:100:5"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-22T05:28:32.905Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\test-results\\signup-회원-가입-SGN-05-규칙에-맞지-않으면-가입되지-않고-이유를-모두-보여-준다-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\test-results\\signup-회원-가입-SGN-05-규칙에-맞지-않으면-가입되지-않고-이유를-모두-보여-준다-chromium\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\test-results\\signup-회원-가입-SGN-05-규칙에-맞지-않으면-가입되지-않고-이유를-모두-보여-준다-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "e5334e3b62ca8fd4a4b6-e482551866e4d16c57e9",
+              "file": "signup.spec.ts",
+              "line": 98,
+              "column": 7
+            },
+            {
+              "title": "SGN-06 이미 있는 아이디는 대소문자 구분 없이 가입할 수 없다",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 0,
+                      "status": "timedOut",
+                      "duration": 30203,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\tests\\signup.spec.ts",
+                            "column": 36,
+                            "line": 21
+                          },
+                          "message": "Error: locator.fill: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByLabel('비밀번호 확인')\u001b[22m\n\n\n  19 |   await page.getByLabel('아이디').fill(username);\n  20 |   await page.getByLabel('비밀번호', { exact: true }).fill(password);\n> 21 |   await page.getByLabel('비밀번호 확인').fill(confirm);\n     |                                    ^\n  22 | }\n  23 |\n  24 | /** 가입 화면에서 가입을 끝낸다. 끝나면 가입 완료 안내가 보인다. */\n    at fillSignup (C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\tests\\signup.spec.ts:21:36)\n    at signUp (C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\tests\\signup.spec.ts:27:3)\n    at C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\tests\\signup.spec.ts:119:5"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-22T05:29:04.463Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\test-results\\signup-회원-가입-SGN-06-이미-있는-아이디는-대소문자-구분-없이-가입할-수-없다-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\test-results\\signup-회원-가입-SGN-06-이미-있는-아이디는-대소문자-구분-없이-가입할-수-없다-chromium\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\test-results\\signup-회원-가입-SGN-06-이미-있는-아이디는-대소문자-구분-없이-가입할-수-없다-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "e5334e3b62ca8fd4a4b6-a8fcc4f56567ae0ed58a",
+              "file": "signup.spec.ts",
+              "line": 117,
+              "column": 7
+            },
+            {
+              "title": "SGN-07 로그인한 상태에서 가입 화면을 열면 주문 목록으로 간다",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 5695,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected pattern: \u001b[32m/\\/orders$/\u001b[39m\nReceived string:  \u001b[31m\"http://localhost:18083/signup\"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 5000ms\u001b[22m\n\u001b[2m    14 × locator resolved to <html>…</html>\u001b[22m\n\u001b[2m       - unexpected value \"http://localhost:18083/signup\"\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected pattern: \u001b[32m/\\/orders$/\u001b[39m\nReceived string:  \u001b[31m\"http://localhost:18083/signup\"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 5000ms\u001b[22m\n\u001b[2m    14 × locator resolved to <html>…</html>\u001b[22m\n\u001b[2m       - unexpected value \"http://localhost:18083/signup\"\u001b[22m\n\n    at C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\tests\\signup.spec.ts:132:24",
+                        "location": {
+                          "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\tests\\signup.spec.ts",
+                          "column": 24,
+                          "line": 132
+                        },
+                        "snippet": "  130 |     await login(page);\n  131 |     await page.goto('/signup');\n> 132 |     await expect(page).toHaveURL(/\\/orders$/);\n      |                        ^\n  133 |   });\n  134 |\n  135 |   test('SGN-08 로그인하지 않아도 가입 화면은 열리지만 다른 화면은 여전히 막혀 있다', async ({ page, request }) => {"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\tests\\signup.spec.ts",
+                            "column": 24,
+                            "line": 132
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected pattern: \u001b[32m/\\/orders$/\u001b[39m\nReceived string:  \u001b[31m\"http://localhost:18083/signup\"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 5000ms\u001b[22m\n\u001b[2m    14 × locator resolved to <html>…</html>\u001b[22m\n\u001b[2m       - unexpected value \"http://localhost:18083/signup\"\u001b[22m\n\n\n  130 |     await login(page);\n  131 |     await page.goto('/signup');\n> 132 |     await expect(page).toHaveURL(/\\/orders$/);\n      |                        ^\n  133 |   });\n  134 |\n  135 |   test('SGN-08 로그인하지 않아도 가입 화면은 열리지만 다른 화면은 여전히 막혀 있다', async ({ page, request }) => {\n    at C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\tests\\signup.spec.ts:132:24"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-22T05:29:36.163Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\test-results\\signup-회원-가입-SGN-07-로그인한-상태에서-가입-화면을-열면-주문-목록으로-간다-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\test-results\\signup-회원-가입-SGN-07-로그인한-상태에서-가입-화면을-열면-주문-목록으로-간다-chromium\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\test-results\\signup-회원-가입-SGN-07-로그인한-상태에서-가입-화면을-열면-주문-목록으로-간다-chromium\\trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\tests\\signup.spec.ts",
+                        "column": 24,
+                        "line": 132
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "e5334e3b62ca8fd4a4b6-4c1524e098a634a9ba4d",
+              "file": "signup.spec.ts",
+              "line": 129,
+              "column": 7
+            },
+            {
+              "title": "SGN-08 로그인하지 않아도 가입 화면은 열리지만 다른 화면은 여전히 막혀 있다",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 7,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 5525,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected pattern: \u001b[32m/\\/signup$/\u001b[39m\nReceived string:  \u001b[31m\"http://localhost:18083/login\"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 5000ms\u001b[22m\n\u001b[2m    14 × locator resolved to <html lang=\"ko\">…</html>\u001b[22m\n\u001b[2m       - unexpected value \"http://localhost:18083/login\"\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected pattern: \u001b[32m/\\/signup$/\u001b[39m\nReceived string:  \u001b[31m\"http://localhost:18083/login\"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 5000ms\u001b[22m\n\u001b[2m    14 × locator resolved to <html lang=\"ko\">…</html>\u001b[22m\n\u001b[2m       - unexpected value \"http://localhost:18083/login\"\u001b[22m\n\n    at C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\tests\\signup.spec.ts:138:24",
+                        "location": {
+                          "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\tests\\signup.spec.ts",
+                          "column": 24,
+                          "line": 138
+                        },
+                        "snippet": "  136 |     const response = await page.goto('/signup');\n  137 |     expect(response!.status()).toBe(200);\n> 138 |     await expect(page).toHaveURL(/\\/signup$/);\n      |                        ^\n  139 |\n  140 |     for (const path of ['/orders', '/orders/new', '/master']) {\n  141 |       await page.goto(path);"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\tests\\signup.spec.ts",
+                            "column": 24,
+                            "line": 138
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected pattern: \u001b[32m/\\/signup$/\u001b[39m\nReceived string:  \u001b[31m\"http://localhost:18083/login\"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 5000ms\u001b[22m\n\u001b[2m    14 × locator resolved to <html lang=\"ko\">…</html>\u001b[22m\n\u001b[2m       - unexpected value \"http://localhost:18083/login\"\u001b[22m\n\n\n  136 |     const response = await page.goto('/signup');\n  137 |     expect(response!.status()).toBe(200);\n> 138 |     await expect(page).toHaveURL(/\\/signup$/);\n      |                        ^\n  139 |\n  140 |     for (const path of ['/orders', '/orders/new', '/master']) {\n  141 |       await page.goto(path);\n    at C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\tests\\signup.spec.ts:138:24"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-22T05:29:43.400Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\test-results\\signup-회원-가입-SGN-08-로그인하지-않아도-가입-화면은-열리지만-다른-화면은-여전히-막혀-있다-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\test-results\\signup-회원-가입-SGN-08-로그인하지-않아도-가입-화면은-열리지만-다른-화면은-여전히-막혀-있다-chromium\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\test-results\\signup-회원-가입-SGN-08-로그인하지-않아도-가입-화면은-열리지만-다른-화면은-여전히-막혀-있다-chromium\\trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main5\\e2e\\tests\\signup.spec.ts",
+                        "column": 24,
+                        "line": 138
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "e5334e3b62ca8fd4a4b6-4d1943a32ff7c9a99bc8",
+              "file": "signup.spec.ts",
+              "line": 135,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-22T05:26:14.067Z",
+    "duration": 216730.194,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 8,
+    "flaky": 0
+  }
+}

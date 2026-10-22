@@ -1,8 +1,10 @@
 package com.example.demo.controller;
 
 import com.example.demo.config.LoginInterceptor;
+import com.example.demo.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import java.util.Map;
+import java.util.Optional;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +17,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class AuthController {
 
-	private static final String ACCOUNT = "admin";
+	private final UserService userService;
+
+	public AuthController(UserService userService) {
+		this.userService = userService;
+	}
 
 	@GetMapping("/login")
 	public String loginForm(HttpSession session) {
@@ -25,13 +31,22 @@ public class AuthController {
 		return "forward:/login.html";
 	}
 
+	@GetMapping("/signup")
+	public String signupForm(HttpSession session) {
+		if (session.getAttribute(LoginInterceptor.SESSION_USER) != null) {
+			return "redirect:/orders";
+		}
+		return "forward:/signup.html";
+	}
+
 	/** 성공하면 주문 목록으로 이동(302), 실패하면 401 과 이유를 돌려준다. */
 	@PostMapping("/login")
 	@ResponseBody
 	public ResponseEntity<Map<String, Object>> login(@RequestParam String username, @RequestParam String password,
 			HttpSession session) {
-		if (ACCOUNT.equals(username) && ACCOUNT.equals(password)) {
-			session.setAttribute(LoginInterceptor.SESSION_USER, username);
+		Optional<String> authenticated = userService.authenticate(username, password);
+		if (authenticated.isPresent()) {
+			session.setAttribute(LoginInterceptor.SESSION_USER, authenticated.get());
 			return ResponseEntity.status(HttpStatus.FOUND).header(HttpHeaders.LOCATION, "/orders").build();
 		}
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED)

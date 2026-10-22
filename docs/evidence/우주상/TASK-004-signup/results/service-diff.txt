@@ -1,0 +1,18 @@
+$ git diff main -- src/main/java/com/example/demo/service  (기존 서비스 파일의 변경)
+(출력 없음 = 변경 없음)
+
+$ git status --short src/main  (이번 작업에서 바뀐 main 코드)
+ M src/main/java/com/example/demo/config/DataInitializer.java
+ M src/main/java/com/example/demo/config/WebConfig.java
+ M src/main/java/com/example/demo/controller/ApiExceptionHandler.java
+ M src/main/java/com/example/demo/controller/AuthController.java
+ M src/main/resources/static/css/app.css
+ M src/main/resources/static/js/order-detail.js
+ M src/main/resources/static/login.html
+?? src/main/java/com/example/demo/config/PasswordConfig.java
+?? src/main/java/com/example/demo/controller/SignupController.java
+?? src/main/java/com/example/demo/entity/User.java
+?? src/main/java/com/example/demo/repository/UserRepository.java
+?? src/main/java/com/example/demo/service/UserService.java
+?? src/main/resources/static/js/signup.js
+?? src/main/resources/static/signup.html
