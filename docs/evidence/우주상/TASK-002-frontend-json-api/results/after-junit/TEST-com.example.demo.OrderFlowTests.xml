@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.example.demo.OrderFlowTests" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-22T01:35:41.532Z" hostname="DESKTOP-2GEPPK4" time="0.966">
+<testsuite name="com.example.demo.OrderFlowTests" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-22T02:10:29.619Z" hostname="DESKTOP-2GEPPK4" time="0.943">
   <properties/>
   <testcase name="confirmFailsWhenMasterChangedAfterSimulation()" classname="com.example.demo.OrderFlowTests" time="0.013"/>
-  <testcase name="pagesRender()" classname="com.example.demo.OrderFlowTests" time="0.008"/>
+  <testcase name="pagesRender()" classname="com.example.demo.OrderFlowTests" time="0.007"/>
   <testcase name="confirmThenDetailAndStatusFlow()" classname="com.example.demo.OrderFlowTests" time="0.113"/>
-  <testcase name="wrongPasswordIsRejected()" classname="com.example.demo.OrderFlowTests" time="0.007"/>
-  <testcase name="simulateReturnsThreeOptions()" classname="com.example.demo.OrderFlowTests" time="0.016"/>
+  <testcase name="wrongPasswordIsRejected()" classname="com.example.demo.OrderFlowTests" time="0.006"/>
+  <testcase name="simulateReturnsThreeOptions()" classname="com.example.demo.OrderFlowTests" time="0.014"/>
   <testcase name="invalidMasterIsNotSaved()" classname="com.example.demo.OrderFlowTests" time="0.016"/>
   <testcase name="masterUpdateBumpsVersionAndKeepsConfirmedPlans()" classname="com.example.demo.OrderFlowTests" time="0.065"/>
   <testcase name="emptyOrderIsRejectedWithReason()" classname="com.example.demo.OrderFlowTests" time="0.012"/>
-  <testcase name="anonymousUserIsSentToLogin()" classname="com.example.demo.OrderFlowTests" time="0.006"/>
-  <system-out><![CDATA[2026-10-22T10:35:41.534+09:00  INFO 19468 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.example.demo.OrderFlowTests]: OrderFlowTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-10-22T10:35:41.536+09:00  INFO 19468 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.example.demo.DemoApplication for test class com.example.demo.OrderFlowTests
-2026-10-22T10:35:41.537+09:00  INFO 19468 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.example.demo.OrderFlowTests]: OrderFlowTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-10-22T10:35:41.540+09:00  INFO 19468 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.example.demo.DemoApplication for test class com.example.demo.OrderFlowTests
-2026-10-22T10:35:41.788+09:00  INFO 19468 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
-2026-10-22T10:35:41.794+09:00  INFO 19468 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Shutdown initiated...
-2026-10-22T10:35:41.796+09:00  INFO 19468 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Shutdown completed.
+  <testcase name="anonymousUserIsSentToLogin()" classname="com.example.demo.OrderFlowTests" time="0.004"/>
+  <system-out><![CDATA[2026-10-22T11:10:29.621+09:00  INFO 7684 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.example.demo.OrderFlowTests]: OrderFlowTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-10-22T11:10:29.624+09:00  INFO 7684 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.example.demo.DemoApplication for test class com.example.demo.OrderFlowTests
+2026-10-22T11:10:29.625+09:00  INFO 7684 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.example.demo.OrderFlowTests]: OrderFlowTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-10-22T11:10:29.635+09:00  INFO 7684 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.example.demo.DemoApplication for test class com.example.demo.OrderFlowTests
+2026-10-22T11:10:29.864+09:00  INFO 7684 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-10-22T11:10:29.869+09:00  INFO 7684 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Shutdown initiated...
+2026-10-22T11:10:29.874+09:00  INFO 7684 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Shutdown completed.
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -27,16 +27,16 @@
 
  :: Spring Boot ::                (v4.1.1)
 
-2026-10-22T10:35:41.825+09:00  INFO 19468 --- [    Test worker] com.example.demo.OrderFlowTests          : Starting OrderFlowTests using Java 17.0.20.1 with PID 19468 (started by 주상 in C:\work\battery)
-2026-10-22T10:35:41.827+09:00  INFO 19468 --- [    Test worker] com.example.demo.OrderFlowTests          : No active profile set, falling back to 1 default profile: "default"
-2026-10-22T10:35:41.997+09:00  INFO 19468 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-10-22T10:35:42.013+09:00  INFO 19468 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 13 ms. Found 5 JPA repository interfaces.
-2026-10-22T10:35:42.135+09:00  INFO 19468 --- [    Test worker] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
-2026-10-22T10:35:42.172+09:00  INFO 19468 --- [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2026-10-22T10:35:42.174+09:00  INFO 19468 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Starting...
-2026-10-22T10:35:42.176+09:00  INFO 19468 --- [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-3 - Added connection conn20: url=jdbc:h2:mem:battery-test user=SA
-2026-10-22T10:35:42.177+09:00  INFO 19468 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Start completed.
-2026-10-22T10:35:42.178+09:00  INFO 19468 --- [    Test worker] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+2026-10-22T11:10:29.904+09:00  INFO 7684 --- [    Test worker] com.example.demo.OrderFlowTests          : Starting OrderFlowTests using Java 17.0.20.1 with PID 7684 (started by 주상 in C:\work\battery)
+2026-10-22T11:10:29.904+09:00  INFO 7684 --- [    Test worker] com.example.demo.OrderFlowTests          : No active profile set, falling back to 1 default profile: "default"
+2026-10-22T11:10:30.070+09:00  INFO 7684 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-10-22T11:10:30.082+09:00  INFO 7684 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 10 ms. Found 5 JPA repository interfaces.
+2026-10-22T11:10:30.184+09:00  INFO 7684 --- [    Test worker] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-10-22T11:10:30.214+09:00  INFO 7684 --- [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-10-22T11:10:30.215+09:00  INFO 7684 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Starting...
+2026-10-22T11:10:30.217+09:00  INFO 7684 --- [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-3 - Added connection conn20: url=jdbc:h2:mem:battery-test user=SA
+2026-10-22T11:10:30.217+09:00  INFO 7684 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Start completed.
+2026-10-22T11:10:30.218+09:00  INFO 7684 --- [    Test worker] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
 	Database JDBC URL [jdbc:h2:mem:battery-test]
 	Database driver: H2 JDBC Driver
 	Database dialect: H2Dialect
@@ -48,13 +48,13 @@
 	Pool: DataSourceConnectionProvider
 	Minimum pool size: undefined/unknown
 	Maximum pool size: undefined/unknown
-2026-10-22T10:35:42.287+09:00  INFO 19468 --- [    Test worker] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2026-10-22T10:35:42.296+09:00  INFO 19468 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2026-10-22T10:35:42.388+09:00  WARN 19468 --- [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2026-10-22T10:35:42.454+09:00  INFO 19468 --- [    Test worker] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
-2026-10-22T10:35:42.454+09:00  INFO 19468 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
-2026-10-22T10:35:42.456+09:00  INFO 19468 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 1 ms
-2026-10-22T10:35:42.462+09:00  INFO 19468 --- [    Test worker] com.example.demo.OrderFlowTests          : Started OrderFlowTests in 0.662 seconds (process running for 11.012)
+2026-10-22T11:10:30.314+09:00  INFO 7684 --- [    Test worker] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-10-22T11:10:30.324+09:00  INFO 7684 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-10-22T11:10:30.421+09:00  WARN 7684 --- [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-10-22T11:10:30.506+09:00  INFO 7684 --- [    Test worker] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-10-22T11:10:30.507+09:00  INFO 7684 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-10-22T11:10:30.509+09:00  INFO 7684 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 2 ms
+2026-10-22T11:10:30.520+09:00  INFO 7684 --- [    Test worker] com.example.demo.OrderFlowTests          : Started OrderFlowTests in 0.642 seconds (process running for 11.114)
 ]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

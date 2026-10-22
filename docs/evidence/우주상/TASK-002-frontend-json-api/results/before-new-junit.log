@@ -1,18 +1,20 @@
 ﻿
 JsonApiTests > missingOrderIsNotFoundNotServerError() FAILED
 JsonApiTests > orderDetailHasStoredPlanHistoryAndVersion() FAILED
+JsonApiTests > masterSaveReturnsSavedFormInEok() FAILED
 JsonApiTests > meReturnsLoginUser() FAILED
 JsonApiTests > statusChangeReturnsUpdatedOrderAndRejectsBadRequests() FAILED
 JsonApiTests > orderListHasCountsAndFilters() FAILED
 JsonApiTests > pageUrlsServeStaticHtmlAndStayProtected() FAILED
 JsonApiTests > masterFormUsesEokAndInvalidSaveListsAllErrors() FAILED
 JsonApiTests > cancelDeletesOrderAndReportsDeleted() FAILED
-9 tests completed, 8 failed
+JsonApiTests > malformedRequestsGetReasonInJson() FAILED
+11 tests completed, 10 failed
 FAILURE: Build failed with an exception.
-> There were failing tests. See the report at: file:///C:/Users/dyddn/AppData/Local/Temp/claude/C--work-battery/ec36ac3
-6-dfcf-4f8e-b138-1a86fafdd6b7/scratchpad/wt-main2/build/reports/tests/test/index.html
+> There were failing tests. See the report at: file:///C:/Users/<user>/AppData/Local/Temp/claude/C--work-battery/ec36ac3
+6-dfcf-4f8e-b138-1a86fafdd6b7/scratchpad/wt-main3/build/reports/tests/test/index.html
 > Run with --scan to get full insights from a Build Scan (powered by Develocity).
-BUILD FAILED in 12s
+BUILD FAILED in 13s
 
 
 
