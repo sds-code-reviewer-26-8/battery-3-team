@@ -6,20 +6,35 @@ const main = document.getElementById('detail');
 try {
 	await Promise.all([renderHeader('orders'), load()]);
 } catch (e) {
-	showNotFound(e);
+	showLoadError(e);
 }
 
 async function load(ok, error) {
 	try {
 		render(await getJson('/api/orders/' + orderId), ok, error);
 	} catch (e) {
-		showNotFound(e);
+		showLoadError(e);
 	}
 }
 
-function showNotFound(e) {
-	main.innerHTML = `<div class="page-head"><h1>주문 상세</h1><a class="button" href="/orders">목록으로</a></div>
-		<p class="alert error">${esc(e.message)}</p>`;
+/** 화면 맨 위 제목 줄(제목과 목록으로 버튼) */
+function pageHead(titleHtml) {
+	return `<div class="page-head"><h1>${titleHtml}</h1><a class="button" href="/orders">목록으로</a></div>`;
+}
+
+/** 상세 대신 안내만 보여 준다. kind 는 ok 또는 error */
+function showMessage(titleHtml, kind, text) {
+	main.innerHTML = `${pageHead(titleHtml)}<p class="alert ${kind}">${esc(text)}</p>`;
+}
+
+/** 주문을 불러오지 못했을 때(예: 없는 주문) */
+function showLoadError(e) {
+	showMessage('주문 상세', 'error', e.message);
+}
+
+function showCanceled(d) {
+	showMessage(`주문 <span>#${d.id}</span> <span class="badge badge-CANCELED">취소</span>`, 'ok',
+		`주문 #${d.id}을(를) 취소했습니다. 취소한 주문은 삭제되어 목록에서 사라집니다.`);
 }
 
 function render(d, ok, error) {
@@ -36,11 +51,7 @@ function render(d, ok, error) {
 	</tr>`).join('');
 
 	main.innerHTML = `
-	<div class="page-head">
-		<h1>주문 <span>#${d.id}</span>
-			<span class="badge badge-${d.status.name}">${esc(d.status.label)}</span></h1>
-		<a class="button" href="/orders">목록으로</a>
-	</div>
+	${pageHead(`주문 <span>#${d.id}</span> <span class="badge badge-${d.status.name}">${esc(d.status.label)}</span>`)}
 
 	${ok ? `<p class="alert ok">${esc(ok)}</p>` : ''}
 	${error ? `<p class="alert error">${esc(error)}</p>` : ''}
@@ -85,36 +96,15 @@ function render(d, ok, error) {
 /** 확인 창을 거쳐 상태를 바꾼다. 실패하면(예: 다른 사람이 먼저 바꿈) 이유를 보여 주고 최신 상태를 다시 불러온다. */
 async function changeStatus(d, status, label) {
 	if (!confirm(`${label}(으)로 바꿉니다. 계속할까요?`)) return;
-	if (status === 'CANCELED') {
-		cancelOrder(d);
-		return;
-	}
 	try {
 		const result = await postJson(`/api/orders/${d.id}/status`, {status, version: d.version});
-		render(result.order, `상태를 '${label}'(으)로 바꿨습니다`);
+		if (result.deleted) {
+			showCanceled(d);   // 취소하면 주문이 삭제되므로 더 보여 줄 주문이 없다
+		} else {
+			render(result.order, `상태를 '${label}'(으)로 바꿨습니다`);
+		}
 	} catch (e) {
-		await load(null, e.message);
-	}
-}
-
-/**
- * 취소: 주문이 삭제된 뒤 그 주문의 상세 주소(/orders/{id})로 이동한다. 삭제된 주문이라 서버가 오류 페이지를 돌려준다.
- * 예전 폼 전송처럼 이동이 이 클릭 안에서 시작되도록 요청을 동기로 보낸다(클릭 직후 다른 화면으로 이동하는 쪽과 겹치지 않게).
- */
-function cancelOrder(d) {
-	const xhr = new XMLHttpRequest();
-	xhr.open('POST', `/api/orders/${d.id}/status`, false);
-	xhr.setRequestHeader('Content-Type', 'application/json');
-	xhr.send(JSON.stringify({status: 'CANCELED', version: d.version}));
-	if (xhr.status === 401) {
-		location.href = '/login';
-	} else if (xhr.status >= 200 && xhr.status < 300) {
-		location.href = '/orders/' + d.id;
-	} else {
-		let message = '요청에 실패했습니다';
-		try {
-			message = JSON.parse(xhr.responseText).error || message;
-		} catch (e) { /* 본문 없음 */ }
-		load(null, message);
+		if (e.notFound) showLoadError(e);
+		else await load(null, e.message);
 	}
 }

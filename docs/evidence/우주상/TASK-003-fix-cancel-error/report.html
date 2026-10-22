@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>검증 리포트 (report)</title>
+<style>
+:root{
+  --bg:#f6f7f9; --card:#fff; --text:#1c2430; --muted:#5d6b7c; --line:#d8dee6;
+  --accent:#1f4e78; --ph:#fff4c2; --ph-line:#e6c84a;
+  --ok:#17803d; --ok-bg:#e3f4ea; --warn:#9a6700; --warn-bg:#fdf1d6; --bad:#b42318; --bad-bg:#fde7e4;
+  --guide-bg:#eaf1fa; --guide-line:#9db8d8; --code:#eef1f5;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#10151c; --card:#18202a; --text:#e6ebf2; --muted:#9aa8ba; --line:#2d3947;
+    --accent:#7db3e8; --ph:#4a3f12; --ph-line:#a88a1c;
+    --ok:#4cc27a; --ok-bg:#16301f; --warn:#f0b24b; --warn-bg:#35290f; --bad:#ff8a80; --bad-bg:#3a1a17;
+    --guide-bg:#1b2a3d; --guide-line:#3d5a80; --code:#212c39;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.7 -apple-system,"Segoe UI","Malgun Gothic",sans-serif}
+.wrap{max-width:960px;margin:0 auto;padding:24px 16px 80px}
+h1{font-size:26px;margin:4px 0 2px}
+h2{font-size:18px;margin:0 0 10px;color:var(--accent)}
+h2 .no{display:inline-block;background:var(--accent);color:#fff;border-radius:6px;padding:0 8px;margin-right:6px;font-size:14px}
+section{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:16px 0}
+.sub{color:var(--muted);margin:0 0 12px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+th{background:var(--bg);color:var(--muted);font-weight:600}
+.tablewrap{overflow-x:auto}
+.ph{background:var(--ph);border-bottom:1px dashed var(--ph-line);padding:0 3px;border-radius:3px}
+.guide{background:var(--guide-bg);border-left:4px solid var(--guide-line);padding:9px 13px;border-radius:6px;margin:0 0 12px;font-size:13.5px}
+.guide b{color:var(--accent)}
+.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px 16px}
+.meta div{border:1px solid var(--line);border-radius:8px;padding:6px 10px;background:var(--card)}
+.meta span{display:block;font-size:12px;color:var(--muted)}
+.badge{display:inline-block;border-radius:999px;padding:1px 10px;font-size:12.5px;font-weight:600}
+.b-ok{background:var(--ok-bg);color:var(--ok)} .b-warn{background:var(--warn-bg);color:var(--warn)} .b-bad{background:var(--bad-bg);color:var(--bad)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:8px 0 4px}
+.tile{border:1px solid var(--line);border-radius:10px;padding:10px 12px;text-align:center}
+.tile b{display:block;font-size:26px;line-height:1.2}
+.tile small{color:var(--muted)}
+.tile.ok b{color:var(--ok)} .tile.bad b{color:var(--bad)} .tile.warn b{color:var(--warn)}
+.timeline{list-style:none;margin:0;padding:0 0 0 14px;border-left:3px solid var(--line)}
+.timeline li{position:relative;padding:0 0 16px 16px}
+.timeline li::before{content:"";position:absolute;left:-23px;top:6px;width:11px;height:11px;border-radius:50%;background:var(--accent)}
+.timeline li:last-child{padding-bottom:0}
+.check{list-style:none;padding:0;margin:0}
+.check li{display:flex;gap:10px;padding:6px 0;border-bottom:1px solid var(--line)}
+.check li:last-child{border-bottom:0}
+.check input{margin-top:5px}
+pre{background:var(--code);padding:10px 12px;border-radius:8px;overflow-x:auto;font:13px/1.55 Consolas,"D2Coding",monospace;margin:6px 0}
+.rules{font-size:13px;color:var(--muted)} .rules li{margin:2px 0}
+@media print{ body{background:#fff} .guide{display:none} section{break-inside:avoid} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="sub">Inner Loop · 검증·리포트 작성 단계의 증거(Evidence)</p>
+  <h1>검증 리포트: 주문 취소 시 에러 페이지가 뜨는 버그 수정</h1>
+  <div class="meta">
+    <div><span>작성자</span>joosang425 (AI 초안 작성, 사람 확인 전)</div>
+    <div><span>작성일</span>2026-10-22</div>
+    <div><span>브랜치 / PR</span>fix/cancel-error-page · PR #21</div>
+    <div><span>사전 검토 문서</span><a href="precheck.html">precheck.html</a></div>
+    <div><span>최종 결과</span><span class="badge b-warn">완료 (사람 승인 대기)</span></div>
+  </div>
+</header>
+
+<section>
+  <h2><span class="no">1</span>한눈에 보기</h2>
+  <div class="tiles">
+    <div class="tile ok"><b id="c-pass">-</b><small>통과</small></div>
+    <div class="tile bad"><b id="c-fail">-</b><small>실패</small></div>
+    <div class="tile warn"><b id="c-skip">-</b><small>건너뜀·미확인</small></div>
+    <div class="tile"><b id="c-ac">-</b><small>충족한 통과 기준</small></div>
+    <div class="tile"><b id="c-loop">1</b><small>반복 횟수</small></div>
+  </div>
+  <p><b>한 줄 요약:</b> 취소 후 삭제된 주문을 다시 조회하지 않고 같은 화면에 안내를 보여 주도록 고쳐 에러 페이지(HTTP 500)가 사라졌다. 없는 주문의 화면도 500 대신 안내를 보여 준다. JUnit 41/41, E2E 82 통과(건너뜀 1개는 깨끗한 DB에서 통과), 전체 3회 반복에서도 실패 0. 처음 검증은 통과했고, PR 리뷰 반영(코드 정리, 리뷰어가 추가한 테스트 포함)으로 1회 더 돌았다.</p>
+  <p class="sub">※ 위 숫자는 3장 표(<code>id="results"</code>)의 행만 센다. 표 밖의 건너뜀·미확인은 집계되지 않으므로 5장을 함께 읽는다. "건너뜀·미확인 0"을 "문제 없음"으로 읽지 않는다.</p>
+</section>
+
+<section>
+  <h2><span class="no">2</span>구현 요약</h2>
+  <table>
+    <tr><th style="width:150px">구현한 것</th><td>① 취소하면 주문이 삭제된 뒤 같은 화면에 "주문 #N을(를) 취소했습니다. 취소한 주문은 삭제되어 목록에서 사라집니다." 안내와 "목록으로" 버튼이 보인다(더 이상 삭제된 주문의 상세 주소로 이동하지 않는다). ② 없는 주문 번호의 화면 주소(<code>/orders/{id}</code>)는 500 대신 화면을 열고 "주문을 찾을 수 없습니다" 안내를 보여 준다(JSON API는 404 그대로). ③ 취소가 충돌 등으로 실패하면 이유를 보여 주고 최신 상태를 다시 불러온다.</td></tr>
+    <tr><th>접근 방법</th><td>사전 검토의 대안 A. 취소 API가 이미 돌려주는 <code>deleted:true</code>를 화면이 받아 처리하게 하고, 화면 주소가 주문 존재를 확인하던 부분을 없애 안내를 화면에 맡긴다. 서비스(업무 규칙)는 바꾸지 않았다.</td></tr>
+  </table>
+  <h3 style="font-size:15px;margin:14px 0 6px">바뀐 파일</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>파일</th><th>변경 내용</th><th>종류</th></tr></thead>
+    <tbody>
+      <tr><td>controller/PageController.java</td><td>화면 주소에서 주문 존재 확인 제거</td><td>수정</td></tr>
+      <tr><td>controller/OrderController.java</td><td>상태 변경 결과(취소 시 삭제됨 표시) 반환 부분 정리</td><td>수정</td></tr>
+      <tr><td>static/js/order-detail.js</td><td>취소 후 같은 화면 안내, 취소 실패 시 이유 표시와 최신 상태 재조회. 리뷰 반영: 상태 변경 함수 단순화, 제목 줄·안내 화면 마크업 공통화, 함수 이름 정리</td><td>수정</td></tr>
+      <tr><td>e2e/tests/order-detail.spec.ts</td><td>DTL-05, DTL-08의 "알려진 결함" 표시(<code>test.fail</code>) 제거, DTL-05가 기다리는 응답을 취소 요청으로 변경 (승인된 기존 테스트 수정, 아래 표)</td><td>수정</td></tr>
+      <tr><td>e2e/tests/pages.spec.ts</td><td>없는 주문 화면 안내(PGE-01), 취소 후 안내(PGE-02) 확인 추가</td><td>수정(새 테스트)</td></tr>
+      <tr><td>src/test/.../JsonApiTests.java</td><td>없는 주문 화면 연결, 취소 충돌(409) 확인 추가</td><td>수정(새 테스트)</td></tr>
+      <tr><td>docs/PRD.md</td><td>결함 후보 2건을 "해소"로 갱신, Q2 참조 문구 갱신</td><td>수정</td></tr>
+      <tr><td>CLAUDE.md (<b>이 브랜치에 커밋하지 않는 로컬 파일</b>)</td><td>오류 처리 설명이 이미 이 동작과 일치함(변경 없음)</td><td>-</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2><span class="no">3</span>검증 결과</h2>
+  <div class="tablewrap"><table id="results">
+    <thead><tr><th style="width:60px">AC</th><th>검증 항목</th><th>실행 명령 / 방법</th><th style="width:80px">결과</th><th>근거 (결과 파일·로그)</th></tr></thead>
+    <tbody>
+      <tr data-result="pass" data-ac="AC-1"><td>AC-1</td><td>컴파일 에러 0</td><td><code>.\gradlew.bat compileJava compileTestJava --rerun-tasks</code></td><td><span class="badge b-ok">통과</span></td><td>results/after-compile.log (BUILD SUCCESSFUL)</td></tr>
+      <tr data-result="pass" data-ac="AC-2"><td>AC-2</td><td>취소 후 에러 페이지 없이 안내가 보이고 주문은 목록에서 사라짐</td><td>신규 E2E PGE-02, 기존 DTL-05·06</td><td><span class="badge b-ok">통과</span></td><td>results/after-e2e.json (expected 82, skipped 1, unexpected 0). 수정 전 코드에서는 PGE-02가 실패(results/before-new-e2e.json).</td></tr>
+      <tr data-result="pass" data-ac="AC-3"><td>AC-3</td><td>없는 주문 화면이 500이 아니라 안내를 보이고 API는 404</td><td>신규 E2E PGE-01·DTL-08, JUnit <code>missingOrderPageStillOpens</code>, <code>missingOrderIsNotFoundNotServerError</code></td><td><span class="badge b-ok">통과</span></td><td>results/after-e2e.json, results/after-junit/TEST-…JsonApiTests.xml (19/19). 수정 전 코드에서 PGE-01, DTL-08, <code>missingOrderPageStillOpens</code>가 실패.</td></tr>
+      <tr data-result="pass" data-ac="AC-4"><td>AC-4</td><td>취소 중 다른 사용자가 먼저 바꾸면 충돌 메시지, 취소 안 됨, 최신 상태 유지</td><td>기존 E2E DTL-07, 신규 JUnit <code>cancelWithStaleVersionIsConflict</code></td><td><span class="badge b-ok">통과</span></td><td>results/after-e2e.json, results/after-junit/ (이 JUnit은 서버 규칙을 지키는 회귀 방지용이라 수정 전 코드에서도 통과)</td></tr>
+      <tr data-result="pass" data-ac="AC-5"><td>AC-5</td><td>DTL-05·DTL-08이 표시 없이 정상 통과, 변경은 승인된 범위만</td><td>E2E 실행, <code>git diff main -- e2e/tests/order-detail.spec.ts</code></td><td><span class="badge b-ok">통과</span></td><td>results/existing-tests-diff.txt (33줄: 두 테스트의 <code>test.fail</code> 제거와 DTL-05 응답 조건 변경뿐). 단 DTL-05의 한계는 5장 참고.</td></tr>
+      <tr data-result="pass" data-ac="AC-6"><td>AC-6</td><td>그 밖의 JUnit·E2E 전부 통과, 반복 실행에서 간헐 실패 없음, LST-04는 깨끗한 DB에서 통과</td><td><code>gradlew.bat test</code>, <code>npx playwright test</code>, <code>--repeat-each=3</code>, 취소 관련 테스트(<code>-g "DTL-0[5-8]|PGE-0[1267]|PGE-10"</code>) <code>--repeat-each=10</code>, LST-04 단독</td><td><span class="badge b-ok">통과</span></td><td>results/after-junit/ (41/41), results/after-e2e.json (82 통과·1 건너뜀·0 실패), results/after-e2e-repeat3.json (전체 3회 반복: 246 통과·3 건너뜀·0 실패·flaky 0), results/after-e2e-cancel-x10.json (취소 관련 테스트 10회씩 90/90), results/after-e2e-clean-db.json (1/1)</td></tr>
+      <tr data-result="pass" data-ac="AC-7"><td>AC-7</td><td>서비스 코드 변경 없음</td><td><code>git diff main -- src/main/java/com/example/demo/service</code></td><td><span class="badge b-ok">통과</span></td><td>diff 0줄</td></tr>
+      <tr data-result="pass" data-ac="AC-8"><td>AC-8</td><td>PRD 결함 후보 2건이 해소로 갱신되어 코드와 일치</td><td><code>git diff 5bba5b7 -- docs/PRD.md</code> (리팩토링 2에서 검토된 문구와 같음)</td><td><span class="badge b-ok">통과</span></td><td>diff 0줄. 문구는 실제 동작(취소 후 안내, 없는 주문 화면 200과 안내, API 404)과 일치.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 style="font-size:15px;margin:14px 0 6px">추가한 테스트(TC)와 통과 기준 대응</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>통과 기준</th><th>추가·수정한 TC</th><th>수정 전 코드(main 52d1d46)에서의 결과</th></tr></thead>
+    <tbody>
+      <tr><td>AC-3</td><td>JsonApiTests <code>missingOrderPageStillOpens</code>, 복원한 <code>pageUrlsServeStaticHtmlAndStayProtected</code></td><td><b>2개 실패</b> (없는 주문의 화면 주소가 500). results/before-new-junit.log</td></tr>
+      <tr><td>AC-2, AC-3</td><td>PGE-01 없는 주문 화면 안내, PGE-02 취소 후 안내, DTL-08(표시 제거)</td><td><b>3개 실패</b> (results/before-new-e2e.json: unexpected 3)</td></tr>
+      <tr><td>AC-4</td><td>JsonApiTests <code>cancelWithStaleVersionIsConflict</code></td><td>이전에도 <b>통과</b>(서버의 동시 수정 확인은 원래 동작하며 이를 지키는 회귀 방지용)</td></tr>
+      <tr><td>AC-2, AC-3, AC-4</td><td>리뷰어(Jaesuk-0307)가 추가한 JUnit 6개(이미 취소한 주문 재취소 404, 진행 상태 취소, 완료 주문 취소 불가, 취소 후 이력 유지, 숫자가 아니거나 범위를 넘는 주문 번호 화면)와 E2E PGE-07~10(취소 후 새로고침, 다른 사용자가 먼저 취소, 취소 중 5xx·콘솔 오류 없음, 진행 상태 주문 취소)</td><td>리뷰어가 수정 전 코드에서 확인한 결과: E2E PGE-07~10 모두 실패, JUnit은 화면 주소 테스트 1개만 실패(나머지는 취소 API 규칙을 지키는 회귀 방지용). <b>이 확인은 리뷰어가 한 것이며 이번 작업에서 다시 실행하지는 않았다.</b> 반영 후 결과는 위 3장 표의 수치에 포함.</td></tr>
+      <tr><td>AC-2</td><td>DTL-05(표시 제거, 취소 요청의 응답 코드만 확인)</td><td>이전에도 <b>통과</b>. 취소 요청 자체는 수정 전에도 200이므로 이 테스트만으로는 버그를 감지하지 못한다. 에러 페이지 여부는 PGE-02가 확인한다.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 style="font-size:15px;margin:14px 0 6px">수정한 기존 테스트 (사람이 승인한 범위만)</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>파일 / 테스트</th><th>바꾼 것</th><th>검증 내용이 약해졌는가</th></tr></thead>
+    <tbody>
+      <tr><td>e2e order-detail.spec.ts DTL-05</td><td><code>test.fail(true)</code> 제거(결함 해소). 기다리는 응답을 "취소 직후 이동한 <code>/orders/{id}</code> GET" → "취소 요청 <code>POST /api/orders/{id}/status</code>"로 변경</td><td><b>일부 약해졌다.</b> 취소 요청의 상태 코드만 보므로 수정 전에도 통과한다. 취소 직후 화면이 정상이라는 의도는 PGE-02가 보완한다.</td></tr>
+      <tr><td>e2e order-detail.spec.ts DTL-08</td><td><code>test.fail(true)</code> 제거. 없는 주문 화면이 5xx가 아님을 단언</td><td>아니오. 수정 전에는 실패하고 수정 후 통과하므로 결함을 감지한다(안내 문구는 PGE-01이 확인).</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 style="font-size:15px;margin:14px 0 6px">린트 결과</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>도구</th><th>대상</th><th>에러</th><th>경고</th><th>기준선과 비교</th></tr></thead>
+    <tbody>
+      <tr><td>린트 미설정 → 컴파일로 대체 (javac via Gradle), 로그: results/after-compile.log</td><td>변경한 Java 코드와 테스트</td><td>0</td><td>콘솔 출력에서 경고 줄을 보지 못함(경고 수를 따로 집계하지는 않음)</td><td>기준선도 컴파일 에러 0. 동일.</td></tr>
+      <tr><td>JS 린트·타입 검사 도구 없음</td><td>변경한 JS(order-detail.js), E2E TypeScript</td><td>미확인</td><td>미확인</td><td>도구 도입은 별도 기능. E2E 실행으로 동작만 확인했다.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2><span class="no">4</span>반복(Feedback) 기록</h2>
+  <ol class="timeline">
+    <li><b>1회차 (PR #21 리뷰 반영)</b> — 통과<br>
+      계기: 리뷰 3건(GlennHKim, anglermoon, Jaesuk-0307). 검증 실패가 아니라 리뷰 반영이다.<br>
+      변경: 상태 변경 함수 정리(가드 절, 같은 두 분기 제거, 불필요한 중첩·방어 코드 제거, 이름 정리, <code>try</code> 안에서 바로 안내), 컨트롤러 반환 정리(불필요한 <code>else</code>와 이름), 제목 줄·안내 화면 마크업 공통화와 함수 이름 변경, JsonApiTests의 화면 주소 번호가 임의 값임을 주석으로 설명. 리뷰어가 추가한 테스트(커밋 564dcb5)를 함께 받아 실행.<br>
+      구현 중 발견: 공통 함수를 <code>const</code>로 만들었더니, 이 화면 스크립트는 맨 위 <code>await</code>가 끝나기 전에는 아래 <code>const</code>가 초기화되지 않아 화면이 깨질 수 있었다. 테스트 실행 전에 코드를 읽다가 발견해 호이스팅되는 함수 선언으로 바꿨다.<br>
+      재검증: JUnit 41/41, E2E 82 통과·1 건너뜀·0 실패, 전체 3회 반복 246 통과, 취소 관련 테스트 10회씩 90/90, LST-04 깨끗한 DB 통과 (수치는 3장).</li>
+    <li><b>처음 구현</b> — 통과<br>
+      실패 내용: 없음 (검증 항목 전부 처음 실행에서 통과)<br>
+      원인 / 조치: 해당 없음.</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="no">5</span>건너뛴 것과 확인하지 못한 것</h2>
+  <ul>
+    <li>전체 E2E에서 LST-04 1개 건너뜀 — 주문이 이미 쌓인 환경에서는 재현할 수 없는 조건부 테스트. AC-6에서 깨끗한 DB로 따로 실행해 통과를 확인했다. 3장 표에는 AC-6이 "통과"로 들어 있으므로 전체 실행에서 건너뛴 사실은 여기에만 있다.</li>
+    <li><b>DTL-05는 수정 전 버그를 감지하지 못한다.</b> 승인받은 변경(기다리는 응답을 취소 요청으로)에 따라 취소 요청의 응답 코드만 보기 때문이다. 같은 의도를 PGE-02(안내 문구, 에러 페이지 없음)가 실제로 확인하며, 수정 전 코드에서 PGE-02가 실패하는 것을 확인했다.</li>
+    <li>취소한 주문 화면을 새로고침하면 주문이 이미 삭제되어 "주문을 찾을 수 없습니다"로 바뀐다(정책상 자연스러움, PRD Q2는 열린 질문 그대로).</li>
+    <li><b>리뷰 제안 중 이번에 반영하지 않은 것</b>: ① <code>DTL-05</code>에 <code>.alert.ok</code> 단언 한 줄 추가(anglermoon) — 승인받은 수정 범위("표시 제거와 기다리는 응답 변경")를 넘으므로 다시 승인이 필요하다. 같은 의도는 <code>PGE-02</code>가 확인한다. ② "취소하면 삭제된다"는 지식이 컨트롤러에 있는 점(Glenn) — 서비스가 삭제 여부를 돌려주게 바꾸는 일이라 이번 범위("서비스는 바꾸지 않는다") 밖, 후속 이슈로 제안. ③ 리뷰어 제안 테스트 중 anglermoon의 없는 주문 취소 404·재취소는 Jaesuk의 테스트와 겹쳐 따로 추가하지 않았다.</li>
+    <li>JS 린트·타입 검사는 도구가 없어 미확인. 화면을 사람이 직접 눈으로 보는 수동 확인(L3 필수)은 <b>실행하지 못했다</b> → 게이트 ②에서 사람이 취소 화면과 없는 주문 화면을 한 번 열어 보길 권한다(<code>./gradlew bootRun</code> 후 주문 취소, <code>/orders/999999</code>).</li>
+    <li>이 문서는 승인 칸을 비워 두었다. 사람 확인 전이다.</li>
+  </ul>
+</section>
+
+<section>
+  <h2><span class="no">6</span>남은 이슈와 후속 작업</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>이슈</th><th>심각도</th><th>제안</th></tr></thead>
+    <tbody>
+      <tr><td>취소하면 주문이 삭제되어 취소한 주문을 나중에 조회·집계할 수 없다(PRD Q2, 알려진 한계)</td><td><span class="badge b-warn">중</span></td><td>정책 결정이 필요하다(대안 C). 이번 범위 밖.</td></tr>
+      <tr><td>취소 시 삭제 여부 판단이 컨트롤러(요청이 CANCELED인지)에 있고 서비스가 결과를 돌려주지 않는다</td><td><span class="badge b-ok">낮</span></td><td>정책(PRD Q2)이 바뀌면 함께 고쳐야 하므로, 서비스가 삭제 여부를 돌려주도록 하는 후속 이슈 제안(Glenn).</td></tr>
+      <tr><td>DTL-05는 단독으로는 결함 감지력이 약하다</td><td><span class="badge b-ok">낮</span></td><td>PGE-02가 보완하므로 통합·정리는 후속에서 검토.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2><span class="no">7</span>증거 파일 목록</h2>
+  <ul>
+    <li>기준선(수정 전): results/before-junit/, results/before-e2e.json, results/before-repro.txt(버그 재현)</li>
+    <li>수정 후: results/after-compile.log, results/after-junit/, results/after-e2e.json, results/after-e2e-clean-db.json, results/after-e2e-repeat3.json, results/after-e2e-cancel-x10.json</li>
+    <li>새 TC가 수정 전 코드(52d1d46)에서 실패하는지: results/before-new-junit.log, results/before-new-e2e.json</li>
+    <li>수정한 기존 테스트 diff: results/existing-tests-diff.txt</li>
+    <li>사전 검토: <a href="precheck.html">precheck.html</a></li>
+  </ul>
+</section>
+
+<section>
+  <h2><span class="no">8</span>사람 확인 (HITL)</h2>
+  <ul class="check">
+    <li><input type="checkbox"><div>검증 결과가 통과 기준을 모두 충족한다</div></li>
+    <li><input type="checkbox"><div>실패·건너뜀·미확인 항목이 정직하게 기록되어 있다</div></li>
+    <li><input type="checkbox"><div>기존 기능이 깨지지 않았다(회귀 확인)</div></li>
+  </ul>
+  <table style="margin-top:10px">
+    <tr><th style="width:150px">결정</th><td>(사람이 채움: 완료 / 보완 필요)</td></tr>
+    <tr><th>확인한 사람</th><td>(사람이 채움)</td></tr>
+    <tr><th>의견</th><td>(사람이 채움)</td></tr>
+  </table>
+</section>
+
+</div>
+<script>
+// 3장 검증 결과 표의 data-result 값으로 요약 숫자를 센다. (값을 손으로 적지 않기 위해)
+(function () {
+  var rows = document.querySelectorAll('#results tbody tr');
+  function count(v) { return Array.prototype.filter.call(rows, function (r) { return r.dataset.result === v; }).length; }
+  function put(id, text) { var el = document.getElementById(id); if (el) el.textContent = text; }
+  if (!rows.length) return;
+  var pass = count('pass');
+  put('c-pass', pass);
+  put('c-fail', count('fail'));
+  put('c-skip', count('skip'));
+  put('c-ac', pass + ' / ' + rows.length);
+})();
+</script>
+</body>
+</html>

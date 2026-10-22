@@ -1,0 +1,4 @@
+REPRO 취소 후 이동: GET /orders/1 -> HTTP 500
+REPRO 화면 본문: Whitelabel Error Page This application has no explicit mapping for /error, so you are seeing this as a fallback. Thu Oct 22 11:44:46 KST 2026 There was an unexpected error (type=Internal Server Error, status=500). 주문을 찾을 수 없습니다 com.example.demo.service.Busines
+REPRO 없는 주문 화면: GET /orders/999999 -> HTTP 500
+REPRO 없는 주문 API: GET /api/orders/999999 -> HTTP 404

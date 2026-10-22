@@ -1,0 +1,789 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main4\\e2e\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "tests/pages.spec.ts",
+      "tests/order-detail.spec.ts",
+      "--reporter=json"
+    ],
+    "configFile": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main4\\e2e\\playwright.config.ts",
+    "rootDir": "C:/Users/<user>/AppData/Local/Temp/claude/C--work-battery/ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7/scratchpad/wt-main4/e2e/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/<user>/AppData/Local/Temp/claude/C--work-battery/ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7/scratchpad/wt-main4/e2e/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "C:/Users/<user>/AppData/Local/Temp/claude/C--work-battery/ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7/scratchpad/wt-main4/e2e/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main4\\e2e\\test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "chromium",
+        "testDir": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main4\\e2e\\tests",
+        "snapshotDir": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main4\\e2e\\tests",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 30000,
+        "use": {
+          "baseURL": "http://localhost:18083",
+          "trace": "retain-on-failure",
+          "screenshot": "only-on-failure",
+          "launchOptions": {
+            "slowMo": 0
+          },
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Safari/537.36",
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "screen": {
+            "width": 1920,
+            "height": 1080
+          },
+          "deviceScaleFactor": 1,
+          "isMobile": false,
+          "hasTouch": false,
+          "defaultBrowserType": "chromium"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "chromium"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.1",
+    "workers": 1,
+    "webServer": {
+      "command": ".\\gradlew.bat bootRun",
+      "cwd": "..",
+      "url": "http://localhost:18083/login",
+      "reuseExistingServer": true,
+      "timeout": 180000,
+      "env": {
+        "SERVER_PORT": "18083",
+        "SPRING_DATASOURCE_URL": "jdbc:h2:mem:battery-e2e;DB_CLOSE_DELAY=-1"
+      }
+    }
+  },
+  "suites": [
+    {
+      "title": "order-detail.spec.ts",
+      "file": "order-detail.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "주문 상세·상태",
+          "file": "order-detail.spec.ts",
+          "line": 14,
+          "column": 6,
+          "specs": [
+            {
+              "title": "DTL-01 상세 화면 정보와 저장된 계획 표시",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1306,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-22T02:56:50.302Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "48897fda6cdd49b9018f-267d64966fffed8eca95",
+              "file": "order-detail.spec.ts",
+              "line": 19,
+              "column": 7
+            },
+            {
+              "title": "DTL-02 확정 → 진행 변경",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 859,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-22T02:56:51.895Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "48897fda6cdd49b9018f-bfc2e1a1feed098ebe79",
+              "file": "order-detail.spec.ts",
+              "line": 35,
+              "column": 7
+            },
+            {
+              "title": "DTL-03 진행 → 완료 후 최종 상태",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 881,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-22T02:56:52.767Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "48897fda6cdd49b9018f-4f81c9266455179589f9",
+              "file": "order-detail.spec.ts",
+              "line": 52,
+              "column": 7
+            },
+            {
+              "title": "DTL-04 확인 대화상자를 취소하면 상태가 유지된다",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 792,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-22T02:56:53.662Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "48897fda6cdd49b9018f-93bf589bccf1f39e9ab3",
+              "file": "order-detail.spec.ts",
+              "line": 64,
+              "column": 7
+            },
+            {
+              "title": "DTL-05 확정 주문 취소 직후에도 오류 화면이 나오지 않는다",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 832,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-22T02:56:54.468Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "48897fda6cdd49b9018f-073507b2e3c6e43c1e4e",
+              "file": "order-detail.spec.ts",
+              "line": 76,
+              "column": 7
+            },
+            {
+              "title": "DTL-06 취소된 주문은 목록에서 사라지고 취소 칩 건수는 0 이다",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 955,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-22T02:56:55.316Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "48897fda6cdd49b9018f-79298911995895465ed5",
+              "file": "order-detail.spec.ts",
+              "line": 91,
+              "column": 7
+            },
+            {
+              "title": "DTL-07 다른 사용자가 먼저 바꾸면 옛 화면의 변경은 충돌로 거부된다",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1541,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-22T02:56:56.285Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "48897fda6cdd49b9018f-ed6221ce4c2d7cb250fc",
+              "file": "order-detail.spec.ts",
+              "line": 105,
+              "column": 7
+            },
+            {
+              "title": "DTL-08 존재하지 않는 주문을 열면 안내가 나온다(404 또는 안내 문구)",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 720,
+                      "error": {
+                        "message": "Error: 존재하지 않는 주문이 서버 오류(5xx)면 안 된다\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m500\u001b[39m\nReceived:   \u001b[31m500\u001b[39m",
+                        "stack": "Error: 존재하지 않는 주문이 서버 오류(5xx)면 안 된다\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m500\u001b[39m\nReceived:   \u001b[31m500\u001b[39m\n    at C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main4\\e2e\\tests\\order-detail.spec.ts:130:64",
+                        "location": {
+                          "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main4\\e2e\\tests\\order-detail.spec.ts",
+                          "column": 64,
+                          "line": 130
+                        },
+                        "snippet": "  128 |     // 예전 결함: 없는 주문 번호를 열면 HTTP 500 이 났다. 이제 화면은 열리고 안내 문구가 나온다(API 는 404).\n  129 |     const response = await page.goto('/orders/999999');\n> 130 |     expect(response!.status(), '존재하지 않는 주문이 서버 오류(5xx)면 안 된다').toBeLessThan(500);\n      |                                                                ^\n  131 |   });\n  132 |\n  133 |   test('DTL-09 상태 이력 표(확정 → 진행 → 완료)', async ({ page }) => {"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main4\\e2e\\tests\\order-detail.spec.ts",
+                            "column": 64,
+                            "line": 130
+                          },
+                          "message": "Error: 존재하지 않는 주문이 서버 오류(5xx)면 안 된다\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m500\u001b[39m\nReceived:   \u001b[31m500\u001b[39m\n\n  128 |     // 예전 결함: 없는 주문 번호를 열면 HTTP 500 이 났다. 이제 화면은 열리고 안내 문구가 나온다(API 는 404).\n  129 |     const response = await page.goto('/orders/999999');\n> 130 |     expect(response!.status(), '존재하지 않는 주문이 서버 오류(5xx)면 안 된다').toBeLessThan(500);\n      |                                                                ^\n  131 |   });\n  132 |\n  133 |   test('DTL-09 상태 이력 표(확정 → 진행 → 완료)', async ({ page }) => {\n    at C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main4\\e2e\\tests\\order-detail.spec.ts:130:64"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-22T02:56:57.842Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main4\\e2e\\test-results\\order-detail-주문-상세·상태-DTL--e9fe1-문을-열면-안내가-나온다-404-또는-안내-문구--chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main4\\e2e\\test-results\\order-detail-주문-상세·상태-DTL--e9fe1-문을-열면-안내가-나온다-404-또는-안내-문구--chromium\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main4\\e2e\\test-results\\order-detail-주문-상세·상태-DTL--e9fe1-문을-열면-안내가-나온다-404-또는-안내-문구--chromium\\trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main4\\e2e\\tests\\order-detail.spec.ts",
+                        "column": 64,
+                        "line": 130
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "48897fda6cdd49b9018f-aff4f2f79a7939e6bf74",
+              "file": "order-detail.spec.ts",
+              "line": 127,
+              "column": 7
+            },
+            {
+              "title": "DTL-09 상태 이력 표(확정 → 진행 → 완료)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 865,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-22T02:56:59.836Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "48897fda6cdd49b9018f-76213c28d096aac63cc5",
+              "file": "order-detail.spec.ts",
+              "line": 133,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "pages.spec.ts",
+      "file": "pages.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "정적 화면 전환",
+          "file": "pages.spec.ts",
+          "line": 11,
+          "column": 6,
+          "specs": [
+            {
+              "title": "PGE-01 존재하지 않는 주문을 열면 서버 오류 대신 안내가 나온다",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 631,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m200\u001b[39m\nReceived: \u001b[31m500\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m200\u001b[39m\nReceived: \u001b[31m500\u001b[39m\n    at C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main4\\e2e\\tests\\pages.spec.ts:16:32",
+                        "location": {
+                          "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main4\\e2e\\tests\\pages.spec.ts",
+                          "column": 32,
+                          "line": 16
+                        },
+                        "snippet": "  14 |     const response = await page.goto('/orders/999999');\n  15 |\n> 16 |     expect(response!.status()).toBe(200); // 화면(정적 HTML) 자체는 열린다\n     |                                ^\n  17 |     await expect(page.locator('.alert.error')).toHaveText('주문을 찾을 수 없습니다');\n  18 |     await expect(page.getByRole('link', { name: '목록으로' })).toBeVisible();\n  19 |     await expect(page).toHaveURL(/\\/orders\\/999999$/);"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main4\\e2e\\tests\\pages.spec.ts",
+                            "column": 32,
+                            "line": 16
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m200\u001b[39m\nReceived: \u001b[31m500\u001b[39m\n\n  14 |     const response = await page.goto('/orders/999999');\n  15 |\n> 16 |     expect(response!.status()).toBe(200); // 화면(정적 HTML) 자체는 열린다\n     |                                ^\n  17 |     await expect(page.locator('.alert.error')).toHaveText('주문을 찾을 수 없습니다');\n  18 |     await expect(page.getByRole('link', { name: '목록으로' })).toBeVisible();\n  19 |     await expect(page).toHaveURL(/\\/orders\\/999999$/);\n    at C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main4\\e2e\\tests\\pages.spec.ts:16:32"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-22T02:57:00.981Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main4\\e2e\\test-results\\pages-정적-화면-전환-PGE-01-존재하지-않는-주문을-열면-서버-오류-대신-안내가-나온다-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main4\\e2e\\test-results\\pages-정적-화면-전환-PGE-01-존재하지-않는-주문을-열면-서버-오류-대신-안내가-나온다-chromium\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main4\\e2e\\test-results\\pages-정적-화면-전환-PGE-01-존재하지-않는-주문을-열면-서버-오류-대신-안내가-나온다-chromium\\trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main4\\e2e\\tests\\pages.spec.ts",
+                        "column": 32,
+                        "line": 16
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "9bb6bb2ed574bebb3c58-461e0d4e5b0dc18a913a",
+              "file": "pages.spec.ts",
+              "line": 12,
+              "column": 7
+            },
+            {
+              "title": "PGE-02 취소하면 같은 화면에 안내가 나오고 주문은 목록에서 사라진다",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 6060,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.alert.ok')\nExpected substring: \u001b[32m\"주문 #9을(를) 취소했습니다\"\u001b[39m\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" locator('.alert.ok') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.alert.ok')\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.alert.ok')\nExpected substring: \u001b[32m\"주문 #9을(를) 취소했습니다\"\u001b[39m\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" locator('.alert.ok') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.alert.ok')\u001b[22m\n\n    at C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main4\\e2e\\tests\\pages.spec.ts:34:45",
+                        "location": {
+                          "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main4\\e2e\\tests\\pages.spec.ts",
+                          "column": 45,
+                          "line": 34
+                        },
+                        "snippet": "  32 |     await changeStatus(page, '취소(으)로 변경');\n  33 |\n> 34 |     await expect(page.locator('.alert.ok')).toContainText(`주문 #${id}을(를) 취소했습니다`);\n     |                                             ^\n  35 |     await expect(page.locator('h1 .badge')).toHaveText('취소');\n  36 |     await expect(page.getByRole('button', { name: /\\(으\\)로 변경/ })).toHaveCount(0);\n  37 |     await expect(page).toHaveURL(new RegExp(`/orders/${id}$`));"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main4\\e2e\\tests\\pages.spec.ts",
+                            "column": 45,
+                            "line": 34
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.alert.ok')\nExpected substring: \u001b[32m\"주문 #9을(를) 취소했습니다\"\u001b[39m\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" locator('.alert.ok') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.alert.ok')\u001b[22m\n\n\n  32 |     await changeStatus(page, '취소(으)로 변경');\n  33 |\n> 34 |     await expect(page.locator('.alert.ok')).toContainText(`주문 #${id}을(를) 취소했습니다`);\n     |                                             ^\n  35 |     await expect(page.locator('h1 .badge')).toHaveText('취소');\n  36 |     await expect(page.getByRole('button', { name: /\\(으\\)로 변경/ })).toHaveCount(0);\n  37 |     await expect(page).toHaveURL(new RegExp(`/orders/${id}$`));\n    at C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main4\\e2e\\tests\\pages.spec.ts:34:45"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-22T02:57:02.782Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main4\\e2e\\test-results\\pages-정적-화면-전환-PGE-02-취소하면-같은-화면에-안내가-나오고-주문은-목록에서-사라진다-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main4\\e2e\\test-results\\pages-정적-화면-전환-PGE-02-취소하면-같은-화면에-안내가-나오고-주문은-목록에서-사라진다-chromium\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main4\\e2e\\test-results\\pages-정적-화면-전환-PGE-02-취소하면-같은-화면에-안내가-나오고-주문은-목록에서-사라진다-chromium\\trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main4\\e2e\\tests\\pages.spec.ts",
+                        "column": 45,
+                        "line": 34
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "9bb6bb2ed574bebb3c58-cfd33833bd7f2d9a2788",
+              "file": "pages.spec.ts",
+              "line": 27,
+              "column": 7
+            },
+            {
+              "title": "PGE-03 로그인하지 않으면 모든 화면 주소가 로그인으로 이동한다",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 549,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-22T02:57:10.375Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9bb6bb2ed574bebb3c58-3535b9c1f404de711668",
+              "file": "pages.spec.ts",
+              "line": 44,
+              "column": 7
+            },
+            {
+              "title": "PGE-04 로그인 요청이 틀리면 401 과 이유가 온다 (폼 전송 계약 유지)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 37,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-22T02:57:11.182Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9bb6bb2ed574bebb3c58-c512ed2ef212cec9bdb0",
+              "file": "pages.spec.ts",
+              "line": 51,
+              "column": 7
+            },
+            {
+              "title": "PGE-05 화면 상단은 로그인한 아이디를 API 로 받아 보여 준다",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 628,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-22T02:57:11.229Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9bb6bb2ed574bebb3c58-6ed7e18f00157393b81a",
+              "file": "pages.spec.ts",
+              "line": 61,
+              "column": 7
+            },
+            {
+              "title": "PGE-06 메모에 태그를 넣어도 글자 그대로 보이고 실행되지 않는다",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 602,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-22T02:57:11.870Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9bb6bb2ed574bebb3c58-7dce649c849c5eb74b5a",
+              "file": "pages.spec.ts",
+              "line": 70,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-22T02:56:36.941Z",
+    "duration": 36981.183,
+    "expected": 12,
+    "skipped": 0,
+    "unexpected": 3,
+    "flaky": 0
+  }
+}

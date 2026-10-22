@@ -74,15 +74,13 @@ test.describe('주문 상세·상태', () => {
   });
 
   test('DTL-05 확정 주문 취소 직후에도 오류 화면이 나오지 않는다', async ({ page }) => {
-    // 알려진 결함: 취소는 주문을 삭제한 뒤 삭제된 주문의 상세로 이동해 HTTP 500 이 난다(실행으로 확인).
-    // 결함이 고쳐지면 이 테스트가 "실패할 것으로 표시했는데 통과"로 알려 준다 → 그때 test.fail 줄을 지운다.
-    test.fail(true, '알려진 결함: 취소 직후 /orders/{id} 가 HTTP 500 (PRD 결함 후보)');
+    // 예전 결함: 취소는 주문을 삭제한 뒤 삭제된 주문의 상세로 이동해 HTTP 500 이 났다.
+    // 이제 취소하면 삭제 결과를 받고 같은 화면에 안내를 보여 주므로, 취소 요청의 응답 코드를 확인한다.
     const id = await createOrderViaApi(page);
     await page.goto(`/orders/${id}`);
 
-    // 취소는 주문을 삭제한 뒤 /orders/{id} 로 이동한다. 그 이동의 응답 코드를 확인한다.
     const redirected = page.waitForResponse(
-      (r) => new URL(r.url()).pathname === `/orders/${id}` && r.request().method() === 'GET', // 화면 주소만(/api/orders/{id} 제외)
+      (r) => new URL(r.url()).pathname === `/api/orders/${id}/status` && r.request().method() === 'POST',
     );
     await changeStatus(page, '취소(으)로 변경');
     const response = await redirected;
@@ -127,8 +125,7 @@ test.describe('주문 상세·상태', () => {
   });
 
   test('DTL-08 존재하지 않는 주문을 열면 안내가 나온다(404 또는 안내 문구)', async ({ page }) => {
-    // 알려진 결함: 없는 주문 번호를 열면 HTTP 500 (실행으로 확인). 고쳐지면 아래 줄을 지운다.
-    test.fail(true, '알려진 결함: 존재하지 않는 주문 조회가 HTTP 500');
+    // 예전 결함: 없는 주문 번호를 열면 HTTP 500 이 났다. 이제 화면은 열리고 안내 문구가 나온다(API 는 404).
     const response = await page.goto('/orders/999999');
     expect(response!.status(), '존재하지 않는 주문이 서버 오류(5xx)면 안 된다').toBeLessThan(500);
   });
