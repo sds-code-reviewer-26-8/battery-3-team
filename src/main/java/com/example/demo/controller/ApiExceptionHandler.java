@@ -14,7 +14,8 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
  * 업무 오류를 {error, conflict} JSON 으로 바꾼다. 이유가 여러 개면 errors 도 함께 준다.
  * JSON API 컨트롤러에만 적용한다. 화면 주소(PageController)의 오류는 처리하지 않는다.
  */
-@RestControllerAdvice(assignableTypes = {OrderController.class, MasterController.class, SimulationController.class})
+@RestControllerAdvice(assignableTypes = {OrderController.class, MasterController.class, SimulationController.class,
+		SignupController.class})
 public class ApiExceptionHandler {
 
 	@ExceptionHandler(BusinessException.class)

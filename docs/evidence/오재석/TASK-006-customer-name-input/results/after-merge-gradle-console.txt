@@ -1,0 +1,32 @@
+﻿> Task :clean UP-TO-DATE
+> Task :compileJava
+> Task :processResources
+> Task :classes
+> Task :resolveMainClassName
+> Task :bootJar
+> Task :jar
+> Task :assemble
+> Task :compileTestJava
+> Task :processTestResources
+> Task :testClasses
+.\gradlew.bat : OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap c
+lasspath has been appended
+At line:1 char:592
++ ...  | Out-Null }; .\gradlew.bat clean build --console=plain 2>&1 | Tee-O ...
++                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (OpenJDK 64-Bit ...s been appended:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+2026-10-22T15:55:16.144+09:00  INFO 31388 --- [ionShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-10-22T15:55:16.147+09:00  INFO 31388 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-10-22T15:55:16.149+09:00  INFO 31388 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2026-10-22T15:55:16.151+09:00  INFO 31388 --- [ionShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-10-22T15:55:16.152+09:00  INFO 31388 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Shutdown initiated...
+2026-10-22T15:55:16.153+09:00  INFO 31388 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Shutdown completed.
+> Task :test
+> Task :check
+> Task :build
+
+BUILD SUCCESSFUL in 34s
+9 actionable tasks: 8 executed, 1 up-to-date
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.8.1/userguide/configuration_cache_enabling.html

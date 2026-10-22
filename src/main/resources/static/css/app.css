@@ -64,6 +64,7 @@ input[type=text], input[type=password], input[type=number], textarea {
 label { display: block; font-weight: 600; }
 label input, label textarea { margin-top: 4px; font-weight: 400; }
 .stack { display: flex; flex-direction: column; gap: 12px; }
+[hidden] { display: none !important; }
 .row { display: flex; gap: 20px; align-items: flex-end; flex-wrap: wrap; }
 .row label { width: 220px; }
 .hint { flex: 1; min-width: 240px; margin: 0; }

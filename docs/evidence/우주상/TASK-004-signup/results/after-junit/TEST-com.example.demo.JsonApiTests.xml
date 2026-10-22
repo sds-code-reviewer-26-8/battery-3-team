@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.demo.JsonApiTests" tests="19" skipped="0" failures="0" errors="0" timestamp="2026-10-22T06:01:34.230Z" hostname="DESKTOP-2GEPPK4" time="2.637">
+  <properties/>
+  <testcase name="singleErrorHasNoErrorsList()" classname="com.example.demo.JsonApiTests" time="0.114"/>
+  <testcase name="missingOrderIsNotFoundNotServerError()" classname="com.example.demo.JsonApiTests" time="0.107"/>
+  <testcase name="missingOrderPageStillOpens()" classname="com.example.demo.JsonApiTests" time="0.107"/>
+  <testcase name="orderDetailHasStoredPlanHistoryAndVersion()" classname="com.example.demo.JsonApiTests" time="0.148"/>
+  <testcase name="masterSaveReturnsSavedFormInEok()" classname="com.example.demo.JsonApiTests" time="0.127"/>
+  <testcase name="cancelingAlreadyCanceledOrderIsNotFoundNotServerError()" classname="com.example.demo.JsonApiTests" time="0.158"/>
+  <testcase name="meReturnsLoginUser()" classname="com.example.demo.JsonApiTests" time="0.099"/>
+  <testcase name="statusChangeReturnsUpdatedOrderAndRejectsBadRequests()" classname="com.example.demo.JsonApiTests" time="0.173"/>
+  <testcase name="orderListHasCountsAndFilters()" classname="com.example.demo.JsonApiTests" time="0.214"/>
+  <testcase name="orderPageOpensForAnyNumericIdEvenOutOfRange()" classname="com.example.demo.JsonApiTests" time="0.103"/>
+  <testcase name="cancelKeepsStatusHistoryAfterOrderIsDeleted()" classname="com.example.demo.JsonApiTests" time="0.149"/>
+  <testcase name="pageUrlsServeStaticHtmlAndStayProtected()" classname="com.example.demo.JsonApiTests" time="0.121"/>
+  <testcase name="masterFormUsesEokAndInvalidSaveListsAllErrors()" classname="com.example.demo.JsonApiTests" time="0.123"/>
+  <testcase name="cancelFromInProgressDeletesOrder()" classname="com.example.demo.JsonApiTests" time="0.162"/>
+  <testcase name="cancelDeletesOrderAndReportsDeleted()" classname="com.example.demo.JsonApiTests" time="0.144"/>
+  <testcase name="malformedRequestsGetReasonInJson()" classname="com.example.demo.JsonApiTests" time="0.115"/>
+  <testcase name="nonNumericOrderPageIsNotFoundNotServerError()" classname="com.example.demo.JsonApiTests" time="0.107"/>
+  <testcase name="completedOrderCannotBeCanceled()" classname="com.example.demo.JsonApiTests" time="0.171"/>
+  <testcase name="cancelWithStaleVersionIsConflict()" classname="com.example.demo.JsonApiTests" time="0.15"/>
+  <system-out><![CDATA[2026-10-22T15:01:34.231+09:00  INFO 16620 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.example.demo.JsonApiTests]: JsonApiTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-10-22T15:01:34.235+09:00  INFO 16620 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.example.demo.DemoApplication for test class com.example.demo.JsonApiTests
+2026-10-22T15:01:34.239+09:00  INFO 16620 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.example.demo.JsonApiTests]: JsonApiTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-10-22T15:01:34.243+09:00  INFO 16620 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.example.demo.DemoApplication for test class com.example.demo.JsonApiTests
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
