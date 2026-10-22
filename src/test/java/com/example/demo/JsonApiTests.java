@@ -423,6 +423,47 @@ class JsonApiTests {
 	}
 
 	@Test
+	void lateIsDecidedAtExactlyTheRouteTotalDays() throws Exception {
+		MockHttpSession s = login();
+		// 서버가 확정 때 다시 계산하는 비용 최소 안의 소요 일수를 시뮬레이션 응답에서 읽는다
+		MvcResult sim = mvc.perform(post("/api/simulate").session(s).contentType(MediaType.APPLICATION_JSON)
+				.content("{\"orders\":" + ORDERS + "}")).andReturn();
+		List<Integer> costDays = JsonPath.read(sim.getResponse().getContentAsString(),
+				"$.options[?(@.type=='COST')].totalDays");
+		int totalDays = costDays.get(0);
+		assertThat(totalDays - 1).as("경계 아래(totalDays-1)도 5 이상이어야 이 테스트가 성립한다").isGreaterThanOrEqualTo(5);
+
+		int exact = JsonPath.read(confirmWith(s, ",\"requiredDays\":" + totalDays).andExpect(status().isOk()).andReturn()
+				.getResponse().getContentAsString(), "$.id");
+		mvc.perform(get("/api/orders/" + exact).session(s)).andExpect(jsonPath("$.requiredDays").value(totalDays))
+				.andExpect(jsonPath("$.late").value(false)); // 납기일과 소요 일수가 같으면 늦지 않다
+
+		int oneShort = JsonPath.read(confirmWith(s, ",\"requiredDays\":" + (totalDays - 1)).andExpect(status().isOk())
+				.andReturn().getResponse().getContentAsString(), "$.id");
+		mvc.perform(get("/api/orders/" + oneShort).session(s)).andExpect(jsonPath("$.requiredDays").value(totalDays - 1))
+				.andExpect(jsonPath("$.late").value(true)); // 하루라도 모자라면 늦다
+	}
+
+	@Test
+	void explicitNullRequiredDaysMeansAsSoonAsPossible() throws Exception {
+		MockHttpSession s = login();
+		int id = JsonPath.read(confirmWith(s, ",\"requiredDays\":null").andExpect(status().isOk()).andReturn()
+				.getResponse().getContentAsString(), "$.id");
+		mvc.perform(get("/api/orders/" + id).session(s)).andExpect(jsonPath("$.requiredDays").isEmpty())
+				.andExpect(jsonPath("$.late").value(false));
+	}
+
+	@Test
+	void requiredDaysMustBeAnIntegerNumber() throws Exception {
+		MockHttpSession s = login();
+		// 소수·문자열을 조용히 5, 10 으로 바꿔 받아들이지 않는다
+		for (String bad : List.of("5.5", "5.0", "\"10\"", "\"abc\"", "true", "[]", "99999999999")) {
+			confirmWith(s, ",\"requiredDays\":" + bad).andExpect(status().isBadRequest())
+					.andExpect(jsonPath("$.error").value("필요 납기일은 정수로 입력하세요"));
+		}
+	}
+
+	@Test
 	void requiredDaysOutsideFiveToFiftyIsRejected() throws Exception {
 		MockHttpSession s = login();
 		for (String bad : List.of("4", "51", "0", "-1")) {

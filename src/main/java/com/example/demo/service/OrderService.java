@@ -22,8 +22,8 @@ import tools.jackson.databind.ObjectMapper;
 public class OrderService {
 
 	private static final int MAX_MEMO = 1000;
-	public static final int MIN_REQUIRED_DAYS = 5;
-	public static final int MAX_REQUIRED_DAYS = 50;
+	private static final int MIN_REQUIRED_DAYS = 5;
+	private static final int MAX_REQUIRED_DAYS = 50;
 
 	private final SimulationService simulationService;
 	private final OrderRepository orderRepository;
@@ -67,7 +67,8 @@ public class OrderService {
 		int totalK = result.orders().values().stream().mapToInt(Integer::intValue).sum();
 		LocalDateTime now = LocalDateTime.now();
 		Order order = orderRepository.save(new Order(now, user, totalK, plan.type(), plan.label(), plan.totalDays(),
-				plan.productionCost(), plan.shippingCost(), plan.totalCost(), note, requiredDays, json.writeValueAsString(stored)));
+				plan.productionCost(), plan.shippingCost(), plan.totalCost(), note, requiredDays,
+				json.writeValueAsString(stored)));
 		orderStatusHistoryRepository.save(new OrderStatusHistory(order.getId(), null, OrderStatus.CONFIRMED, user, now));
 		return order;
 	}

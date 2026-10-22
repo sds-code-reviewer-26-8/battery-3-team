@@ -141,6 +141,7 @@
 	}
 	asapBox.addEventListener('change', onDeadlineChange);
 	daysInput.addEventListener('input', onDeadlineChange);
+	onDeadlineChange(); // 새로고침 때 브라우저가 체크 상태만 복원해도 입력의 잠금이 맞도록 한 번 맞춘다
 
 	/** 경로 카드. 소요 일수가 필요 납기일을 넘으면 빨간색으로 표시한다. */
 	function renderOptions() {

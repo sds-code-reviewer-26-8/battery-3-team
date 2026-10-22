@@ -105,7 +105,7 @@ test.describe('필요 납기일', () => {
     await expect(metaValue(page, '필요 납기일')).not.toHaveClass(/late/);
   });
 
-  test('DLN-06 범위를 벗어난 납기일은 화면과 API 모두 거부한다', async ({ page }) => {
+  test('DLN-06 범위를 벗어나거나 정수가 아닌 납기일은 화면과 API 모두 거부한다', async ({ page }) => {
     for (const bad of ['4', '51', '']) {
       await setDeadline(page, bad);
       await expect(page.locator('#options .option.late'), `'${bad}' 이면 빨간 표시를 하지 않는다`).toHaveCount(0);
@@ -115,12 +115,20 @@ test.describe('필요 납기일', () => {
     }
 
     const master = await (await page.request.get('/api/master')).json();
-    for (const bad of [4, 51]) {
-      const res = await page.request.post('/api/orders', {
-        data: { orders: DEFAULT_ORDERS, routeType: 'COST', masterVersion: master.version, requiredDays: bad },
+    const post = (requiredDays: unknown) =>
+      page.request.post('/api/orders', {
+        data: { orders: DEFAULT_ORDERS, routeType: 'COST', masterVersion: master.version, requiredDays },
       });
+    for (const bad of [4, 51]) {
+      const res = await post(bad);
       expect(res.status()).toBe(400);
       expect((await res.json()).error).toBe('필요 납기일은 5~50일 사이로 입력하세요');
+    }
+    // 소수·문자열을 조용히 정수로 바꿔 받아들이지 않는다(화면은 막지만 서버도 막는다)
+    for (const bad of [5.5, '10', 'abc']) {
+      const res = await post(bad);
+      expect(res.status(), `requiredDays=${JSON.stringify(bad)}`).toBe(400);
+      expect((await res.json()).error).toBe('필요 납기일은 정수로 입력하세요');
     }
   });
 });
