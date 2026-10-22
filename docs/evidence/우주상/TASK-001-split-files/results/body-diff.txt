@@ -1,0 +1,169 @@
+기준: main 0285f62 의 옛 파일 vs 현재 브랜치의 새 파일들. 각 줄은 앞뒤 공백을 지우고 중복을 제거해 비교. import, package, 닫는 중괄호는 제외.
+
+##### service/BatteryService.java
+== 옛 파일에만 있는 줄
+// ---------------------------------------------------------------- 마스터 데이터
+// ---------------------------------------------------------------- 시뮬레이션
+// ---------------------------------------------------------------- 주문
+Factory f = factories.findById(c).orElseThrow();
+List<Master.FactoryParam> fs = factories.findAll().stream()
+List<Master.RouteParam> rs = routes.findAll().stream()
+Master master = currentMaster();
+Order order = orders.save(new Order(now, user, totalK, plan.type(), plan.label(), plan.totalDays(),
+OrderRepository orders, OrderStatusHistoryRepository histories, ObjectMapper json) {
+Setting s = settings.findById(Setting.SINGLETON_ID)
+Setting s = settings.findById(Setting.SINGLETON_ID).orElseThrow();
+SimulationResult result = simulate(requested);
+counts.put(s, orders.countByStatus(s));
+factories.save(new Factory(Country.CHINA, 400, 4000, 700));
+factories.save(new Factory(Country.INDONESIA, 300, 7000, 450));
+factories.save(new Factory(Country.JAPAN, 800, 2000, 900));
+factories.save(new Factory(Country.VIETNAM, 200, 10000, 550));
+for (Route r : routes.findAll()) {
+histories.save(new OrderStatusHistory(id, from, target, user, LocalDateTime.now()));
+histories.save(new OrderStatusHistory(order.getId(), null, OrderStatus.CONFIRMED, user, now));
+if (settings.count() > 0) {
+orders.delete(order);
+orders.saveAndFlush(order);
+private final FactoryRepository factories;
+private final OrderRepository orders;
+private final OrderStatusHistoryRepository histories;
+private final RouteRepository routes;
+private final SettingRepository settings;
+public BatteryService(FactoryRepository factories, RouteRepository routes, SettingRepository settings,
+public class BatteryService {
+return histories.findByOrderIdOrderByIdAsc(orderId);
+return orders.findById(id).orElseThrow(() -> new BusinessException("주문을 찾을 수 없습니다"));
+return status == null ? orders.findAllByOrderByIdDesc() : orders.findByStatusOrderByIdDesc(status);
+routes.save(new Route(Country.CHINA, Country.INDONESIA, 6));
+routes.save(new Route(Country.CHINA, Country.JAPAN, 2));
+routes.save(new Route(Country.CHINA, Country.VIETNAM, 4));
+routes.save(new Route(Country.JAPAN, Country.INDONESIA, 7));
+routes.save(new Route(Country.JAPAN, Country.VIETNAM, 5));
+routes.save(new Route(Country.KOREA, Country.CHINA, 1));
+routes.save(new Route(Country.KOREA, Country.INDONESIA, 7));
+routes.save(new Route(Country.KOREA, Country.JAPAN, 2));
+routes.save(new Route(Country.KOREA, Country.VIETNAM, 5));
+routes.save(new Route(Country.VIETNAM, Country.INDONESIA, 2));
+settings.save(new Setting(3, WON_PER_EOK));
+this.factories = factories;
+this.histories = histories;
+this.orders = orders;
+this.routes = routes;
+this.settings = settings;
+
+== 새 파일들에만 있는 줄
+Factory f = factoryRepository.findById(c).orElseThrow();
+List<Master.FactoryParam> fs = factoryRepository.findAll().stream()
+List<Master.RouteParam> rs = routeRepository.findAll().stream()
+Master master = masterService.currentMaster();
+Order order = orderRepository.save(new Order(now, user, totalK, plan.type(), plan.label(), plan.totalDays(),
+OrderStatusHistoryRepository orderStatusHistoryRepository, ObjectMapper json) {
+Setting s = settingRepository.findById(Setting.SINGLETON_ID)
+Setting s = settingRepository.findById(Setting.SINGLETON_ID).orElseThrow();
+SettingRepository settingRepository) {
+SimulationResult result = simulationService.simulate(requested);
+counts.put(s, orderRepository.countByStatus(s));
+factoryRepository.save(new Factory(Country.CHINA, 400, 4000, 700));
+factoryRepository.save(new Factory(Country.INDONESIA, 300, 7000, 450));
+factoryRepository.save(new Factory(Country.JAPAN, 800, 2000, 900));
+factoryRepository.save(new Factory(Country.VIETNAM, 200, 10000, 550));
+for (Route r : routeRepository.findAll()) {
+if (settingRepository.count() > 0) {
+orderRepository.delete(order);
+orderRepository.saveAndFlush(order);
+orderStatusHistoryRepository.save(new OrderStatusHistory(id, from, target, user, LocalDateTime.now()));
+orderStatusHistoryRepository.save(new OrderStatusHistory(order.getId(), null, OrderStatus.CONFIRMED, user, now));
+private final FactoryRepository factoryRepository;
+private final MasterService masterService;
+private final OrderRepository orderRepository;
+private final OrderStatusHistoryRepository orderStatusHistoryRepository;
+private final RouteRepository routeRepository;
+private final SettingRepository settingRepository;
+private final SimulationService simulationService;
+public MasterService(FactoryRepository factoryRepository, RouteRepository routeRepository,
+public OrderService(SimulationService simulationService, OrderRepository orderRepository,
+public SimulationService(MasterService masterService) {
+public class MasterService {
+public class OrderService {
+public class SimulationService {
+return orderRepository.findById(id).orElseThrow(() -> new BusinessException("주문을 찾을 수 없습니다"));
+return orderStatusHistoryRepository.findByOrderIdOrderByIdAsc(orderId);
+return status == null ? orderRepository.findAllByOrderByIdDesc() : orderRepository.findByStatusOrderByIdDesc(status);
+routeRepository.save(new Route(Country.CHINA, Country.INDONESIA, 6));
+routeRepository.save(new Route(Country.CHINA, Country.JAPAN, 2));
+routeRepository.save(new Route(Country.CHINA, Country.VIETNAM, 4));
+routeRepository.save(new Route(Country.JAPAN, Country.INDONESIA, 7));
+routeRepository.save(new Route(Country.JAPAN, Country.VIETNAM, 5));
+routeRepository.save(new Route(Country.KOREA, Country.CHINA, 1));
+routeRepository.save(new Route(Country.KOREA, Country.INDONESIA, 7));
+routeRepository.save(new Route(Country.KOREA, Country.JAPAN, 2));
+routeRepository.save(new Route(Country.KOREA, Country.VIETNAM, 5));
+routeRepository.save(new Route(Country.VIETNAM, Country.INDONESIA, 2));
+settingRepository.save(new Setting(3, WON_PER_EOK));
+this.factoryRepository = factoryRepository;
+this.masterService = masterService;
+this.orderRepository = orderRepository;
+this.orderStatusHistoryRepository = orderStatusHistoryRepository;
+this.routeRepository = routeRepository;
+this.settingRepository = settingRepository;
+this.simulationService = simulationService;
+
+##### controller/AppController.java
+== 옛 파일에만 있는 줄
+.divide(BigDecimal.valueOf(BatteryService.WON_PER_EOK)).stripTrailingZeros().toPlainString());
+// ---------------------------------------------------------------- JSON API
+// ---------------------------------------------------------------- 로그인
+// ---------------------------------------------------------------- 마스터 데이터 화면
+// ---------------------------------------------------------------- 주문 화면
+Order order = service.confirm(request.orders(), request.routeType(), request.masterVersion(),
+Order order = service.getOrder(id);
+form.put(BatteryService.routeKey(r.from(), r.to()), String.valueOf(r.days()));
+model.addAttribute("counts", service.countByStatus());
+model.addAttribute("form", toForm(service.currentMaster()));
+model.addAttribute("history", service.history(id));
+model.addAttribute("master", service.currentMaster());
+model.addAttribute("orders", service.listOrders(status));
+model.addAttribute("total", service.listOrders(null).size());
+private final BatteryService service;
+public AppController(BatteryService service) {
+public class AppController {
+return ResponseEntity.ok(service.simulate(request.orders()));
+return service.currentMaster();
+service.changeStatus(id, status, version, (String) session.getAttribute(LoginInterceptor.SESSION_USER));
+service.updateMaster(form);
+this.service = service;
+
+== 새 파일들에만 있는 줄
+(String) session.getAttribute(LoginInterceptor.SESSION_USER));
+.divide(BigDecimal.valueOf(MasterService.WON_PER_EOK)).stripTrailingZeros().toPlainString());
+@ControllerAdvice
+Order order = orderService.confirm(request.orders(), request.routeType(), request.masterVersion(),
+Order order = orderService.getOrder(id);
+OrderService orderService) {
+form.put(MasterService.routeKey(r.from(), r.to()), String.valueOf(r.days()));
+masterService.updateMaster(form);
+model.addAttribute("counts", orderService.countByStatus());
+model.addAttribute("form", toForm(masterService.currentMaster()));
+model.addAttribute("history", orderService.history(id));
+model.addAttribute("master", masterService.currentMaster());
+model.addAttribute("orders", orderService.listOrders(status));
+model.addAttribute("total", orderService.listOrders(null).size());
+orderService.changeStatus(id, status, version,
+private final MasterService masterService;
+private final OrderService orderService;
+private final SimulationService simulationService;
+public ApiController(MasterService masterService, SimulationService simulationService,
+public MasterController(MasterService masterService) {
+public OrderController(OrderService orderService, MasterService masterService) {
+public class ApiController {
+public class AuthController {
+public class LoginUserAdvice {
+public class MasterController {
+public class OrderController {
+return ResponseEntity.ok(simulationService.simulate(request.orders()));
+return masterService.currentMaster();
+this.masterService = masterService;
+this.orderService = orderService;
+this.simulationService = simulationService;
+

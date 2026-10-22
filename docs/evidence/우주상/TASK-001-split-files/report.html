@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>검증 리포트 (report)</title>
+<style>
+:root{
+  --bg:#f6f7f9; --card:#fff; --text:#1c2430; --muted:#5d6b7c; --line:#d8dee6;
+  --accent:#1f4e78; --ph:#fff4c2; --ph-line:#e6c84a;
+  --ok:#17803d; --ok-bg:#e3f4ea; --warn:#9a6700; --warn-bg:#fdf1d6; --bad:#b42318; --bad-bg:#fde7e4;
+  --guide-bg:#eaf1fa; --guide-line:#9db8d8; --code:#eef1f5;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#10151c; --card:#18202a; --text:#e6ebf2; --muted:#9aa8ba; --line:#2d3947;
+    --accent:#7db3e8; --ph:#4a3f12; --ph-line:#a88a1c;
+    --ok:#4cc27a; --ok-bg:#16301f; --warn:#f0b24b; --warn-bg:#35290f; --bad:#ff8a80; --bad-bg:#3a1a17;
+    --guide-bg:#1b2a3d; --guide-line:#3d5a80; --code:#212c39;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.7 -apple-system,"Segoe UI","Malgun Gothic",sans-serif}
+.wrap{max-width:960px;margin:0 auto;padding:24px 16px 80px}
+h1{font-size:26px;margin:4px 0 2px}
+h2{font-size:18px;margin:0 0 10px;color:var(--accent)}
+h2 .no{display:inline-block;background:var(--accent);color:#fff;border-radius:6px;padding:0 8px;margin-right:6px;font-size:14px}
+section{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:16px 0}
+.sub{color:var(--muted);margin:0 0 12px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+th{background:var(--bg);color:var(--muted);font-weight:600}
+.tablewrap{overflow-x:auto}
+.ph{background:var(--ph);border-bottom:1px dashed var(--ph-line);padding:0 3px;border-radius:3px}
+.guide{background:var(--guide-bg);border-left:4px solid var(--guide-line);padding:9px 13px;border-radius:6px;margin:0 0 12px;font-size:13.5px}
+.guide b{color:var(--accent)}
+.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px 16px}
+.meta div{border:1px solid var(--line);border-radius:8px;padding:6px 10px;background:var(--card)}
+.meta span{display:block;font-size:12px;color:var(--muted)}
+.badge{display:inline-block;border-radius:999px;padding:1px 10px;font-size:12.5px;font-weight:600}
+.b-ok{background:var(--ok-bg);color:var(--ok)} .b-warn{background:var(--warn-bg);color:var(--warn)} .b-bad{background:var(--bad-bg);color:var(--bad)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:8px 0 4px}
+.tile{border:1px solid var(--line);border-radius:10px;padding:10px 12px;text-align:center}
+.tile b{display:block;font-size:26px;line-height:1.2}
+.tile small{color:var(--muted)}
+.tile.ok b{color:var(--ok)} .tile.bad b{color:var(--bad)} .tile.warn b{color:var(--warn)}
+.timeline{list-style:none;margin:0;padding:0 0 0 14px;border-left:3px solid var(--line)}
+.timeline li{position:relative;padding:0 0 16px 16px}
+.timeline li::before{content:"";position:absolute;left:-23px;top:6px;width:11px;height:11px;border-radius:50%;background:var(--accent)}
+.timeline li:last-child{padding-bottom:0}
+.check{list-style:none;padding:0;margin:0}
+.check li{display:flex;gap:10px;padding:6px 0;border-bottom:1px solid var(--line)}
+.check li:last-child{border-bottom:0}
+.check input{margin-top:5px}
+pre{background:var(--code);padding:10px 12px;border-radius:8px;overflow-x:auto;font:13px/1.55 Consolas,"D2Coding",monospace;margin:6px 0}
+.rules{font-size:13px;color:var(--muted)} .rules li{margin:2px 0}
+@media print{ body{background:#fff} .guide{display:none} section{break-inside:avoid} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="sub">Inner Loop · 검증·리포트 작성 단계의 증거(Evidence)</p>
+  <h1>검증 리포트: 대형 파일 분리 리팩토링 (Controller·Service·Repository)</h1>
+  <div class="meta">
+    <div><span>작성자</span>joosang425 (AI 초안 작성, 사람 확인 전)</div>
+    <div><span>작성일</span>2026-10-22</div>
+    <div><span>브랜치 / PR</span>refactor/split-large-files · PR #18</div>
+    <div><span>사전 검토 문서</span><a href="precheck.html">precheck.html</a></div>
+    <div><span>최종 결과</span><span class="badge b-warn">완료 (사람 승인 대기)</span></div>
+  </div>
+</header>
+
+<section>
+  <h2><span class="no">1</span>한눈에 보기</h2>
+  <div class="tiles">
+    <div class="tile ok"><b id="c-pass">-</b><small>통과</small></div>
+    <div class="tile bad"><b id="c-fail">-</b><small>실패</small></div>
+    <div class="tile warn"><b id="c-skip">-</b><small>건너뜀·미확인</small></div>
+    <div class="tile"><b id="c-ac">-</b><small>충족한 통과 기준</small></div>
+    <div class="tile"><b id="c-loop">2</b><small>반복 횟수</small></div>
+  </div>
+  <p><b>한 줄 요약:</b> AppController·BatteryService·Repository 묶음 파일을 역할별 파일로 나눴고(동작 변경 없음), JUnit 22/22, E2E 72 통과(건너뜀 1개는 깨끗한 DB에서 따로 실행해 통과). 1회차에 통과했고, PR 리뷰 반영(필드명 통일, 증거 보완) 후 2회차에도 같은 결과다.</p>
+  <p class="sub">※ 위 숫자는 3장 표(<code>id="results"</code>)의 행만 센다. 표 밖의 건너뜀·미확인은 집계되지 않으므로 5장을 함께 읽는다. "건너뜀·미확인 0"을 "문제 없음"으로 읽지 않는다.</p>
+</section>
+
+<section>
+  <h2><span class="no">2</span>구현 요약</h2>
+  <table>
+    <tr><th style="width:150px">구현한 것</th><td>사용자에게 보이는 변화는 없다(URL, 화면, JSON 응답 동일). 코드 구조만 바뀌었다.</td></tr>
+    <tr><th>접근 방법</th><td>메서드 본문은 그대로 옮기고 호출 대상·클래스 이름만 바꿨다. 확정(OrderService)이 시뮬레이션(SimulationService)을, 시뮬레이션이 마스터 조회(MasterService)를 호출하는 한 방향 의존이다. 로그인 아이디 공통 모델은 @ControllerAdvice로 옮겼다. <b>적용 범위는 넓어졌다</b>: 전에는 AppController 안에서만 적용되던 것이 이제 모든 컨트롤러(Spring 기본 오류 컨트롤러 /error 포함)에 적용된다. 템플릿이 loginUser를 읽는 방식은 같아 영향은 작아 보이나(코드 읽기 기반, 별도 확인 안 함), 이름은 같고 범위만 다르다.<br>리뷰 반영: 같은 타입 주입의 필드명을 통일했다(서비스는 xxxService, 저장소는 xxxRepository).</td></tr>
+  </table>
+  <h3 style="font-size:15px;margin:14px 0 6px">바뀐 파일</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>파일</th><th>변경 내용</th><th>종류</th></tr></thead>
+    <tbody>
+      <tr><td>controller/AppController.java</td><td>4개 컨트롤러와 공통 모델 클래스로 분리</td><td>삭제</td></tr>
+      <tr><td>controller/AuthController.java</td><td>/, /login, /logout</td><td>추가</td></tr>
+      <tr><td>controller/OrderController.java</td><td>/orders, /orders/new, /orders/{id}, /orders/{id}/status</td><td>추가</td></tr>
+      <tr><td>controller/MasterController.java</td><td>/master (화면 폼 변환 포함)</td><td>추가</td></tr>
+      <tr><td>controller/ApiController.java</td><td>/api/master, /api/simulate, /api/orders, 요청 record, 오류 변환</td><td>추가</td></tr>
+      <tr><td>controller/LoginUserAdvice.java</td><td>loginUser 공통 모델</td><td>추가</td></tr>
+      <tr><td>service/BatteryService.java</td><td>3개 서비스로 분리</td><td>삭제</td></tr>
+      <tr><td>service/MasterService.java</td><td>초기값, 마스터 조회, 검증 후 저장, 항로 입력칸 이름, WON_PER_EOK</td><td>추가</td></tr>
+      <tr><td>service/SimulationService.java</td><td>주문 수량 검증, 시뮬레이션, SimulationResult</td><td>추가</td></tr>
+      <tr><td>service/OrderService.java</td><td>확정, 목록·건수·조회·이력, 상태 변경</td><td>추가</td></tr>
+      <tr><td>repository/MasterRepositories.java, OrderRepositories.java</td><td>중첩 인터페이스 묶음 제거</td><td>삭제</td></tr>
+      <tr><td>repository/SettingRepository, FactoryRepository, RouteRepository, OrderRepository, OrderStatusHistoryRepository (.java)</td><td>인터페이스를 각각 최상위 파일로</td><td>추가(5)</td></tr>
+      <tr><td>config/DataInitializer.java</td><td>initDefaults 호출 대상을 MasterService로 (승인된 범위 확장)</td><td>수정</td></tr>
+      <tr><td>src/test/.../OrderFlowTests.java</td><td>import와 주입 타입만 BatteryService → OrderService (승인된 기존 테스트 수정, 검증 내용 변경 없음)</td><td>수정</td></tr>
+      <tr><td>docs/INTENT.md 부록</td><td>클래스 이름 갱신 (설계 의도 자체는 변경 없음)</td><td>수정</td></tr>
+      <tr><td>CLAUDE.md (<b>이 PR에 포함되지 않은 로컬 파일</b>)</td><td>구조 표와 주의사항의 클래스 이름 갱신. 리뷰어가 확인할 수 없다.</td><td>수정(로컬)</td></tr>
+      <tr><td>results/*-junit/binary/*.bin</td><td>Gradle 내부 산출물이라 증거에서 제외(리뷰 반영)</td><td>삭제</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2><span class="no">3</span>검증 결과</h2>
+  <div class="tablewrap"><table id="results">
+    <thead><tr><th style="width:60px">AC</th><th>검증 항목</th><th>실행 명령 / 방법</th><th style="width:80px">결과</th><th>근거 (결과 파일·로그)</th></tr></thead>
+    <tbody>
+      <tr data-result="pass" data-ac="AC-1"><td>AC-1</td><td>컴파일 에러 0</td><td><code>.\gradlew.bat compileJava compileTestJava --rerun-tasks</code></td><td><span class="badge b-ok">통과</span></td><td>results/after-compile.log (BUILD SUCCESSFUL)</td></tr>
+      <tr data-result="pass" data-ac="AC-2"><td>AC-2</td><td>전체 E2E: 기준선과 같은 72개 통과, 실패 0 (회귀)</td><td><code>cd e2e; npx playwright test --reporter=json</code></td><td><span class="badge b-ok">통과</span></td><td>results/after-e2e.json (expected 72, skipped 1, unexpected 0, flaky 0). 기준선: results/before-e2e.json (main 0285f62에서 같은 명령, expected 72, skipped 1, unexpected 0)</td></tr>
+      <tr data-result="pass" data-ac="AC-3"><td>AC-3</td><td>건너뛴 LST-04를 깨끗한 인메모리 DB에서 따로 실행</td><td><code>E2E_PORT=18081 npx playwright test -g "LST-04"</code></td><td><span class="badge b-ok">통과</span></td><td>results/after-e2e-clean-db.json (expected 1, skipped 0, unexpected 0)</td></tr>
+      <tr data-result="pass" data-ac="AC-4"><td>AC-4</td><td>JUnit 22개 통과, 테스트 수 감소 없음 (회귀)</td><td><code>.\gradlew.bat test --rerun-tasks</code></td><td><span class="badge b-ok">통과</span></td><td>results/after-junit/*.xml (Demo 1, OrderFlow 9, Planner 12, 실패·오류·건너뜀 0). 기준선은 results/before-junit/</td></tr>
+      <tr data-result="pass" data-ac="AC-5"><td>AC-5</td><td>파일 구성(컨트롤러 4+공통 모델 1, 서비스 3, 저장소 5)과 본문 로직 유지</td><td>옛 파일의 줄을 새 파일들과 비교(<code>git show HEAD:…</code> 대비 정렬 후 comm)</td><td><span class="badge b-ok">통과</span></td><td>results/body-diff.txt는 <b>양방향</b>이다. 옛 파일에만 있는 줄은 클래스 이름, 생성자, 필드·호출 대상(orders. → orderRepository. 등), 구분 주석뿐이고, 새 파일들에만 있는 줄은 그 대응 줄과 새 클래스 선언·@ControllerAdvice뿐이다. 로직이 새로 생긴 줄은 없다. 줄 단위 비교(순서·위치는 보지 않음)라 메서드가 다른 파일로 갔는지는 파일 구성 표와 함께 본다.</td></tr>
+      <tr data-result="pass" data-ac="AC-6"><td>AC-6</td><td>INTENT 원칙 1·3·4·5 유지(재계산, masterVersion 증가, 동시 수정 확인, 전부 맞아야 저장)</td><td>위 AC-5 비교 + OrderFlowTests(확정 재계산, 낙관적 락, 상태 전이) + E2E order-confirm·mst·api</td><td><span class="badge b-ok">통과</span></td><td>OrderService.confirm(재계산·버전 비교), OrderService.changeStatus(version 비교·예외 변환), MasterService.updateMaster(오류 있으면 throw 후 저장, bumpMasterVersion). 테스트는 AC-2·AC-4 결과 참조.</td></tr>
+      <tr data-result="pass" data-ac="AC-7"><td>AC-7</td><td>이 PR에 포함된 docs/INTENT.md에 옛 이름 0건 (CLAUDE.md는 PR 밖 로컬 파일이라 대상에서 제외, 로컬에서는 0건 확인)</td><td><code>grep -n "BatteryService\|AppController" docs/INTENT.md</code></td><td><span class="badge b-ok">통과</span></td><td>출력 없음(0건). 다른 문서의 옛 이름은 6장 참고.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 style="font-size:15px;margin:14px 0 6px">추가한 테스트(TC)와 통과 기준 대응</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>통과 기준</th><th>추가한 TC</th><th>사유</th></tr></thead>
+    <tbody>
+      <tr><td>AC-1~7</td><td>없음</td><td>동작을 바꾸지 않는 리팩토링이라 새 TC 대신 기존 JUnit 22개와 E2E 72개의 회귀로 검증했다. 구현 이전 코드에서 TC가 실패하는지 보는 절차는 해당 없음.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 style="font-size:15px;margin:14px 0 6px">린트 결과</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>도구</th><th>대상</th><th>에러</th><th>경고</th><th>기준선과 비교</th></tr></thead>
+    <tbody>
+      <tr><td>린트 미설정 → 컴파일로 대체 (javac via Gradle), 로그: results/after-compile.log</td><td>변경한 Java 코드와 OrderFlowTests</td><td>0</td><td>콘솔 출력에서 경고 줄을 보지 못함(경고 수를 따로 집계하지는 않음)</td><td>기준선도 컴파일 에러 0. 동일.</td></tr>
+      <tr><td>E2E(TypeScript)</td><td>변경 없음</td><td>미확인</td><td>미확인</td><td>타입 검사 도구가 없고 E2E 코드를 바꾸지 않아 해당 없음.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2><span class="no">4</span>반복(Feedback) 기록</h2>
+  <ol class="timeline">
+    <li><b>2회차 (PR 리뷰 반영)</b> — 통과<br>
+      계기: PR #18 리뷰 3건. 검증 실패가 아니라 리뷰 반영이다.<br>
+      변경: 필드명 통일(리뷰 1-2), body-diff 양방향 재작성, 기준선 E2E·컴파일 로그 추가, Gradle .bin 제거, AC-7·승인 기록·트랜잭션·@ControllerAdvice 서술 보완. MasterService 생성자 한 줄을 줄바꿈.<br>
+      재검증: 컴파일 BUILD SUCCESSFUL, JUnit 22/22, E2E 72 통과·1 건너뜀·0 실패, LST-04 단독 통과 (results/ 갱신).</li>
+    <li><b>1회차</b> — 통과<br>
+      실패 내용: 없음 (검증 항목 전부 처음 실행에서 통과)<br>
+      원인 / 조치: 해당 없음. 참고로 구현 중 셸 명령 구문 오류로 파일 생성 한 묶음이 실행되지 않은 적이 있으나(아무것도 변경되지 않음) 같은 내용을 다시 작성해 적용했고, 검증 단계의 실패는 아니다.</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="no">5</span>건너뛴 것과 확인하지 못한 것</h2>
+  <ul>
+    <li>전체 E2E에서 LST-04 1개 건너뜀 — 주문이 이미 쌓인 환경에서는 재현할 수 없는 조건부 테스트. AC-3에서 깨끗한 DB로 따로 실행해 통과를 확인했다. 3장 표에는 AC-2가 "통과"로 들어 있으므로, 전체 실행에서 건너뛴 사실은 여기에만 있다.</li>
+    <li>린트 미설정: 컴파일 에러 0만 확인했고 경고 수는 집계하지 않았다. E2E TypeScript 타입 검사는 미확인(변경 없음).</li>
+    <li>화면을 직접 눈으로 확인하는 수동 점검은 하지 않았다(L2 필수 범위 아님, E2E가 화면 문구·컬럼을 단언함).</li>
+    <li><b>/api/simulate 경로의 트랜잭션 변화</b>: simulate()를 단독으로 호출하는 경로는 전에는 같은 클래스 안 호출이라 읽기 전용 트랜잭션 없이 실행됐다. 지금은 MasterService 프록시를 거쳐 읽기 전용 트랜잭션으로 실행된다. 공장·항로·설정을 한 트랜잭션에서 읽게 되어 문제는 없어 보이나 코드 읽기 기반 추정이고, 별도로 실험하지는 않았다(JUnit·E2E는 통과).</li>
+    <li>동시 요청 시 트랜잭션 동작 차이는 별도 부하 테스트로 확인하지 않았다. 확정은 OrderService 한 트랜잭션 안에서 시뮬레이션을 호출하는 구조이며, 낙관적 락은 OrderFlowTests가 확인한다.</li>
+    <li>이 문서는 승인 칸을 비워 두었다. 사람 확인 전이다. 사전 검토 때 사람이 대화에서 답한 결정(질문 1~3)은 precheck.html 8장에 기록했다.</li>
+  </ul>
+</section>
+
+<section>
+  <h2><span class="no">6</span>남은 이슈와 후속 작업</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>이슈</th><th>심각도</th><th>제안</th></tr></thead>
+    <tbody>
+      <tr><td><b>사전 검토가 놓친 항목</b>: 옛 클래스 이름이 다른 문서에도 남아 있음(docs/understand/*의 설명 HTML 4개, docs/loops/오재석/README.md). 사전 검토의 검색은 CLAUDE.md·INTENT.md·PRD·e2e·src만 확인했다.</td><td><span class="badge b-warn">낮</span></td><td>이번 승인 범위(CLAUDE.md, INTENT.md) 밖이라 수정하지 않았다. 필요하면 별도 작업으로 갱신. 다음 사전 검토에는 "이름이 바뀌는 클래스는 docs 전체에서 검색"을 추가.</td></tr>
+      <tr><td>e2e/tests/hg.helpers.ts, sim.spec.ts의 주석이 BatteryService.initDefaults를 언급</td><td><span class="badge b-ok">낮</span></td><td>기존 테스트 파일이라 수정하지 않음. 주석만 어긋남.</td></tr>
+      <tr><td><b>PR 리뷰에서 제안됐지만 이번에 반영하지 않은 것</b>: 구조·동작을 바꾸는 개선(MasterService 폼 파싱 분리, ApiController 예외 처리 통합, 주문 건수 조회 쿼리 개선, 메모 정규화 분리 등), 새 서비스 단위 테스트 추가, 확정과 마스터 저장 사이의 락 부재</td><td><span class="badge b-warn">중</span></td><td>동작 유지 리팩토링 범위를 넘어 범위 고정 원칙에 따라 사람 결정 대기. 필요하면 별도 작업(Loop)으로 분류.</td></tr>
+      <tr><td>JpaConfig의 considerNestedRepositories=true가 불필요해짐</td><td><span class="badge b-ok">낮</span></td><td>동작에 영향 없어 그대로 둠. 정리는 별도 작업.</td></tr>
+      <tr><td>CLAUDE.md는 아직 커밋 전(untracked) 파일</td><td><span class="badge b-ok">낮</span></td><td>커밋 때 포함 여부를 사람이 정한다.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2><span class="no">7</span>증거 파일 목록</h2>
+  <ul>
+    <li>JUnit 기준선(변경 전): results/before-junit/ (XML만, Gradle 내부 .bin은 제외)</li>
+    <li>E2E 기준선(변경 전, main 0285f62): results/before-e2e.json</li>
+    <li>컴파일 로그: results/after-compile.log</li>
+    <li>JUnit 결과(변경 후): results/after-junit/</li>
+    <li>E2E 전체 결과: results/after-e2e.json</li>
+    <li>깨끗한 DB에서의 LST-04: results/after-e2e-clean-db.json</li>
+    <li>본문 유지 비교: results/body-diff.txt</li>
+    <li>사전 검토: precheck.html (사전 검토 때 E2E 기준선은 콘솔에서 옮겼고, 리뷰 반영 때 main에서 다시 실행해 before-e2e.json으로 남겼다. 숫자 동일)</li>
+  </ul>
+</section>
+
+<section>
+  <h2><span class="no">8</span>사람 확인 (HITL)</h2>
+  <ul class="check">
+    <li><input type="checkbox"><div>검증 결과가 통과 기준을 모두 충족한다</div></li>
+    <li><input type="checkbox"><div>실패·건너뜀·미확인 항목이 정직하게 기록되어 있다</div></li>
+    <li><input type="checkbox"><div>기존 기능이 깨지지 않았다(회귀 확인)</div></li>
+  </ul>
+  <table style="margin-top:10px">
+    <tr><th style="width:150px">결정</th><td>(사람이 채움: 완료 / 보완 필요)</td></tr>
+    <tr><th>확인한 사람</th><td>(사람이 채움)</td></tr>
+    <tr><th>의견</th><td>(사람이 채움)</td></tr>
+  </table>
+</section>
+
+</div>
+<script>
+// 3장 검증 결과 표의 data-result 값으로 요약 숫자를 센다. (값을 손으로 적지 않기 위해)
+(function () {
+  var rows = document.querySelectorAll('#results tbody tr');
+  function count(v) { return Array.prototype.filter.call(rows, function (r) { return r.dataset.result === v; }).length; }
+  function put(id, text) { var el = document.getElementById(id); if (el) el.textContent = text; }
+  if (!rows.length) return;
+  var pass = count('pass');
+  put('c-pass', pass);
+  put('c-fail', count('fail'));
+  put('c-skip', count('skip'));
+  put('c-ac', pass + ' / ' + rows.length);
+})();
+</script>
+</body>
+</html>
