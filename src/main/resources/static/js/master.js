@@ -18,6 +18,7 @@ function buildFields() {
 		<td><input type="number" min="1" name="maxDaily_${c}"></td>
 		<td><input type="number" min="1" name="stockLimit_${c}"></td>
 		<td><input type="number" min="1" name="unitCost_${c}"></td>
+		<td><input type="text" inputmode="decimal" name="operatingCost_${c}"></td>
 	</tr>`).join('');
 
 	const cols = COUNTRY_ORDER.slice(1);

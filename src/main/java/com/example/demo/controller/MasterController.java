@@ -45,6 +45,8 @@ public class MasterController {
 			form.put("maxDaily_" + f.country(), String.valueOf(f.maxDaily()));
 			form.put("stockLimit_" + f.country(), String.valueOf(f.stockLimit()));
 			form.put("unitCost_" + f.country(), String.valueOf(f.unitCost()));
+			form.put("operatingCost_" + f.country(), new BigDecimal(f.operatingCostWon())
+					.divide(BigDecimal.valueOf(MasterService.WON_PER_EOK)).stripTrailingZeros().toPlainString());
 		}
 		for (Master.RouteParam r : m.routes()) {
 			form.put(MasterService.routeKey(r.from(), r.to()), String.valueOf(r.days()));

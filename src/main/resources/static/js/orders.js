@@ -11,7 +11,7 @@ try {
 	renderRows(data.orders);
 } catch (e) {
 	document.getElementById('rows').innerHTML =
-		`<tr><td colspan="8" class="empty">${esc(e.message)}</td></tr>`;
+		`<tr><td colspan="9" class="empty">${esc(e.message)}</td></tr>`;
 }
 
 function renderFilters(data) {
@@ -36,6 +36,7 @@ function renderRows(orders) {
 		<td class="num">${fmt(o.totalK)}</td>
 		<td>${esc(o.routeLabel)}</td>
 		<td class="num">${o.totalDays}</td>
+		<td class="num">${o.operatingCostEok == null ? '-' : o.operatingCostEok}</td>
 		<td class="num">${o.totalCostEok}</td>
 		<td><span class="badge badge-${o.status.name}">${esc(o.status.label)}</span></td>
 		<td>${esc(o.createdBy)}</td>

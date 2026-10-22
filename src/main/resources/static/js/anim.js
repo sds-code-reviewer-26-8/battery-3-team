@@ -153,6 +153,13 @@ const BatteryAnim = (function () {
 					won += Math.max(0, Math.min(time, trip.returnDay) - trip.departDay) * stored.master.shipDailyCostWon;
 				}
 			}
+			// 운영비: 주문 있는 공장의 하루 운영비 x 경과 일수(총 소요 일수까지). 운영비 도입 전 계획은 값이 없어 0.
+			const elapsed = Math.max(0, Math.min(time, stored.plan.totalDays));
+			for (const f of stored.master.factories) {
+				if ((stored.orders[f.country] || 0) > 0) {
+					won += elapsed * (f.operatingCostWon || 0);
+				}
+			}
 			return won;
 		}
 

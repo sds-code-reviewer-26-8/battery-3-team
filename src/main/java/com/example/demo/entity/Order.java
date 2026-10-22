@@ -41,6 +41,9 @@ public class Order {
 
 	private long totalCost;
 
+	/** 운영비(원). 운영비 도입 전에 확정된 주문은 null (화면에는 "-") */
+	private Long operatingCost;
+
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private OrderStatus status;
@@ -60,7 +63,8 @@ public class Order {
 	}
 
 	public Order(LocalDateTime confirmedAt, String createdBy, int totalK, String routeType, String routeLabel,
-			int totalDays, long productionCost, long shippingCost, long totalCost, String memo, String planJson) {
+			int totalDays, long productionCost, long shippingCost, long totalCost, String memo, String planJson,
+			Long operatingCost) {
 		this.confirmedAt = confirmedAt;
 		this.createdBy = createdBy;
 		this.totalK = totalK;
@@ -70,6 +74,7 @@ public class Order {
 		this.productionCost = productionCost;
 		this.shippingCost = shippingCost;
 		this.totalCost = totalCost;
+		this.operatingCost = operatingCost;
 		this.memo = memo;
 		this.planJson = planJson;
 		this.status = OrderStatus.CONFIRMED;
@@ -115,6 +120,10 @@ public class Order {
 		return totalCost;
 	}
 
+	public Long getOperatingCost() {
+		return operatingCost;
+	}
+
 	public OrderStatus getStatus() {
 		return status;
 	}
@@ -146,6 +155,11 @@ public class Order {
 
 	public String getShippingCostEok() {
 		return eok(shippingCost);
+	}
+
+	/** 운영비 도입 전 주문은 null */
+	public String getOperatingCostEok() {
+		return operatingCost == null ? null : eok(operatingCost);
 	}
 
 	private static String eok(long won) {
