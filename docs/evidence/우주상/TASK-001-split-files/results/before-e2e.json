@@ -2,12 +2,12 @@
   "config": {
     "argv": [
       "C:\\Program Files\\nodejs\\node.exe",
-      "C:\\Users\\dyddn\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\node_modules\\@playwright\\test\\cli.js",
+      "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\node_modules\\@playwright\\test\\cli.js",
       "test",
       "--reporter=json"
     ],
-    "configFile": "C:\\Users\\dyddn\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\playwright.config.ts",
-    "rootDir": "C:/Users/dyddn/AppData/Local/Temp/claude/C--work-battery/ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7/scratchpad/wt-main/e2e/tests",
+    "configFile": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\playwright.config.ts",
+    "rootDir": "C:/Users/<user>/AppData/Local/Temp/claude/C--work-battery/ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7/scratchpad/wt-main/e2e/tests",
     "failOnFlakyTests": false,
     "forbidOnly": false,
     "fullyParallel": false,
@@ -23,7 +23,7 @@
     "preserveOutput": "always",
     "projects": [
       {
-        "outputDir": "C:/Users/dyddn/AppData/Local/Temp/claude/C--work-battery/ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7/scratchpad/wt-main/e2e/test-results",
+        "outputDir": "C:/Users/<user>/AppData/Local/Temp/claude/C--work-battery/ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7/scratchpad/wt-main/e2e/test-results",
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
@@ -31,7 +31,7 @@
         },
         "id": "chromium",
         "name": "chromium",
-        "testDir": "C:/Users/dyddn/AppData/Local/Temp/claude/C--work-battery/ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7/scratchpad/wt-main/e2e/tests",
+        "testDir": "C:/Users/<user>/AppData/Local/Temp/claude/C--work-battery/ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7/scratchpad/wt-main/e2e/tests",
         "testIgnore": [],
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
@@ -43,15 +43,15 @@
       {
         "grep": {},
         "grepInvert": null,
-        "outputDir": "C:\\Users\\dyddn\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\test-results",
+        "outputDir": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\test-results",
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
           "actualWorkers": 1
         },
         "name": "chromium",
-        "testDir": "C:\\Users\\dyddn\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests",
-        "snapshotDir": "C:\\Users\\dyddn\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests",
+        "testDir": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests",
+        "snapshotDir": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests",
         "testIgnore": [],
         "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
         "timeout": 30000,
@@ -808,7 +808,7 @@
                       "type": "skip",
                       "description": "주문이 이미 있어 빈 상태를 재현할 수 없음 (깨끗한 DB 에서만 실행)",
                       "location": {
-                        "file": "C:\\Users\\dyddn\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\lst.spec.ts",
+                        "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\lst.spec.ts",
                         "line": 65,
                         "column": 10
                       }
@@ -833,7 +833,7 @@
                           "type": "skip",
                           "description": "주문이 이미 있어 빈 상태를 재현할 수 없음 (깨끗한 DB 에서만 실행)",
                           "location": {
-                            "file": "C:\\Users\\dyddn\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\lst.spec.ts",
+                            "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\lst.spec.ts",
                             "line": 65,
                             "column": 10
                           }
@@ -1048,7 +1048,7 @@
                     {
                       "type": "serial",
                       "location": {
-                        "file": "C:\\Users\\dyddn\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\mst.spec.ts",
+                        "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\mst.spec.ts",
                         "line": 0,
                         "column": 0
                       }
@@ -1072,7 +1072,7 @@
                         {
                           "type": "serial",
                           "location": {
-                            "file": "C:\\Users\\dyddn\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\mst.spec.ts",
+                            "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\mst.spec.ts",
                             "line": 0,
                             "column": 0
                           }
@@ -1100,7 +1100,7 @@
                     {
                       "type": "serial",
                       "location": {
-                        "file": "C:\\Users\\dyddn\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\mst.spec.ts",
+                        "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\mst.spec.ts",
                         "line": 0,
                         "column": 0
                       }
@@ -1124,7 +1124,7 @@
                         {
                           "type": "serial",
                           "location": {
-                            "file": "C:\\Users\\dyddn\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\mst.spec.ts",
+                            "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\mst.spec.ts",
                             "line": 0,
                             "column": 0
                           }
@@ -1152,7 +1152,7 @@
                     {
                       "type": "serial",
                       "location": {
-                        "file": "C:\\Users\\dyddn\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\mst.spec.ts",
+                        "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\mst.spec.ts",
                         "line": 0,
                         "column": 0
                       }
@@ -1176,7 +1176,7 @@
                         {
                           "type": "serial",
                           "location": {
-                            "file": "C:\\Users\\dyddn\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\mst.spec.ts",
+                            "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\mst.spec.ts",
                             "line": 0,
                             "column": 0
                           }
@@ -1204,7 +1204,7 @@
                     {
                       "type": "serial",
                       "location": {
-                        "file": "C:\\Users\\dyddn\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\mst.spec.ts",
+                        "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\mst.spec.ts",
                         "line": 0,
                         "column": 0
                       }
@@ -1228,7 +1228,7 @@
                         {
                           "type": "serial",
                           "location": {
-                            "file": "C:\\Users\\dyddn\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\mst.spec.ts",
+                            "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\mst.spec.ts",
                             "line": 0,
                             "column": 0
                           }
@@ -1256,7 +1256,7 @@
                     {
                       "type": "serial",
                       "location": {
-                        "file": "C:\\Users\\dyddn\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\mst.spec.ts",
+                        "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\mst.spec.ts",
                         "line": 0,
                         "column": 0
                       }
@@ -1280,7 +1280,7 @@
                         {
                           "type": "serial",
                           "location": {
-                            "file": "C:\\Users\\dyddn\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\mst.spec.ts",
+                            "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\mst.spec.ts",
                             "line": 0,
                             "column": 0
                           }
@@ -1308,7 +1308,7 @@
                     {
                       "type": "serial",
                       "location": {
-                        "file": "C:\\Users\\dyddn\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\mst.spec.ts",
+                        "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\mst.spec.ts",
                         "line": 0,
                         "column": 0
                       }
@@ -1332,7 +1332,7 @@
                         {
                           "type": "serial",
                           "location": {
-                            "file": "C:\\Users\\dyddn\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\mst.spec.ts",
+                            "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\mst.spec.ts",
                             "line": 0,
                             "column": 0
                           }
@@ -1360,7 +1360,7 @@
                     {
                       "type": "serial",
                       "location": {
-                        "file": "C:\\Users\\dyddn\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\mst.spec.ts",
+                        "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\mst.spec.ts",
                         "line": 0,
                         "column": 0
                       }
@@ -1384,7 +1384,7 @@
                         {
                           "type": "serial",
                           "location": {
-                            "file": "C:\\Users\\dyddn\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\mst.spec.ts",
+                            "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\mst.spec.ts",
                             "line": 0,
                             "column": 0
                           }
@@ -1412,7 +1412,7 @@
                     {
                       "type": "serial",
                       "location": {
-                        "file": "C:\\Users\\dyddn\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\mst.spec.ts",
+                        "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\mst.spec.ts",
                         "line": 0,
                         "column": 0
                       }
@@ -1436,7 +1436,7 @@
                         {
                           "type": "serial",
                           "location": {
-                            "file": "C:\\Users\\dyddn\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\mst.spec.ts",
+                            "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\mst.spec.ts",
                             "line": 0,
                             "column": 0
                           }
@@ -1464,7 +1464,7 @@
                     {
                       "type": "serial",
                       "location": {
-                        "file": "C:\\Users\\dyddn\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\mst.spec.ts",
+                        "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\mst.spec.ts",
                         "line": 0,
                         "column": 0
                       }
@@ -1488,7 +1488,7 @@
                         {
                           "type": "serial",
                           "location": {
-                            "file": "C:\\Users\\dyddn\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\mst.spec.ts",
+                            "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\mst.spec.ts",
                             "line": 0,
                             "column": 0
                           }
@@ -1516,7 +1516,7 @@
                     {
                       "type": "serial",
                       "location": {
-                        "file": "C:\\Users\\dyddn\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\mst.spec.ts",
+                        "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\mst.spec.ts",
                         "line": 0,
                         "column": 0
                       }
@@ -1544,7 +1544,7 @@
                         {
                           "type": "serial",
                           "location": {
-                            "file": "C:\\Users\\dyddn\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\mst.spec.ts",
+                            "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\mst.spec.ts",
                             "line": 0,
                             "column": 0
                           }
@@ -2019,7 +2019,7 @@
                       "type": "fail",
                       "description": "알려진 결함: 취소 직후 /orders/{id} 가 HTTP 500 (PRD 결함 후보)",
                       "location": {
-                        "file": "C:\\Users\\dyddn\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\order-detail.spec.ts",
+                        "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\order-detail.spec.ts",
                         "line": 79,
                         "column": 10
                       }
@@ -2036,9 +2036,9 @@
                       "duration": 802,
                       "error": {
                         "message": "Error: 취소 직후 화면이 서버 오류(5xx)면 안 된다\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m500\u001b[39m\nReceived:   \u001b[31m500\u001b[39m",
-                        "stack": "Error: 취소 직후 화면이 서버 오류(5xx)면 안 된다\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m500\u001b[39m\nReceived:   \u001b[31m500\u001b[39m\n    at C:\\Users\\dyddn\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\order-detail.spec.ts:90:61",
+                        "stack": "Error: 취소 직후 화면이 서버 오류(5xx)면 안 된다\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m500\u001b[39m\nReceived:   \u001b[31m500\u001b[39m\n    at C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\order-detail.spec.ts:90:61",
                         "location": {
-                          "file": "C:\\Users\\dyddn\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\order-detail.spec.ts",
+                          "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\order-detail.spec.ts",
                           "column": 61,
                           "line": 90
                         },
@@ -2047,11 +2047,11 @@
                       "errors": [
                         {
                           "location": {
-                            "file": "C:\\Users\\dyddn\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\order-detail.spec.ts",
+                            "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\order-detail.spec.ts",
                             "column": 61,
                             "line": 90
                           },
-                          "message": "Error: 취소 직후 화면이 서버 오류(5xx)면 안 된다\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m500\u001b[39m\nReceived:   \u001b[31m500\u001b[39m\n\n  88 |     const response = await redirected;\n  89 |\n> 90 |     expect(response.status(), '취소 직후 화면이 서버 오류(5xx)면 안 된다').toBeLessThan(500);\n     |                                                             ^\n  91 |   });\n  92 |\n  93 |   test('DTL-06 취소된 주문은 목록에서 사라지고 취소 칩 건수는 0 이다', async ({ page }) => {\n    at C:\\Users\\dyddn\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\order-detail.spec.ts:90:61"
+                          "message": "Error: 취소 직후 화면이 서버 오류(5xx)면 안 된다\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m500\u001b[39m\nReceived:   \u001b[31m500\u001b[39m\n\n  88 |     const response = await redirected;\n  89 |\n> 90 |     expect(response.status(), '취소 직후 화면이 서버 오류(5xx)면 안 된다').toBeLessThan(500);\n     |                                                             ^\n  91 |   });\n  92 |\n  93 |   test('DTL-06 취소된 주문은 목록에서 사라지고 취소 칩 건수는 0 이다', async ({ page }) => {\n    at C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\order-detail.spec.ts:90:61"
                         }
                       ],
                       "stdout": [],
@@ -2063,7 +2063,7 @@
                           "type": "fail",
                           "description": "알려진 결함: 취소 직후 /orders/{id} 가 HTTP 500 (PRD 결함 후보)",
                           "location": {
-                            "file": "C:\\Users\\dyddn\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\order-detail.spec.ts",
+                            "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\order-detail.spec.ts",
                             "line": 79,
                             "column": 10
                           }
@@ -2073,11 +2073,11 @@
                         {
                           "name": "error-context",
                           "contentType": "text/markdown",
-                          "path": "C:\\Users\\dyddn\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\test-results\\order-detail-주문-상세·상태-DTL-05-확정-주문-취소-직후에도-오류-화면이-나오지-않는다-chromium\\error-context.md"
+                          "path": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\test-results\\order-detail-주문-상세·상태-DTL-05-확정-주문-취소-직후에도-오류-화면이-나오지-않는다-chromium\\error-context.md"
                         }
                       ],
                       "errorLocation": {
-                        "file": "C:\\Users\\dyddn\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\order-detail.spec.ts",
+                        "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\order-detail.spec.ts",
                         "column": 61,
                         "line": 90
                       }
@@ -2171,7 +2171,7 @@
                       "type": "fail",
                       "description": "알려진 결함: 존재하지 않는 주문 조회가 HTTP 500",
                       "location": {
-                        "file": "C:\\Users\\dyddn\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\order-detail.spec.ts",
+                        "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\order-detail.spec.ts",
                         "line": 131,
                         "column": 10
                       }
@@ -2188,9 +2188,9 @@
                       "duration": 589,
                       "error": {
                         "message": "Error: 존재하지 않는 주문이 서버 오류(5xx)면 안 된다\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m500\u001b[39m\nReceived:   \u001b[31m500\u001b[39m",
-                        "stack": "Error: 존재하지 않는 주문이 서버 오류(5xx)면 안 된다\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m500\u001b[39m\nReceived:   \u001b[31m500\u001b[39m\n    at C:\\Users\\dyddn\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\order-detail.spec.ts:133:64",
+                        "stack": "Error: 존재하지 않는 주문이 서버 오류(5xx)면 안 된다\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m500\u001b[39m\nReceived:   \u001b[31m500\u001b[39m\n    at C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\order-detail.spec.ts:133:64",
                         "location": {
-                          "file": "C:\\Users\\dyddn\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\order-detail.spec.ts",
+                          "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\order-detail.spec.ts",
                           "column": 64,
                           "line": 133
                         },
@@ -2199,11 +2199,11 @@
                       "errors": [
                         {
                           "location": {
-                            "file": "C:\\Users\\dyddn\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\order-detail.spec.ts",
+                            "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\order-detail.spec.ts",
                             "column": 64,
                             "line": 133
                           },
-                          "message": "Error: 존재하지 않는 주문이 서버 오류(5xx)면 안 된다\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m500\u001b[39m\nReceived:   \u001b[31m500\u001b[39m\n\n  131 |     test.fail(true, '알려진 결함: 존재하지 않는 주문 조회가 HTTP 500');\n  132 |     const response = await page.goto('/orders/999999');\n> 133 |     expect(response!.status(), '존재하지 않는 주문이 서버 오류(5xx)면 안 된다').toBeLessThan(500);\n      |                                                                ^\n  134 |   });\n  135 |\n  136 |   test('DTL-09 상태 이력 표(확정 → 진행 → 완료)', async ({ page }) => {\n    at C:\\Users\\dyddn\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\order-detail.spec.ts:133:64"
+                          "message": "Error: 존재하지 않는 주문이 서버 오류(5xx)면 안 된다\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m500\u001b[39m\nReceived:   \u001b[31m500\u001b[39m\n\n  131 |     test.fail(true, '알려진 결함: 존재하지 않는 주문 조회가 HTTP 500');\n  132 |     const response = await page.goto('/orders/999999');\n> 133 |     expect(response!.status(), '존재하지 않는 주문이 서버 오류(5xx)면 안 된다').toBeLessThan(500);\n      |                                                                ^\n  134 |   });\n  135 |\n  136 |   test('DTL-09 상태 이력 표(확정 → 진행 → 완료)', async ({ page }) => {\n    at C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\order-detail.spec.ts:133:64"
                         }
                       ],
                       "stdout": [],
@@ -2215,7 +2215,7 @@
                           "type": "fail",
                           "description": "알려진 결함: 존재하지 않는 주문 조회가 HTTP 500",
                           "location": {
-                            "file": "C:\\Users\\dyddn\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\order-detail.spec.ts",
+                            "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\order-detail.spec.ts",
                             "line": 131,
                             "column": 10
                           }
@@ -2225,11 +2225,11 @@
                         {
                           "name": "error-context",
                           "contentType": "text/markdown",
-                          "path": "C:\\Users\\dyddn\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\test-results\\order-detail-주문-상세·상태-DTL--e9fe1-문을-열면-안내가-나온다-404-또는-안내-문구--chromium\\error-context.md"
+                          "path": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\test-results\\order-detail-주문-상세·상태-DTL--e9fe1-문을-열면-안내가-나온다-404-또는-안내-문구--chromium\\error-context.md"
                         }
                       ],
                       "errorLocation": {
-                        "file": "C:\\Users\\dyddn\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\order-detail.spec.ts",
+                        "file": "C:\\Users\\<user>\\AppData\\Local\\Temp\\claude\\C--work-battery\\ec36ac36-dfcf-4f8e-b138-1a86fafdd6b7\\scratchpad\\wt-main\\e2e\\tests\\order-detail.spec.ts",
                         "column": 64,
                         "line": 133
                       }
