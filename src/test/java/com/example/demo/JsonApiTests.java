@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.nullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -23,6 +24,7 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultActions;
 
 /** 화면이 쓰는 JSON API(리팩토링 2)와 화면 주소(정적 HTML)를 확인한다. */
 @SpringBootTest
@@ -362,5 +364,178 @@ class JsonApiTests {
 	@Test
 	void nonNumericOrderPageIsNotFoundNotServerError() throws Exception {
 		mvc.perform(get("/orders/abc").session(login())).andExpect(status().isNotFound());
+	}
+
+	// ---- 고객사 이름 (TASK-006)
+
+	/** 고객사 이름을 지정해 확정 요청을 보내고 응답(MvcResult)을 돌려준다. omit 이 true 면 필드를 생략한다. */
+	private MvcResult confirmWithCustomer(MockHttpSession s, String name, boolean omit) throws Exception {
+		MvcResult sim = mvc.perform(post("/api/simulate").session(s).contentType(MediaType.APPLICATION_JSON)
+				.content("{\"orders\":" + ORDERS + "}")).andReturn();
+		int version = JsonPath.read(sim.getResponse().getContentAsString(), "$.master.version");
+		String customer = omit ? "" : ",\"customerName\":" + (name == null ? "null" : "\"" + name + "\"");
+		return mvc.perform(post("/api/orders").session(s).contentType(MediaType.APPLICATION_JSON)
+				.content("{\"orders\":" + ORDERS + ",\"routeType\":\"COST\",\"masterVersion\":" + version + customer + "}"))
+				.andReturn();
+	}
+
+	private int confirmedId(MvcResult r) throws Exception {
+		assertThat(r.getResponse().getStatus()).isEqualTo(200);
+		return JsonPath.read(r.getResponse().getContentAsString(), "$.id");
+	}
+
+	private int confirmWith(MockHttpSession s, String name) throws Exception {
+		return confirmedId(confirmWithCustomer(s, name, false));
+	}
+
+	private static String customerBody(String name, long version) {
+		return "{\"customerName\":" + (name == null ? "null" : "\"" + name + "\"") + ",\"version\":" + version + "}";
+	}
+
+	private ResultActions updateCustomer(MockHttpSession s, int id, String name, long version) throws Exception {
+		return mvc.perform(put("/api/orders/" + id + "/customer").session(s).contentType(MediaType.APPLICATION_JSON)
+				.content(customerBody(name, version)));
+	}
+
+	private int orderCount(MockHttpSession s) throws Exception {
+		return JsonPath.read(mvc.perform(get("/api/orders").session(s)).andReturn().getResponse()
+				.getContentAsString(), "$.total");
+	}
+
+	private String customerOfListItem(MockHttpSession s, int id) throws Exception {
+		List<String> names = JsonPath.read(mvc.perform(get("/api/orders").session(s)).andReturn().getResponse()
+				.getContentAsString(), "$.orders[?(@.id==" + id + ")].customerName");
+		return names.get(0);
+	}
+
+	@Test
+	void customerNameTrimmedOnConfirm() throws Exception {
+		MockHttpSession s = login();
+		int id = confirmWith(s, "  ABC전자  ");
+
+		mvc.perform(get("/api/orders/" + id).session(s)).andExpect(status().isOk())
+				.andExpect(jsonPath("$.customerName").value("ABC전자"));
+		assertThat(customerOfListItem(s, id)).isEqualTo("ABC전자");
+	}
+
+	@Test
+	void customerNameOptionalOnConfirm() throws Exception {
+		MockHttpSession s = login();
+		int omitted = confirmedId(confirmWithCustomer(s, null, true));
+		int nulled = confirmWith(s, null);
+		int blank = confirmWith(s, "   ");
+
+		for (int id : new int[] {omitted, nulled, blank}) {
+			mvc.perform(get("/api/orders/" + id).session(s)).andExpect(status().isOk())
+					.andExpect(jsonPath("$.customerName").value(nullValue()));
+			assertThat(customerOfListItem(s, id)).isNull();
+		}
+	}
+
+	@Test
+	void customerNameLengthBoundaryOnConfirm() throws Exception {
+		MockHttpSession s = login();
+		int id = confirmWith(s, "가".repeat(100));
+		mvc.perform(get("/api/orders/" + id).session(s)).andExpect(jsonPath("$.customerName").value("가".repeat(100)));
+
+		int before = orderCount(s);
+		MvcResult tooLong = confirmWithCustomer(s, "가".repeat(101), false);
+		assertThat(tooLong.getResponse().getStatus()).isEqualTo(400);
+		assertThat((String) JsonPath.read(tooLong.getResponse().getContentAsString(), "$.error"))
+				.contains("고객사 이름은 100자 이하");
+		assertThat(orderCount(s)).isEqualTo(before);
+	}
+
+	@Test
+	void updateCustomerInConfirmedAndInProgress() throws Exception {
+		MockHttpSession s = login();
+		int id = confirmWith(s, "처음");
+
+		long v0 = versionOf(s, id);
+		updateCustomer(s, id, "  변경1  ", v0).andExpect(status().isOk())
+				.andExpect(jsonPath("$.customerName").value("변경1"))
+				.andExpect(jsonPath("$.version").value(v0 + 1));
+
+		moveTo(s, id, "IN_PROGRESS");
+		long v1 = versionOf(s, id);
+		updateCustomer(s, id, "변경2", v1).andExpect(status().isOk())
+				.andExpect(jsonPath("$.customerName").value("변경2"))
+				.andExpect(jsonPath("$.version").value(v1 + 1));
+
+		// 공백만 보내면 값 없음(null)
+		updateCustomer(s, id, "   ", v1 + 1).andExpect(status().isOk())
+				.andExpect(jsonPath("$.customerName").value(nullValue()));
+
+		// 101자는 400, 값과 version 은 그대로
+		updateCustomer(s, id, "나".repeat(101), v1 + 2).andExpect(status().isBadRequest());
+		mvc.perform(get("/api/orders/" + id).session(s)).andExpect(jsonPath("$.customerName").value(nullValue()))
+				.andExpect(jsonPath("$.version").value(v1 + 2));
+
+		// version 누락도 400
+		mvc.perform(put("/api/orders/" + id + "/customer").session(s).contentType(MediaType.APPLICATION_JSON)
+				.content("{\"customerName\":\"x\"}")).andExpect(status().isBadRequest());
+	}
+
+	@Test
+	void updateCustomerRejectedWhenCompleted() throws Exception {
+		MockHttpSession s = login();
+		int id = confirmWith(s, "완료전");
+		moveTo(s, id, "IN_PROGRESS");
+		moveTo(s, id, "COMPLETED");
+		long version = versionOf(s, id);
+
+		updateCustomer(s, id, "바꾸기", version).andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.error").value("완료된 주문은 고객사 이름을 수정할 수 없습니다"))
+				.andExpect(jsonPath("$.conflict").value(false));
+		mvc.perform(get("/api/orders/" + id).session(s)).andExpect(jsonPath("$.customerName").value("완료전"))
+				.andExpect(jsonPath("$.version").value(version));
+	}
+
+	@Test
+	void updateCustomerOnCanceledOrMissingIs404() throws Exception {
+		MockHttpSession s = login();
+		int id = confirmWith(s, "취소될 주문");
+		mvc.perform(post("/api/orders/" + id + "/status").session(s).contentType(MediaType.APPLICATION_JSON)
+				.content(statusBody("CANCELED", versionOf(s, id)))).andExpect(status().isOk());
+
+		updateCustomer(s, id, "x", 0).andExpect(status().isNotFound());
+		updateCustomer(s, 99999999, "x", 0).andExpect(status().isNotFound());
+	}
+
+	@Test
+	void updateCustomerStaleVersionConflict() throws Exception {
+		MockHttpSession s = login();
+		int id = confirmWith(s, "원래");
+		long stale = versionOf(s, id);
+		updateCustomer(s, id, "먼저 수정", stale).andExpect(status().isOk());
+
+		updateCustomer(s, id, "늦은 수정", stale).andExpect(status().isConflict())
+				.andExpect(jsonPath("$.conflict").value(true));
+		mvc.perform(get("/api/orders/" + id).session(s)).andExpect(jsonPath("$.customerName").value("먼저 수정"));
+
+		updateCustomer(s, id, "늦은 수정", versionOf(s, id)).andExpect(status().isOk())
+				.andExpect(jsonPath("$.customerName").value("늦은 수정"));
+	}
+
+	@Test
+	void updateCustomerLeavesNoHistory() throws Exception {
+		MockHttpSession s = login();
+		int id = confirmWith(s, "이력 확인");
+		int before = JsonPath.read(mvc.perform(get("/api/orders/" + id).session(s)).andReturn().getResponse()
+				.getContentAsString(), "$.history.length()");
+
+		updateCustomer(s, id, "이력 없음", versionOf(s, id)).andExpect(status().isOk())
+				.andExpect(jsonPath("$.history.length()").value(before));
+		assertThat(histories.findByOrderIdOrderByIdAsc((long) id)).hasSize(before);
+	}
+
+	@Test
+	void orderWithoutCustomerHasNullCustomerInListAndDetail() throws Exception {
+		MockHttpSession s = login();
+		int id = confirm(s); // 고객사를 보내지 않는 기존 방식의 확정(기존 주문과 같은 상태)
+
+		mvc.perform(get("/api/orders/" + id).session(s)).andExpect(status().isOk())
+				.andExpect(jsonPath("$.customerName").value(nullValue()));
+		assertThat(customerOfListItem(s, id)).isNull();
 	}
 }

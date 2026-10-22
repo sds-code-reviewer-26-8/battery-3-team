@@ -29,7 +29,7 @@ export async function runSimulation(page: Page) {
 /** 사전조건용: API 로 주문을 만들고 주문 번호를 돌려준다. 로그인된 page 가 필요하다. */
 export async function createOrderViaApi(
   page: Page,
-  opts: { routeType?: 'COST' | 'FAST' | 'NEAR'; memo?: string } = {},
+  opts: { routeType?: 'COST' | 'FAST' | 'NEAR'; memo?: string; customerName?: string } = {},
 ): Promise<number> {
   const master = await (await page.request.get('/api/master')).json();
   const res = await page.request.post('/api/orders', {
@@ -38,10 +38,20 @@ export async function createOrderViaApi(
       routeType: opts.routeType ?? 'COST',
       masterVersion: master.version,
       memo: opts.memo ?? '',
+      ...(opts.customerName === undefined ? {} : { customerName: opts.customerName }),
     },
   });
   expect(res.ok(), '주문 생성 API 가 성공해야 한다').toBeTruthy();
   return (await res.json()).id;
+}
+
+/** 사전조건용: API 로 주문 상태를 차례로 올린다(예: ['IN_PROGRESS', 'COMPLETED']). 로그인된 page 가 필요하다. */
+export async function advanceViaApi(page: Page, id: number, targets: string[]) {
+  for (const status of targets) {
+    const detail = await (await page.request.get(`/api/orders/${id}`)).json();
+    const res = await page.request.post(`/api/orders/${id}/status`, { data: { status, version: detail.version } });
+    expect(res.ok(), `상태 ${status} 로 변경 API 가 성공해야 한다`).toBeTruthy();
+  }
 }
 
 /** 주문 상세에서 상태 변경 버튼을 누르고 확인 대화상자를 수락한다. 대화상자 문구를 돌려준다. */
