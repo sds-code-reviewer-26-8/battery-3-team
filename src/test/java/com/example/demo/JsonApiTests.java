@@ -60,10 +60,9 @@ class JsonApiTests {
 				.andExpect(content().string(org.hamcrest.Matchers.containsString("id=\"loginForm\"")));
 
 		MockHttpSession s = login();
-		int id = confirm(s);
 		mvc.perform(get("/orders").session(s)).andExpect(forwardedUrl("/orders.html"));
 		mvc.perform(get("/orders/new").session(s)).andExpect(forwardedUrl("/order-new.html"));
-		mvc.perform(get("/orders/" + id).session(s)).andExpect(forwardedUrl("/order-detail.html"));
+		mvc.perform(get("/orders/7").session(s)).andExpect(forwardedUrl("/order-detail.html"));
 		mvc.perform(get("/master").session(s)).andExpect(forwardedUrl("/master.html"));
 
 		// 로그인하지 않으면 화면은 로그인으로, API 는 401
@@ -162,6 +161,31 @@ class JsonApiTests {
 		mvc.perform(post("/api/orders/999999/status").session(s).contentType(MediaType.APPLICATION_JSON)
 						.content(statusBody("IN_PROGRESS", 0)))
 				.andExpect(status().isNotFound());
+	}
+
+	@Test
+	void missingOrderPageStillOpens() throws Exception {
+		// 화면 주소는 주문 존재를 확인하지 않고 화면(HTML)을 내준다. 안내는 화면이 JSON API(404)로 보여 준다.
+		mvc.perform(get("/orders/999999").session(login())).andExpect(status().isOk())
+				.andExpect(forwardedUrl("/order-detail.html"));
+	}
+
+	@Test
+	void cancelWithStaleVersionIsConflict() throws Exception {
+		MockHttpSession s = login();
+		int id = confirm(s);
+		long version = ((Number) JsonPath.read(mvc.perform(get("/api/orders/" + id).session(s)).andReturn()
+				.getResponse().getContentAsString(), "$.version")).longValue();
+		mvc.perform(post("/api/orders/" + id + "/status").session(s).contentType(MediaType.APPLICATION_JSON)
+				.content(statusBody("IN_PROGRESS", version))).andExpect(status().isOk());
+
+		// 옛 version 으로 취소하려 하면 409, 주문은 그대로 남는다
+		mvc.perform(post("/api/orders/" + id + "/status").session(s).contentType(MediaType.APPLICATION_JSON)
+						.content(statusBody("CANCELED", version)))
+				.andExpect(status().isConflict())
+				.andExpect(jsonPath("$.conflict").value(true));
+		mvc.perform(get("/api/orders/" + id).session(s)).andExpect(status().isOk())
+				.andExpect(jsonPath("$.status.name").value("IN_PROGRESS"));
 	}
 
 	@Test
