@@ -94,7 +94,7 @@ export async function newApi(baseURL: string): Promise<APIRequestContext> {
 
 /** 마스터 값을 기본값으로 되돌린다. 변경 번호(masterVersion)는 되돌릴 수 없고 계속 올라간다. */
 export async function restoreMaster(api: APIRequestContext): Promise<void> {
-  const res = await api.post('/master', { form: defaultMasterForm() });
+  const res = await api.put('/api/master', { data: defaultMasterForm() });
   expect(res.ok(), '마스터 원복 실패').toBeTruthy();
 }
 
@@ -116,8 +116,9 @@ export async function createOrder(api: APIRequestContext, memo = 'E2E'): Promise
   return (await res.json()).id as number;
 }
 
-/** 주문 목록 화면의 행 수 (전체 주문 건수) */
+/** 전체 주문 건수 (주문 목록 API) */
 export async function countOrders(api: APIRequestContext): Promise<number> {
-  const html = await (await api.get('/orders')).text();
-  return html.match(/class="clickable"/g)?.length ?? 0;
+  const res = await api.get('/api/orders');
+  expect(res.ok()).toBeTruthy();
+  return (await res.json()).orders.length as number;
 }
