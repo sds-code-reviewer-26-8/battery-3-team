@@ -56,10 +56,12 @@ public class OrderController {
 			HttpSession session) {
 		orderService.changeStatus(id, request.status(), request.version(),
 				(String) session.getAttribute(LoginInterceptor.SESSION_USER));
-		if (request.status() == OrderStatus.CANCELED) {
+		boolean flag = request.status() == OrderStatus.CANCELED;
+		if (flag) {
 			return new StatusChange.Result(true, null);
+		} else {
+			return new StatusChange.Result(false, detailOf(id));
 		}
-		return new StatusChange.Result(false, detailOf(id));
 	}
 
 	private OrderDetail detailOf(Long id) {
