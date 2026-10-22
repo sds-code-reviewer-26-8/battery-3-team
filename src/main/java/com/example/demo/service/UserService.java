@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,8 @@ public class UserService {
 	private static final Pattern USERNAME_PATTERN = Pattern.compile("[a-z0-9_]{4,20}");
 	private static final int MIN_PASSWORD_LENGTH = 8;
 	private static final int MAX_PASSWORD_LENGTH = 64;
+	/** BCrypt 가 처리할 수 있는 비밀번호의 최대 길이(UTF-8 바이트). 한글은 한 글자가 3바이트다. */
+	private static final int MAX_PASSWORD_BYTES = 72;
 
 	private final UserRepository users;
 	private final PasswordEncoder passwordEncoder;
@@ -83,6 +86,9 @@ public class UserService {
 		}
 		if (password == null || password.length() < MIN_PASSWORD_LENGTH || password.length() > MAX_PASSWORD_LENGTH) {
 			errors.add("비밀번호는 %d자 이상 %d자 이하여야 합니다".formatted(MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH));
+		} else if (password.getBytes(StandardCharsets.UTF_8).length > MAX_PASSWORD_BYTES) {
+			errors.add("비밀번호가 너무 깁니다. UTF-8 기준 %d바이트까지 가능합니다(영문·숫자 %d자, 한글 %d자)"
+					.formatted(MAX_PASSWORD_BYTES, MAX_PASSWORD_LENGTH, MAX_PASSWORD_BYTES / 3));
 		}
 		if (password != null && !password.equals(passwordConfirm)) {
 			errors.add("비밀번호와 비밀번호 확인이 같지 않습니다");
