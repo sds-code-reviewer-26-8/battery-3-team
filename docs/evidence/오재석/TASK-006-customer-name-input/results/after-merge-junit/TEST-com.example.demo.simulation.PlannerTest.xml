@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.example.demo.simulation.PlannerTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2026-10-22T06:55:16.086Z" hostname="DESKTOP-QKSLO89" time="0.046">
+<testsuite name="com.example.demo.simulation.PlannerTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2026-10-22T07:01:35.323Z" hostname="DESKTOP-QKSLO89" time="0.035">
   <properties/>
-  <testcase name="usesAtMostAvailableShips()" classname="com.example.demo.simulation.PlannerTest" time="0.005"/>
+  <testcase name="usesAtMostAvailableShips()" classname="com.example.demo.simulation.PlannerTest" time="0.002"/>
   <testcase name="costOptionIsNotMoreExpensiveAndFastOptionIsNotSlower()" classname="com.example.demo.simulation.PlannerTest" time="0.004"/>
-  <testcase name="defaultOrderSummary()" classname="com.example.demo.simulation.PlannerTest" time="0.01"/>
+  <testcase name="defaultOrderSummary()" classname="com.example.demo.simulation.PlannerTest" time="0.007"/>
   <testcase name="productionCostIsCellsTimesUnitCost()" classname="com.example.demo.simulation.PlannerTest" time="0.001"/>
-  <testcase name="everyOptionCollectsExactlyWhatWasOrdered()" classname="com.example.demo.simulation.PlannerTest" time="0.011"/>
-  <testcase name="productionStopsAtStockLimitUntilPickup()" classname="com.example.demo.simulation.PlannerTest" time="0.0"/>
+  <testcase name="everyOptionCollectsExactlyWhatWasOrdered()" classname="com.example.demo.simulation.PlannerTest" time="0.009"/>
+  <testcase name="productionStopsAtStockLimitUntilPickup()" classname="com.example.demo.simulation.PlannerTest" time="0.001"/>
   <testcase name="singleSmallOrderTakesProductionPlusRoundTrip()" classname="com.example.demo.simulation.PlannerTest" time="0.001"/>
-  <testcase name="eachCountryIsVisitedByOneShipOnly()" classname="com.example.demo.simulation.PlannerTest" time="0.004"/>
+  <testcase name="eachCountryIsVisitedByOneShipOnly()" classname="com.example.demo.simulation.PlannerTest" time="0.005"/>
   <testcase name="rejectsEmptyOrder()" classname="com.example.demo.simulation.PlannerTest" time="0.001"/>
   <testcase name="shipDepartsLateSoItDoesNotWaitAtPort()" classname="com.example.demo.simulation.PlannerTest" time="0.0"/>
-  <testcase name="visitsAreCeilOfOrderOverStockLimit()" classname="com.example.demo.simulation.PlannerTest" time="0.0"/>
-  <testcase name="overStockLimitOrderIsCollectedInSeveralRoundTrips()" classname="com.example.demo.simulation.PlannerTest" time="0.004"/>
+  <testcase name="visitsAreCeilOfOrderOverStockLimit()" classname="com.example.demo.simulation.PlannerTest" time="0.001"/>
+  <testcase name="overStockLimitOrderIsCollectedInSeveralRoundTrips()" classname="com.example.demo.simulation.PlannerTest" time="0.002"/>
   <system-out><![CDATA[운항비 최소: 26일, 생산 78.00억, 운항 20.00억, 합계 98.00억, 배 1척
   1호 출항 1 → [일본(3일,2000)] → 귀환 5
   1호 출항 10 → [중국(11일,3000), 베트남(15일,3000), 인도네시아(17일,3000), 일본(24일,1000)] → 귀환 26

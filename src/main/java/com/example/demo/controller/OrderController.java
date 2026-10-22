@@ -26,8 +26,9 @@ import tools.jackson.databind.ObjectMapper;
 @RequestMapping("/api/orders")
 public class OrderController {
 
+	/** requiredDays 는 일부러 JsonNode 로 받는다. Integer 로 받으면 5.5 나 "10" 을 조용히 5, 10 으로 바꿔 받아들인다. */
 	public record ConfirmRequest(Map<Country, Integer> orders, String routeType, long masterVersion, String memo,
-			String customerName) {
+			JsonNode requiredDays, String customerName) {
 	}
 
 	private final OrderService orderService;
@@ -51,8 +52,20 @@ public class OrderController {
 	@PostMapping
 	public Map<String, Long> confirm(@RequestBody ConfirmRequest request, HttpSession session) {
 		Order order = orderService.confirm(request.orders(), request.routeType(), request.masterVersion(),
-				request.memo(), request.customerName(), (String) session.getAttribute(LoginInterceptor.SESSION_USER));
+				request.memo(), requiredDaysOf(request.requiredDays()), request.customerName(),
+				(String) session.getAttribute(LoginInterceptor.SESSION_USER));
 		return Map.of("id", order.getId());
+	}
+
+	/** 없거나 null 이면 '가능한 빨리'(null). 있으면 정수여야 한다(소수·문자열은 거부). 범위(5~50)는 서비스가 확인한다. */
+	private static Integer requiredDaysOf(JsonNode node) {
+		if (node == null || node.isNull()) {
+			return null;
+		}
+		if (!node.isIntegralNumber() || !node.canConvertToInt()) {
+			throw new BusinessException("필요 납기일은 정수로 입력하세요");
+		}
+		return node.intValue();
 	}
 
 	@PostMapping("/{id}/status")

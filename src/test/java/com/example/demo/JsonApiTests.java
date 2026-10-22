@@ -25,6 +25,8 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 
 /** 화면이 쓰는 JSON API(리팩토링 2)와 화면 주소(정적 HTML)를 확인한다. */
 @SpringBootTest
@@ -38,6 +40,8 @@ class JsonApiTests {
 	MockMvc mvc;
 	@Autowired
 	OrderStatusHistoryRepository histories;
+	@Autowired
+	ObjectMapper json;
 
 	private MockHttpSession login() throws Exception {
 		MockHttpSession session = new MockHttpSession();
@@ -366,6 +370,109 @@ class JsonApiTests {
 		mvc.perform(get("/orders/abc").session(login())).andExpect(status().isNotFound());
 	}
 
+	/** requiredDaysJson(예: ",\"requiredDays\":10")을 덧붙여 주문 확정을 요청한다. */
+	private ResultActions confirmWith(MockHttpSession s, String requiredDaysJson) throws Exception {
+		MvcResult sim = mvc.perform(post("/api/simulate").session(s).contentType(MediaType.APPLICATION_JSON)
+				.content("{\"orders\":" + ORDERS + "}")).andReturn();
+		int version = JsonPath.read(sim.getResponse().getContentAsString(), "$.master.version");
+		return mvc.perform(post("/api/orders").session(s).contentType(MediaType.APPLICATION_JSON)
+				.content("{\"orders\":" + ORDERS + ",\"routeType\":\"COST\",\"masterVersion\":" + version
+						+ requiredDaysJson + "}"));
+	}
+
+	private JsonNode detail(MockHttpSession s, int id) throws Exception {
+		String body = mvc.perform(get("/api/orders/" + id).session(s)).andExpect(status().isOk()).andReturn()
+				.getResponse().getContentAsString();
+		return json.readTree(body);
+	}
+
+	@Test
+	void orderWithoutRequiredDaysMeansAsSoonAsPossible() throws Exception {
+		MockHttpSession s = login();
+		int id = confirm(s); // requiredDays 를 보내지 않는다
+
+		mvc.perform(get("/api/orders/" + id).session(s)).andExpect(status().isOk())
+				.andExpect(jsonPath("$.requiredDays").isEmpty())
+				.andExpect(jsonPath("$.late").value(false));
+	}
+
+	@Test
+	void requiredDaysIsStoredAndLateIsTrueOnlyWhenRouteTakesLonger() throws Exception {
+		MockHttpSession s = login();
+
+		int tight = JsonPath.read(confirmWith(s, ",\"requiredDays\":5").andExpect(status().isOk()).andReturn()
+				.getResponse().getContentAsString(), "$.id");
+		JsonNode d = detail(s, tight);
+		assertThat(d.get("requiredDays").asInt()).isEqualTo(5);
+		assertThat(d.get("late").asBoolean()).isEqualTo(d.get("totalDays").asInt() > 5);
+
+		int loose = JsonPath.read(confirmWith(s, ",\"requiredDays\":50").andExpect(status().isOk()).andReturn()
+				.getResponse().getContentAsString(), "$.id");
+		d = detail(s, loose);
+		assertThat(d.get("requiredDays").asInt()).isEqualTo(50);
+		assertThat(d.get("late").asBoolean()).isEqualTo(d.get("totalDays").asInt() > 50);
+	}
+
+	@Test
+	void lateRouteCanStillBeConfirmed() throws Exception {
+		MockHttpSession s = login();
+		int id = JsonPath.read(confirmWith(s, ",\"requiredDays\":5").andExpect(status().isOk()).andReturn()
+				.getResponse().getContentAsString(), "$.id");
+
+		// 이 입력(12,000K)의 소요 일수는 5일보다 길어 납기를 넘지만, 확정은 막지 않고 표시만 한다
+		mvc.perform(get("/api/orders/" + id).session(s)).andExpect(jsonPath("$.late").value(true));
+	}
+
+	@Test
+	void lateIsDecidedAtExactlyTheRouteTotalDays() throws Exception {
+		MockHttpSession s = login();
+		// 서버가 확정 때 다시 계산하는 비용 최소 안의 소요 일수를 시뮬레이션 응답에서 읽는다
+		MvcResult sim = mvc.perform(post("/api/simulate").session(s).contentType(MediaType.APPLICATION_JSON)
+				.content("{\"orders\":" + ORDERS + "}")).andReturn();
+		List<Integer> costDays = JsonPath.read(sim.getResponse().getContentAsString(),
+				"$.options[?(@.type=='COST')].totalDays");
+		int totalDays = costDays.get(0);
+		assertThat(totalDays - 1).as("경계 아래(totalDays-1)도 5 이상이어야 이 테스트가 성립한다").isGreaterThanOrEqualTo(5);
+
+		int exact = JsonPath.read(confirmWith(s, ",\"requiredDays\":" + totalDays).andExpect(status().isOk()).andReturn()
+				.getResponse().getContentAsString(), "$.id");
+		mvc.perform(get("/api/orders/" + exact).session(s)).andExpect(jsonPath("$.requiredDays").value(totalDays))
+				.andExpect(jsonPath("$.late").value(false)); // 납기일과 소요 일수가 같으면 늦지 않다
+
+		int oneShort = JsonPath.read(confirmWith(s, ",\"requiredDays\":" + (totalDays - 1)).andExpect(status().isOk())
+				.andReturn().getResponse().getContentAsString(), "$.id");
+		mvc.perform(get("/api/orders/" + oneShort).session(s)).andExpect(jsonPath("$.requiredDays").value(totalDays - 1))
+				.andExpect(jsonPath("$.late").value(true)); // 하루라도 모자라면 늦다
+	}
+
+	@Test
+	void explicitNullRequiredDaysMeansAsSoonAsPossible() throws Exception {
+		MockHttpSession s = login();
+		int id = JsonPath.read(confirmWith(s, ",\"requiredDays\":null").andExpect(status().isOk()).andReturn()
+				.getResponse().getContentAsString(), "$.id");
+		mvc.perform(get("/api/orders/" + id).session(s)).andExpect(jsonPath("$.requiredDays").isEmpty())
+				.andExpect(jsonPath("$.late").value(false));
+	}
+
+	@Test
+	void requiredDaysMustBeAnIntegerNumber() throws Exception {
+		MockHttpSession s = login();
+		// 소수·문자열을 조용히 5, 10 으로 바꿔 받아들이지 않는다
+		for (String bad : List.of("5.5", "5.0", "\"10\"", "\"abc\"", "true", "[]", "99999999999")) {
+			confirmWith(s, ",\"requiredDays\":" + bad).andExpect(status().isBadRequest())
+					.andExpect(jsonPath("$.error").value("필요 납기일은 정수로 입력하세요"));
+		}
+	}
+
+	@Test
+	void requiredDaysOutsideFiveToFiftyIsRejected() throws Exception {
+		MockHttpSession s = login();
+		for (String bad : List.of("4", "51", "0", "-1")) {
+			confirmWith(s, ",\"requiredDays\":" + bad).andExpect(status().isBadRequest())
+					.andExpect(jsonPath("$.error").value("필요 납기일은 5~50일 사이로 입력하세요"));
+		}
+	}
+
 	// ---- 고객사 이름 (TASK-006)
 
 	/** 고객사 이름을 지정해 확정 요청을 보내고 응답(MvcResult)을 돌려준다. omit 이 true 면 필드를 생략한다. */
@@ -384,7 +491,7 @@ class JsonApiTests {
 		return JsonPath.read(r.getResponse().getContentAsString(), "$.id");
 	}
 
-	private int confirmWith(MockHttpSession s, String name) throws Exception {
+	private int confirmNamed(MockHttpSession s, String name) throws Exception {
 		return confirmedId(confirmWithCustomer(s, name, false));
 	}
 
@@ -411,7 +518,7 @@ class JsonApiTests {
 	@Test
 	void customerNameTrimmedOnConfirm() throws Exception {
 		MockHttpSession s = login();
-		int id = confirmWith(s, "  ABC전자  ");
+		int id = confirmNamed(s, "  ABC전자  ");
 
 		mvc.perform(get("/api/orders/" + id).session(s)).andExpect(status().isOk())
 				.andExpect(jsonPath("$.customerName").value("ABC전자"));
@@ -422,8 +529,8 @@ class JsonApiTests {
 	void customerNameOptionalOnConfirm() throws Exception {
 		MockHttpSession s = login();
 		int omitted = confirmedId(confirmWithCustomer(s, null, true));
-		int nulled = confirmWith(s, null);
-		int blank = confirmWith(s, "   ");
+		int nulled = confirmNamed(s, null);
+		int blank = confirmNamed(s, "   ");
 
 		for (int id : new int[] {omitted, nulled, blank}) {
 			mvc.perform(get("/api/orders/" + id).session(s)).andExpect(status().isOk())
@@ -435,7 +542,7 @@ class JsonApiTests {
 	@Test
 	void customerNameLengthBoundaryOnConfirm() throws Exception {
 		MockHttpSession s = login();
-		int id = confirmWith(s, "가".repeat(100));
+		int id = confirmNamed(s, "가".repeat(100));
 		mvc.perform(get("/api/orders/" + id).session(s)).andExpect(jsonPath("$.customerName").value("가".repeat(100)));
 
 		int before = orderCount(s);
@@ -449,7 +556,7 @@ class JsonApiTests {
 	@Test
 	void updateCustomerInConfirmedAndInProgress() throws Exception {
 		MockHttpSession s = login();
-		int id = confirmWith(s, "처음");
+		int id = confirmNamed(s, "처음");
 
 		long v0 = versionOf(s, id);
 		updateCustomer(s, id, "  변경1  ", v0).andExpect(status().isOk())
@@ -479,7 +586,7 @@ class JsonApiTests {
 	@Test
 	void updateCustomerRejectedWhenCompleted() throws Exception {
 		MockHttpSession s = login();
-		int id = confirmWith(s, "완료전");
+		int id = confirmNamed(s, "완료전");
 		moveTo(s, id, "IN_PROGRESS");
 		moveTo(s, id, "COMPLETED");
 		long version = versionOf(s, id);
@@ -494,7 +601,7 @@ class JsonApiTests {
 	@Test
 	void updateCustomerOnCanceledOrMissingIs404() throws Exception {
 		MockHttpSession s = login();
-		int id = confirmWith(s, "취소될 주문");
+		int id = confirmNamed(s, "취소될 주문");
 		mvc.perform(post("/api/orders/" + id + "/status").session(s).contentType(MediaType.APPLICATION_JSON)
 				.content(statusBody("CANCELED", versionOf(s, id)))).andExpect(status().isOk());
 
@@ -505,7 +612,7 @@ class JsonApiTests {
 	@Test
 	void updateCustomerStaleVersionConflict() throws Exception {
 		MockHttpSession s = login();
-		int id = confirmWith(s, "원래");
+		int id = confirmNamed(s, "원래");
 		long stale = versionOf(s, id);
 		updateCustomer(s, id, "먼저 수정", stale).andExpect(status().isOk());
 
@@ -520,7 +627,7 @@ class JsonApiTests {
 	@Test
 	void updateCustomerLeavesNoHistory() throws Exception {
 		MockHttpSession s = login();
-		int id = confirmWith(s, "이력 확인");
+		int id = confirmNamed(s, "이력 확인");
 		int before = JsonPath.read(mvc.perform(get("/api/orders/" + id).session(s)).andReturn().getResponse()
 				.getContentAsString(), "$.history.length()");
 
@@ -541,7 +648,7 @@ class JsonApiTests {
 	@Test
 	void updateCustomerWithoutNameKeyIsRejectedAndKeepsValue() throws Exception {
 		MockHttpSession s = login();
-		int id = confirmWith(s, "유지될 이름");
+		int id = confirmNamed(s, "유지될 이름");
 		long version = versionOf(s, id);
 
 		// customerName 키가 없으면 이름이 지워지지 않고 400 (지우려면 빈 문자열이나 null 을 명시한다)
@@ -568,7 +675,7 @@ class JsonApiTests {
 	@Test
 	void updatingCustomerBumpsVersionSoStaleStatusChangeConflicts() throws Exception {
 		MockHttpSession s = login();
-		int id = confirmWith(s, "처음 이름");
+		int id = confirmNamed(s, "처음 이름");
 		long version = versionOf(s, id);
 
 		updateCustomer(s, id, "바뀐 이름", version).andExpect(status().isOk())

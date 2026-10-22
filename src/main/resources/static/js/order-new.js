@@ -7,6 +7,8 @@
 	const optionsEl = document.getElementById('options');
 	const confirmBtn = document.getElementById('confirmBtn');
 	const confirmError = document.getElementById('confirmError');
+	const asapBox = document.getElementById('asap');
+	const daysInput = document.getElementById('requiredDays');
 
 	let master = null;                 // 게이지 옆 방문 횟수 표시용
 	let values = {};                   // 나라별 주문 수량(K)
@@ -124,18 +126,45 @@
 		return {master: result.master, orders: result.orders, visits: result.visits, plan};
 	}
 
-	function renderResult(first) {
-		optionsEl.innerHTML = result.options.map(o => `
-			<button type="button" class="option ${o.type === selected ? 'selected' : ''}" data-type="${o.type}">
+	// ---- 필요 납기일
+
+	/** 가능한 빨리면 null, 5~50 사이 정수면 그 값, 입력이 올바르지 않으면 undefined */
+	function requiredDays() {
+		if (asapBox.checked) return null;
+		const v = Number(daysInput.value);
+		return Number.isInteger(v) && v >= 5 && v <= 50 ? v : undefined;
+	}
+
+	function onDeadlineChange() {
+		daysInput.disabled = asapBox.checked;
+		if (result) renderOptions();
+	}
+	asapBox.addEventListener('change', onDeadlineChange);
+	daysInput.addEventListener('input', onDeadlineChange);
+	onDeadlineChange(); // 새로고침 때 브라우저가 체크 상태만 복원해도 입력의 잠금이 맞도록 한 번 맞춘다
+
+	/** 경로 카드. 소요 일수가 필요 납기일을 넘으면 빨간색으로 표시한다. */
+	function renderOptions() {
+		const days = requiredDays();
+		optionsEl.innerHTML = result.options.map(o => {
+			const late = days != null && o.totalDays > days;
+			return `
+			<button type="button" class="option ${o.type === selected ? 'selected' : ''} ${late ? 'late' : ''}" data-type="${o.type}">
 				<strong>${o.label}</strong>
 				<span>소요 ${o.totalDays}일</span>
+				${late ? `<span class="late-note">납기 ${o.totalDays - days}일 초과</span>` : ''}
 				<span>총 비용 ${eok(o.totalCost)}억원</span>
 				<span class="muted">운항비 ${eok(o.shippingCost)}억원 · 배 ${o.ships.length}척</span>
-			</button>`).join('');
+			</button>`;
+		}).join('');
 		optionsEl.querySelectorAll('.option').forEach(b => b.addEventListener('click', () => {
 			selected = b.dataset.type;
 			renderResult(false);
 		}));
+	}
+
+	function renderResult(first) {
+		renderOptions();
 
 		const stored = currentStored();
 		PlanView.renderSummary(document.getElementById('summary'), stored);
@@ -153,6 +182,11 @@
 	confirmBtn.addEventListener('click', async () => {
 		if (!result) return;
 		confirmError.hidden = true;
+		const days = requiredDays();
+		if (days === undefined) {
+			showError(confirmError, '필요 납기일은 5~50일 사이의 정수로 입력하세요');
+			return;
+		}
 		confirmBtn.disabled = true;
 		try {
 			const res = await postJson('/api/orders', {
@@ -160,7 +194,8 @@
 				routeType: selected,
 				masterVersion: result.master.version,
 				memo: document.getElementById('memo').value,
-				customerName: document.getElementById('customerName').value
+				customerName: document.getElementById('customerName').value,
+				requiredDays: days
 			});
 			location.href = '/orders/' + res.id;
 		} catch (e) {

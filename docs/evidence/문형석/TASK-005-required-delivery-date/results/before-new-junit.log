@@ -1,0 +1,13 @@
+# 수정 전 코드(main 8c942bc)에 이번 JsonApiTests 를 복사해 실행한 결과(요약, 경로의 사용자 이름은 지움)
+JsonApiTests > orderWithoutRequiredDaysMeansAsSoonAsPossible() FAILED
+    java.lang.AssertionError at JsonApiTests.java:394
+        Caused by: com.jayway.jsonpath.PathNotFoundException
+JsonApiTests > requiredDaysIsStoredAndLateIsTrueOnlyWhenRouteTakesLonger() FAILED
+    java.lang.NullPointerException at JsonApiTests.java:405
+JsonApiTests > lateRouteCanStillBeConfirmed() FAILED
+    java.lang.AssertionError at JsonApiTests.java:422
+        Caused by: com.jayway.jsonpath.PathNotFoundException
+JsonApiTests > requiredDaysOutsideFiveToFiftyIsRejected() FAILED
+    java.lang.AssertionError at JsonApiTests.java:429
+23 tests completed, 4 failed
+BUILD FAILED in 20s
