@@ -7,12 +7,14 @@ import com.example.demo.controller.dto.StatusChange;
 import com.example.demo.entity.Country;
 import com.example.demo.entity.Order;
 import com.example.demo.entity.OrderStatus;
+import com.example.demo.service.BusinessException;
 import com.example.demo.service.OrderService;
 import jakarta.servlet.http.HttpSession;
 import java.util.Map;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,7 +25,12 @@ import tools.jackson.databind.ObjectMapper;
 @RequestMapping("/api/orders")
 public class OrderController {
 
-	public record ConfirmRequest(Map<Country, Integer> orders, String routeType, long masterVersion, String memo) {
+	public record ConfirmRequest(Map<Country, Integer> orders, String routeType, long masterVersion, String memo,
+			String customerName) {
+	}
+
+	/** version 은 화면에서 본 시점의 주문 version */
+	public record UpdateCustomerRequest(String customerName, Long version) {
 	}
 
 	private final OrderService orderService;
@@ -47,7 +54,7 @@ public class OrderController {
 	@PostMapping
 	public Map<String, Long> confirm(@RequestBody ConfirmRequest request, HttpSession session) {
 		Order order = orderService.confirm(request.orders(), request.routeType(), request.masterVersion(),
-				request.memo(), (String) session.getAttribute(LoginInterceptor.SESSION_USER));
+				request.memo(), request.customerName(), (String) session.getAttribute(LoginInterceptor.SESSION_USER));
 		return Map.of("id", order.getId());
 	}
 
@@ -60,6 +67,15 @@ public class OrderController {
 			return new StatusChange.Result(true, null);
 		}
 		return new StatusChange.Result(false, detailOf(id));
+	}
+
+	@PutMapping("/{id}/customer")
+	public OrderDetail updateCustomer(@PathVariable Long id, @RequestBody UpdateCustomerRequest request) {
+		if (request.version() == null) {
+			throw new BusinessException("주문 version 이 필요합니다");
+		}
+		orderService.updateCustomer(id, request.customerName(), request.version());
+		return detailOf(id);
 	}
 
 	private OrderDetail detailOf(Long id) {

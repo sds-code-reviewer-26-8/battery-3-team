@@ -12,11 +12,12 @@ import java.util.Map;
 public record OrderList(List<Item> orders, Map<String, Long> counts, long total, List<StatusInfo> statuses) {
 
 	public record Item(Long id, LocalDateTime confirmedAt, int totalK, String routeLabel, int totalDays,
-			String totalCostEok, StatusInfo status, String createdBy) {
+			String totalCostEok, StatusInfo status, String createdBy, String customerName) {
 
 		static Item of(Order o) {
 			return new Item(o.getId(), o.getConfirmedAt(), o.getTotalK(), o.getRouteLabel(), o.getTotalDays(),
-					o.getTotalCostEok(), StatusInfo.of(o.getStatus()), o.getCreatedBy());
+					o.getTotalCostEok(), StatusInfo.of(o.getStatus()), o.getCreatedBy(),
+					o.getCustomerName());
 		}
 	}
 

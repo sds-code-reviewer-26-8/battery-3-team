@@ -48,6 +48,10 @@ public class Order {
 	@Column(length = 1000)
 	private String memo;
 
+	/** 고객사 이름(선택). 기존 주문은 값 없음(null) */
+	@Column(length = 100)
+	private String customerName;
+
 	/** 확정 시점의 계획 스냅샷(주문 수량, 마스터 값, 경로, 일별 생산) JSON */
 	@Lob
 	@Column(nullable = false)
@@ -125,6 +129,14 @@ public class Order {
 
 	public String getMemo() {
 		return memo;
+	}
+
+	public String getCustomerName() {
+		return customerName;
+	}
+
+	public void setCustomerName(String customerName) {
+		this.customerName = customerName;
 	}
 
 	public String getPlanJson() {
