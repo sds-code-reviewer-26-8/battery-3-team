@@ -15,6 +15,8 @@ export const DEFAULT_ORDERS: Record<Country, number> = {
 const MAX_DAILY: Record<Country, number> = { CHINA: 400, JAPAN: 800, VIETNAM: 200, INDONESIA: 300 };
 const STOCK_LIMIT: Record<Country, number> = { CHINA: 4000, JAPAN: 2000, VIETNAM: 10000, INDONESIA: 7000 };
 const UNIT_COST: Record<Country, number> = { CHINA: 700, JAPAN: 900, VIETNAM: 550, INDONESIA: 450 };
+/** 공장별 하루 운영비(억 원) 기본값 */
+const OPERATING_COST = '1';
 
 /** 항로 입력칸 이름 = days_<앞선 나라>_<뒤 나라> (Country 선언 순서) */
 const DAYS: Record<string, number> = {
@@ -37,6 +39,7 @@ export function defaultMasterForm(): Record<string, string> {
     form[`maxDaily_${c}`] = String(MAX_DAILY[c]);
     form[`stockLimit_${c}`] = String(STOCK_LIMIT[c]);
     form[`unitCost_${c}`] = String(UNIT_COST[c]);
+    form[`operatingCost_${c}`] = OPERATING_COST;
   }
   for (const [pair, days] of Object.entries(DAYS)) {
     form[`days_${pair}`] = String(days);

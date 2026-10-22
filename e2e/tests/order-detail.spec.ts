@@ -24,7 +24,7 @@ test.describe('주문 상세·상태', () => {
     await expect(page.locator('h1 .badge')).toHaveText('확정');
     await expect(metaValue(page, '확정 일시')).toHaveText(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/);
     await expect(metaValue(page, '작성자')).toHaveText('admin');
-    await expect(metaValue(page, '경로')).toHaveText('운항비 최소');
+    await expect(metaValue(page, '경로')).toHaveText('비용 최소');
     await expect(metaValue(page, '메모')).toHaveText('상세 확인용 메모');
 
     await expect(page.locator('#summary .stats')).toContainText('12,000K'); // 총 수량
