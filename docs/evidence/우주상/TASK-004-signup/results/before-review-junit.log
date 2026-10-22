@@ -1,0 +1,11 @@
+﻿
+SignupTests > passwordLongerThanBcryptLimitIsRejectedWithReasonNotServerError() FAILED
+13 tests completed, 1 failed
+FAILURE: Build failed with an exception.
+> There were failing tests. See the report at: file:///C:/Users/<user>/AppData/Local/Temp/claude/C--work-battery/ec36ac3
+6-dfcf-4f8e-b138-1a86fafdd6b7/scratchpad/wt-main6/build/reports/tests/test/index.html
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+BUILD FAILED in 15s
+
+
+

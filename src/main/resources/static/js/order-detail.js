@@ -3,6 +3,10 @@
 const orderId = location.pathname.split('/').pop();
 const main = document.getElementById('detail');
 
+// 아래 최상위 await 보다 먼저 초기화되어야 하므로 파일 맨 위에 둔다.
+const LIST_URL = '/orders';
+const STATUS_CANCELED = 'CANCELED';
+
 try {
 	await Promise.all([renderHeader('orders'), load()]);
 } catch (e) {
@@ -19,7 +23,7 @@ async function load(ok, error) {
 
 /** 화면 맨 위 제목 줄(제목과 목록으로 버튼) */
 function pageHead(titleHtml) {
-	return `<div class="page-head"><h1>${titleHtml}</h1><a class="button" href="/orders">목록으로</a></div>`;
+	return `<div class="page-head"><h1>${titleHtml}</h1><a class="button" href="${LIST_URL}">목록으로</a></div>`;
 }
 
 /** 상세 대신 안내만 보여 준다. kind 는 ok 또는 error */
@@ -33,14 +37,14 @@ function showLoadError(e) {
 }
 
 function showCanceled(d) {
-	showMessage(`주문 <span>#${d.id}</span> <span class="badge badge-CANCELED">취소</span>`, 'ok',
+	showMessage(`주문 <span>#${d.id}</span> <span class="badge badge-${STATUS_CANCELED}">취소</span>`, 'ok',
 		`주문 #${d.id}을(를) 취소했습니다. 취소한 주문은 삭제되어 목록에서 사라집니다.`);
 }
 
 function render(d, ok, error) {
 	const actions = d.next.length > 0
 		? `<div class="actions">${d.next.map(s => `<form class="status-form" data-status="${s.name}" data-label="${esc(s.label)}">
-				<button type="submit" class="${s.name === 'CANCELED' ? 'danger' : 'primary'}">${esc(s.label)}(으)로 변경</button>
+				<button type="submit" class="${s.name === STATUS_CANCELED ? 'danger' : 'primary'}">${esc(s.label)}(으)로 변경</button>
 			</form>`).join('')}</div>`
 		: '<p class="muted">최종 상태라 더 바꿀 수 없습니다.</p>';
 	const history = d.history.map(h => `<tr>
