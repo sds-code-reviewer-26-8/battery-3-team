@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 460" width="1280" height="920">
+  <!-- PR diff panel -->
+  <rect x="30" y="50" width="380" height="330" rx="22" fill="#FFFFFF"/>
+  <rect x="30" y="50" width="380" height="52" rx="22" fill="#E4E2F7"/>
+  <rect x="30" y="80" width="380" height="22" fill="#E4E2F7"/>
+  <circle cx="62" cy="76" r="8" fill="#F26B6B"/>
+  <circle cx="88" cy="76" r="8" fill="#F5C04A"/>
+  <circle cx="114" cy="76" r="8" fill="#5CC98B"/>
+  <rect x="150" y="68" width="150" height="16" rx="8" fill="#B9B6EA"/>
+  <!-- diff lines -->
+  <rect x="50" y="122" width="340" height="30" rx="6" fill="#FBE3E3"/>
+  <rect x="62" y="132" width="12" height="4" rx="2" fill="#E05555"/>
+  <rect x="88" y="131" width="210" height="10" rx="5" fill="#E8A3A3"/>
+  <rect x="50" y="160" width="340" height="30" rx="6" fill="#DDF4E6"/>
+  <rect x="60" y="170" width="16" height="4" rx="2" fill="#2E9E6B"/>
+  <rect x="67" y="164" width="4" height="16" rx="2" fill="#2E9E6B" transform="translate(-1,0)"/>
+  <rect x="88" y="169" width="250" height="10" rx="5" fill="#8FD6AE"/>
+  <rect x="50" y="198" width="340" height="30" rx="6" fill="#DDF4E6"/>
+  <rect x="60" y="208" width="16" height="4" rx="2" fill="#2E9E6B"/>
+  <rect x="67" y="202" width="4" height="16" rx="2" fill="#2E9E6B" transform="translate(-1,0)"/>
+  <rect x="88" y="207" width="180" height="10" rx="5" fill="#8FD6AE"/>
+  <rect x="62" y="248" width="14" height="10" rx="5" fill="#D9D8EA"/>
+  <rect x="88" y="247" width="230" height="10" rx="5" fill="#D9D8EA"/>
+  <rect x="62" y="272" width="14" height="10" rx="5" fill="#D9D8EA"/>
+  <rect x="88" y="271" width="150" height="10" rx="5" fill="#D9D8EA"/>
+  <!-- review comment bubble -->
+  <rect x="88" y="300" width="270" height="56" rx="16" fill="#6B66C8"/>
+  <path d="M110 300 l-8 -14 l24 14 z" fill="#6B66C8"/>
+  <rect x="108" y="318" width="170" height="8" rx="4" fill="#E4E2F7"/>
+  <rect x="108" y="334" width="110" height="8" rx="4" fill="#B9B6EA"/>
+
+  <!-- approve badge -->
+  <circle cx="392" cy="62" r="34" fill="#2E9E6B"/>
+  <path d="M374 63 l12 12 l22 -24" fill="none" stroke="#FFFFFF" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- robot reviewer -->
+  <line x1="520" y1="96" x2="520" y2="124" stroke="#B9B6EA" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="520" cy="90" r="12" fill="#F5C04A"/>
+  <rect x="445" y="124" width="150" height="124" rx="38" fill="#6B66C8"/>
+  <rect x="463" y="146" width="114" height="78" rx="26" fill="#2B2A4C"/>
+  <circle cx="496" cy="180" r="13" fill="#7FE3F0"/>
+  <circle cx="544" cy="180" r="13" fill="#7FE3F0"/>
+  <circle cx="500" cy="176" r="4" fill="#FFFFFF"/>
+  <circle cx="548" cy="176" r="4" fill="#FFFFFF"/>
+  <path d="M500 204 q20 14 40 0" fill="none" stroke="#7FE3F0" stroke-width="6" stroke-linecap="round"/>
+  <rect x="430" y="164" width="14" height="40" rx="7" fill="#8E8AD8"/>
+  <rect x="596" y="164" width="14" height="40" rx="7" fill="#8E8AD8"/>
+  <rect x="468" y="256" width="104" height="110" rx="30" fill="#8E8AD8"/>
+  <rect x="496" y="282" width="48" height="30" rx="10" fill="#E4E2F7"/>
+  <circle cx="510" cy="297" r="5" fill="#6B66C8"/>
+  <circle cx="530" cy="297" r="5" fill="#2E9E6B"/>
+  <!-- arm holding magnifier -->
+  <path d="M472 292 C440 300 420 290 392 262" fill="none" stroke="#8E8AD8" stroke-width="20" stroke-linecap="round"/>
+  <!-- magnifier -->
+  <line x1="372" y1="244" x2="396" y2="268" stroke="#4F4AA8" stroke-width="14" stroke-linecap="round"/>
+  <circle cx="330" cy="206" r="58" fill="#FFFFFF" fill-opacity="0.35" stroke="#F5C04A" stroke-width="12"/>
+  <path d="M300 208 l22 22 l38 -42" fill="none" stroke="#2E9E6B" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- legs / feet -->
+  <rect x="488" y="366" width="28" height="22" rx="10" fill="#4F4AA8"/>
+  <rect x="524" y="366" width="28" height="22" rx="10" fill="#4F4AA8"/>
+  <!-- sparkles -->
+  <path d="M600 60 l6 16 l16 6 l-16 6 l-6 16 l-6 -16 l-16 -6 l16 -6 z" fill="#F5C04A"/>
+  <path d="M40 410 l5 12 l12 5 l-12 5 l-5 12 l-5 -12 l-12 -5 l12 -5 z" fill="#B9B6EA"/>
+</svg>
