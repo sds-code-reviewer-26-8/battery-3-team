@@ -5,7 +5,7 @@
 | 테스트 | 개수 | 테스트 도구 |
 |---|:-:|---|
 | Unit Test | __개 | ___ |
-| Slice Test | __개 | ___ |
+| Slice Test | 49개 | Spring Boot `@WebMvcTest`(컨트롤러 36개) · `@DataJpaTest`(리포지토리 13개), MockMvc, Mockito(`@MockitoBean`), JUnit 5, AssertJ, H2 |
 | 통합 테스트 | __개 | ___ |
 | E2E 테스트 | __개 | ___ |
 | Robustness 테스트 | __개 | ___ |
