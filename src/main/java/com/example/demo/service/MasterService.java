@@ -15,6 +15,7 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -148,6 +149,12 @@ public class MasterService {
 		s.setShipCount(shipCount);
 		s.setShipDailyCostWon(shipCostWon);
 		s.bumpMasterVersion();
+		// 커밋 때가 아니라 여기서 반영해야, 동시에 저장한 다른 사용자와 부딪힌 것을 잡아 충돌(409)로 알릴 수 있다
+		try {
+			settingRepository.flush();
+		} catch (ObjectOptimisticLockingFailureException e) {
+			throw new BusinessException("다른 사용자가 먼저 마스터 데이터를 변경했습니다. 화면을 새로 고쳐 현재 값을 확인한 뒤 다시 시도해 주세요", true);
+		}
 	}
 
 	/** 억 원 단위 소수 입력(0 이상, 원 단위로 떨어져야 함)을 원으로 바꾼다. 틀리면 errors 에 이유를 모은다. */
