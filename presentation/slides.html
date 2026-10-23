@@ -1,0 +1,846 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>삼삼오오 발표 자료</title>
+<style>
+:root {
+	--bg: #0d0c24;
+	--card: #1d1b45;
+	--card2: #26235a;
+	--panel: rgba(255, 255, 255, .06);
+	--line: rgba(255, 255, 255, .14);
+	--ink: #f3f2ff;
+	--muted: #b6b4dc;
+	--dim: #8d8bb8;
+	--accent: #8f89ff;
+	--accent2: #5eead4;
+	--gold: #fbbf24;
+	--green: #34d399;
+	--orange: #fb923c;
+	--pink: #f472b6;
+	--font: "Pretendard Variable", Pretendard, "Malgun Gothic", "Apple SD Gothic Neo", "Noto Sans KR", system-ui, sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; background: #07061a; color: var(--ink); font-family: var(--font); overflow: hidden; }
+button { font: inherit; color: inherit; cursor: pointer; }
+a { color: inherit; }
+
+#viewport { position: fixed; inset: 0; }
+#stage {
+	position: absolute; left: 50%; top: 50%; width: 1920px; height: 1080px; overflow: hidden;
+	transform-origin: center center; background: var(--bg);
+}
+
+/* ---------- 배경 ---------- */
+.bg { position: absolute; inset: 0; pointer-events: none; }
+.bg i { position: absolute; border-radius: 50%; will-change: transform; }
+.bg .b1 { width: 1100px; height: 1100px; left: -300px; top: -420px; background: radial-gradient(circle, rgba(143, 137, 255, .38), transparent 65%); animation: drift1 26s ease-in-out infinite alternate; }
+.bg .b2 { width: 1000px; height: 1000px; right: -280px; bottom: -420px; background: radial-gradient(circle, rgba(94, 234, 212, .20), transparent 65%); animation: drift2 32s ease-in-out infinite alternate; }
+.bg .b3 { width: 700px; height: 700px; right: 260px; top: -300px; background: radial-gradient(circle, rgba(244, 114, 182, .16), transparent 65%); animation: drift1 38s ease-in-out infinite alternate-reverse; }
+.bg .grid { inset: 0; border-radius: 0; background-image: linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px); background-size: 64px 64px; -webkit-mask-image: radial-gradient(ellipse at 50% 40%, #000 20%, transparent 75%); mask-image: radial-gradient(ellipse at 50% 40%, #000 20%, transparent 75%); }
+@keyframes drift1 { to { transform: translate(140px, 90px) scale(1.1); } }
+@keyframes drift2 { to { transform: translate(-160px, -80px) scale(1.12); } }
+
+/* ---------- 슬라이드 ---------- */
+.slide {
+	position: absolute; inset: 0; padding: 56px 96px 96px; opacity: 0; visibility: hidden;
+	transform: translateX(60px); transition: opacity .5s ease, transform .5s ease, visibility 0s linear .5s;
+}
+.slide.active { opacity: 1; visibility: visible; transform: none; transition: opacity .5s ease, transform .5s ease; }
+.slide.past { transform: translateX(-60px); }
+
+.head { height: 150px; }
+.kicker { display: inline-flex; align-items: center; gap: 14px; font-size: 24px; font-weight: 700; color: var(--accent2); letter-spacing: .02em; }
+.kicker b { display: inline-block; padding: 4px 14px; border-radius: 999px; background: rgba(94, 234, 212, .14); border: 1px solid rgba(94, 234, 212, .35); font-weight: 700; }
+.kicker span { color: var(--muted); font-weight: 500; }
+h1.title { font-size: 66px; font-weight: 800; line-height: 1.12; margin-top: 12px; letter-spacing: -.01em; background: linear-gradient(90deg, #fff 30%, #c7c4ff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.sub { font-size: 25px; color: var(--muted); line-height: 1.5; margin-top: 8px; }
+.body { position: relative; height: 780px; }
+.head.tall { height: 212px; }
+.body.short { height: 730px; }
+
+/* ---------- 조각(클릭마다 나타남) ---------- */
+.frag { opacity: 0; transform: translateY(26px) scale(.985); pointer-events: none; transition: opacity .45s ease, transform .45s cubic-bezier(.2, .8, .2, 1); }
+.frag.shown { opacity: 1; transform: none; pointer-events: auto; }
+.frag.swapped { opacity: 0; visibility: hidden; transform: translateY(-20px); pointer-events: none; }
+.swapbox { position: relative; }
+.swapbox > .frag { position: absolute; inset: 0; }
+
+/* ---------- 공통 부품 ---------- */
+.glass { background: linear-gradient(145deg, rgba(255,255,255,.10), rgba(255,255,255,.04)); border: 1px solid var(--line); border-radius: 28px; box-shadow: 0 20px 50px rgba(0,0,0,.28); }
+.ava { border-radius: 50%; object-fit: cover; display: block; background: #eee; }
+.ring { padding: 6px; border-radius: 50%; background: conic-gradient(from 200deg, #8f89ff, #5eead4, #f472b6, #8f89ff); box-shadow: 0 0 60px rgba(143, 137, 255, .45); display: inline-block; }
+.ring .ava { border: 5px solid var(--bg); }
+.pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; font-size: 22px; font-weight: 700; background: rgba(255,255,255,.10); border: 1px solid var(--line); color: var(--ink); white-space: nowrap; }
+.pill.gold { background: rgba(251, 191, 36, .16); border-color: rgba(251, 191, 36, .5); color: var(--gold); }
+.pill.green { background: rgba(52, 211, 153, .15); border-color: rgba(52, 211, 153, .45); color: var(--green); }
+.pill.orange { background: rgba(251, 146, 60, .15); border-color: rgba(251, 146, 60, .45); color: var(--orange); }
+.pill.teal { background: rgba(94, 234, 212, .14); border-color: rgba(94, 234, 212, .4); color: var(--accent2); }
+.pill.purple { background: rgba(143, 137, 255, .2); border-color: rgba(143, 137, 255, .55); color: #cfccff; }
+.btn { display: inline-flex; align-items: center; gap: 10px; padding: 10px 22px; border-radius: 14px; font-size: 21px; font-weight: 700; text-decoration: none; background: rgba(143, 137, 255, .22); border: 1px solid rgba(143, 137, 255, .6); color: #e4e2ff; transition: background .2s, transform .2s; }
+.btn:hover { background: rgba(143, 137, 255, .4); transform: translateY(-2px); }
+
+/* ---------- 말풍선 ---------- */
+.bubble { position: relative; background: var(--card); border: 1px solid var(--line); border-radius: 26px; padding: 24px 32px; box-shadow: 0 14px 34px rgba(0,0,0,.3); }
+.bubble.tail::before { content: ""; position: absolute; left: -12px; top: 38px; width: 22px; height: 22px; background: var(--card); border-left: 1px solid var(--line); border-bottom: 1px solid var(--line); transform: rotate(45deg); border-bottom-left-radius: 6px; }
+.bubble.hl { background: linear-gradient(135deg, #5f59e6, #7f79f7); border-color: rgba(255,255,255,.28); }
+.bubble.hl.tail::before { background: #6760ea; border-color: rgba(255,255,255,.28); }
+.bubble h3 { font-size: 30px; font-weight: 800; line-height: 1.3; }
+.bubble p { font-size: 24px; line-height: 1.55; color: var(--muted); margin-top: 8px; }
+.bubble.hl p { color: #ece9ff; }
+.num { flex: none; width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; font-size: 28px; font-weight: 800; background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #0d0c24; }
+
+/* ---------- 하단 크롬 ---------- */
+.chrome { position: absolute; left: 0; right: 0; bottom: 0; height: 72px; padding: 0 64px; display: flex; align-items: center; gap: 24px; z-index: 30; background: linear-gradient(to top, rgba(5,4,20,.85), rgba(5,4,20,0)); }
+.chrome .brand { font-weight: 800; font-size: 22px; color: #fff; }
+.chrome .sec { font-size: 20px; color: var(--dim); min-width: 190px; }
+.chrome .progress { flex: 1; height: 6px; border-radius: 999px; background: rgba(255,255,255,.12); overflow: hidden; }
+.chrome .progress i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width .4s ease; }
+.chrome .count { font-size: 22px; font-weight: 700; color: var(--muted); min-width: 96px; text-align: right; font-variant-numeric: tabular-nums; }
+.chrome button { width: 46px; height: 46px; border-radius: 14px; border: 1px solid var(--line); background: rgba(255,255,255,.08); font-size: 22px; line-height: 1; display: grid; place-items: center; transition: background .2s; }
+.chrome button:hover { background: rgba(255,255,255,.2); }
+.chrome button:focus-visible, .btn:focus-visible, .card-btn:focus-visible { outline: 3px solid var(--accent2); outline-offset: 3px; }
+
+/* ---------- 표지 ---------- */
+.cover { display: flex; flex-direction: column; justify-content: center; padding-top: 40px; }
+.cover .eyebrow { font-size: 28px; font-weight: 700; color: var(--accent2); letter-spacing: .12em; text-transform: uppercase; }
+.cover h1 { font-size: 230px; font-weight: 900; line-height: 1; letter-spacing: -.03em; margin: 8px 0 12px; background: linear-gradient(100deg, #fff 20%, #b9b5ff 60%, #5eead4); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.cover .tagline { font-size: 36px; color: var(--muted); }
+.team { display: flex; gap: 36px; margin-top: 64px; }
+.member { width: 360px; padding: 34px 20px 28px; text-align: center; animation: float 6s ease-in-out infinite; }
+.member:nth-child(2) { animation-delay: -1.5s; } .member:nth-child(3) { animation-delay: -3s; } .member:nth-child(4) { animation-delay: -4.5s; }
+@keyframes float { 50% { transform: translateY(-12px); } }
+.member .ava { width: 190px; height: 190px; margin: 0 auto; }
+.member .nm { font-size: 40px; font-weight: 800; margin: 18px 0 10px; }
+.member .gh { font-size: 20px; color: var(--dim); margin-top: 10px; }
+.cover .links { position: absolute; right: 96px; top: 64px; display: flex; gap: 14px; }
+.cover .hint { position: absolute; left: 96px; bottom: 100px; font-size: 22px; color: var(--dim); }
+
+/* ---------- 테스트 ---------- */
+.tests { display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 1fr); gap: 24px; height: 100%; }
+.tcard { padding: 28px 30px; display: flex; flex-direction: column; }
+.tcard h4 { font-size: 28px; font-weight: 800; color: var(--muted); }
+.tcard .big { font-size: 96px; font-weight: 900; line-height: 1.05; margin: 6px 0 10px; background: linear-gradient(120deg, #fff, var(--accent)); -webkit-background-clip: text; background-clip: text; color: transparent; font-variant-numeric: tabular-nums; }
+.tcard .big small { font-size: 36px; font-weight: 800; margin-left: 4px; }
+.tcard p { font-size: 21px; line-height: 1.5; color: var(--muted); }
+.tcard.hl { background: linear-gradient(135deg, #5f59e6, #7f79f7); border-color: rgba(255,255,255,.3); }
+.tcard.hl h4, .tcard.hl p { color: #ece9ff; }
+.tcard.hl .big { background: none; color: #fff; -webkit-text-fill-color: #fff; }
+
+/* ---------- 브라우저 프레임 ---------- */
+.frame { border-radius: 20px; overflow: hidden; background: #fff; border: 1px solid var(--line); box-shadow: 0 30px 70px rgba(0,0,0,.5); display: inline-block; }
+.frame .bar { height: 40px; background: #e9e8f7; display: flex; align-items: center; gap: 9px; padding: 0 16px; }
+.frame .bar i { width: 13px; height: 13px; border-radius: 50%; background: #f26b6b; } .frame .bar i:nth-child(2) { background: #f5c04a; } .frame .bar i:nth-child(3) { background: #5cc98b; }
+.frame .bar span { margin-left: 12px; flex: 1; height: 22px; border-radius: 11px; background: #fff; opacity: .8; }
+.frame img { display: block; }
+.zoomable { cursor: zoom-in; }
+
+/* ---------- 템플릿 / 뼈대 ---------- */
+.tpl { display: grid; grid-template-columns: auto 1fr; gap: 56px; height: 100%; }
+.tpl .shots { display: flex; gap: 32px; }
+.tpl .shot { text-align: center; }
+.tpl .shot .tag { margin-bottom: 14px; }
+.tpl .shot img { height: 650px; width: auto; }
+.tpl .side { display: flex; flex-direction: column; gap: 22px; }
+.note { padding: 22px 30px; }
+.note h3 { font-size: 30px; font-weight: 800; margin-bottom: 8px; display: flex; align-items: center; gap: 12px; }
+.note h3 .btn { margin-left: auto; padding: 6px 16px; font-size: 19px; }
+.note p, .note li { font-size: 22px; line-height: 1.5; color: var(--muted); }
+.note ul { list-style: none; display: grid; gap: 8px; }
+.note li::before { content: "✓"; color: var(--accent2); font-weight: 900; margin-right: 12px; }
+.note .row { display: flex; gap: 12px; margin-top: 14px; flex-wrap: wrap; }
+
+.flow { position: relative; height: 330px; }
+.fnode { position: absolute; top: 60px; width: 280px; height: 132px; padding: 16px 18px; text-align: center; display: flex; flex-direction: column; justify-content: center; border-radius: 24px; }
+.fnode b { font-size: 30px; font-weight: 800; } .fnode span { font-size: 20px; color: var(--muted); margin-top: 4px; line-height: 1.35; }
+.fnode.step { background: linear-gradient(135deg, #5f59e6, #7f79f7); border: 1px solid rgba(255,255,255,.3); box-shadow: 0 16px 40px rgba(95, 89, 230, .45); }
+.fnode.step span { color: #ece9ff; }
+.farrow { position: absolute; top: 108px; width: 82px; height: 36px; color: var(--accent2); font-size: 40px; font-weight: 900; text-align: center; line-height: 36px; }
+.fhilp { position: absolute; top: 0; left: 362px; width: 280px; text-align: center; }
+.fhilp::after { content: ""; display: block; width: 3px; height: 26px; margin: 4px auto 0; background: var(--orange); }
+.fback { position: absolute; top: 192px; left: 502px; width: 724px; height: 62px; border: 3px dashed var(--accent2); border-top: none; border-radius: 0 0 28px 28px; }
+.fback::before, .fback::after { content: ""; position: absolute; top: -14px; width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; }
+.fback::before { left: -13px; border-bottom: 16px solid var(--accent2); }
+.flabel { position: absolute; top: 262px; left: 502px; width: 724px; text-align: center; font-size: 23px; color: var(--accent2); font-weight: 700; }
+.fcols { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; height: 440px; }
+.mini { padding: 16px 24px; margin-bottom: 14px; }
+.mini h4 { font-size: 26px; font-weight: 800; display: flex; align-items: center; gap: 12px; }
+.mini p { font-size: 21px; line-height: 1.45; color: var(--muted); margin-top: 4px; }
+.dec { display: grid; gap: 10px; }
+.dec div { padding: 12px 22px; border-radius: 18px; background: var(--panel); border: 1px solid var(--line); }
+.dec b { display: block; font-size: 23px; font-weight: 800; }
+.dec span { display: block; font-size: 20px; color: var(--muted); margin-top: 2px; line-height: 1.4; }
+
+/* ---------- 프로필 + 말풍선 (Best Practice) ---------- */
+.bp { display: grid; grid-template-columns: 340px 1fr; gap: 56px; height: 100%; }
+.profile { padding: 36px 24px; text-align: center; height: fit-content; }
+.profile .ava { width: 230px; height: 230px; }
+.profile .nm { font-size: 44px; font-weight: 800; margin: 24px 0 8px; }
+.profile .cap { font-size: 22px; color: var(--muted); }
+.profile .intro { margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--line); display: grid; gap: 14px; justify-items: center; }
+.profile .intro .ava { width: 84px; height: 84px; }
+.profile .intro .t { font-size: 22px; color: var(--muted); line-height: 1.4; }
+.chat { display: flex; gap: 24px; align-items: flex-start; margin-bottom: 26px; }
+.chat .bubble { flex: 1; }
+
+/* ---------- 느낀 점 ---------- */
+.feel { display: grid; grid-template-columns: 280px 660px 1fr; gap: 40px; height: 100%; }
+.feel .profile { padding: 30px 18px; }
+.feel .profile .ava { width: 190px; height: 190px; }
+.feel .profile .nm { font-size: 38px; }
+.fgroup { padding: 22px 28px; margin-bottom: 18px; }
+.fgroup h4 { font-size: 26px; font-weight: 800; margin-bottom: 8px; display: flex; align-items: center; gap: 12px; }
+.fgroup li { list-style: none; font-size: 22px; line-height: 1.5; color: var(--ink); padding-left: 22px; position: relative; margin-top: 8px; }
+.fgroup li::before { content: ""; position: absolute; left: 0; top: .6em; width: 9px; height: 9px; border-radius: 50%; background: var(--accent); }
+.fgroup.good li::before { background: var(--green); } .fgroup.bad li::before { background: var(--orange); }
+.fgroup li b { color: #fff; }
+.probhead { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.probhead h4 { font-size: 28px; font-weight: 800; }
+.dots { display: flex; gap: 10px; }
+.dots i { width: 14px; height: 14px; border-radius: 50%; background: rgba(255,255,255,.2); transition: background .3s, transform .3s; }
+.dots i.on { background: var(--accent2); transform: scale(1.3); }
+.pcard { padding: 26px 32px; overflow: auto; }
+.pcard .tag { font-size: 20px; font-weight: 800; letter-spacing: .06em; margin-bottom: 4px; }
+.pcard .tag.p { color: var(--orange); } .pcard .tag.c { color: var(--pink); } .pcard .tag.f { color: var(--green); }
+.pcard p { font-size: 22px; line-height: 1.55; margin-bottom: 14px; }
+.pcard p.f { color: #e8fff7; }
+.pcard p.c { color: var(--muted); }
+
+/* ---------- 미션 ---------- */
+.mission { display: grid; grid-template-columns: auto 1fr; gap: 56px; height: 100%; align-items: start; }
+.mission .frame img { height: 700px; width: auto; }
+.mside { display: flex; flex-direction: column; gap: 28px; }
+.who { padding: 34px 40px; }
+.who .row { display: flex; align-items: center; gap: 22px; justify-content: space-between; }
+.who .p { text-align: center; } .who .p .ava { width: 150px; height: 150px; margin: 0 auto 12px; } .who .p b { font-size: 34px; display: block; } .who .p span { font-size: 22px; color: var(--muted); }
+.who .arrow { font-size: 44px; color: var(--accent2); font-weight: 900; }
+.stats { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.stat { padding: 30px 34px; }
+.stat .n { font-size: 88px; font-weight: 900; line-height: 1; background: linear-gradient(120deg, #fff, var(--accent2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.stat .n small { font-size: 34px; margin-left: 4px; }
+.stat .l { font-size: 24px; color: var(--muted); margin-top: 6px; }
+
+/* ---------- PR 현황 ---------- */
+.prtable { display: grid; gap: 18px; }
+.prrow { display: grid; grid-template-columns: 330px 1fr 300px 320px; align-items: center; gap: 24px; padding: 22px 32px; }
+.prrow .m b { font-size: 30px; font-weight: 800; display: block; } .prrow .m span { font-size: 21px; color: var(--muted); }
+.prrow .ag { display: flex; align-items: center; gap: 18px; font-size: 24px; font-weight: 700; }
+.prrow .ag .ava { width: 74px; height: 74px; } .prrow .ag small { display: block; font-size: 19px; color: var(--muted); font-weight: 500; }
+.prrow .ag .ar { color: var(--accent2); font-size: 34px; font-weight: 900; }
+.bar2 { height: 14px; border-radius: 999px; background: rgba(255,255,255,.12); overflow: hidden; margin-top: 8px; }
+.bar2 i { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+.prrow .nums { font-size: 22px; color: var(--muted); } .prrow .nums b { color: #fff; font-size: 28px; }
+.prhead { display: grid; grid-template-columns: 330px 1fr 300px 320px; gap: 24px; padding: 0 32px 4px; font-size: 20px; color: var(--dim); font-weight: 700; }
+
+/* ---------- 리뷰 카드 ---------- */
+.rgrid { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 26px; height: 100%; }
+.rcard { padding: 28px 34px; display: flex; flex-direction: column; text-align: left; cursor: pointer; transition: transform .25s, border-color .25s; color: inherit; width: 100%; }
+.rcard:hover { transform: translateY(-4px); border-color: rgba(143, 137, 255, .7); }
+.rcard .top { display: flex; align-items: center; gap: 20px; }
+.rcard .top .ava { width: 84px; height: 84px; }
+.rcard .top .nm { font-size: 30px; font-weight: 800; }
+.rcard .top .meta { font-size: 21px; color: var(--muted); margin-top: 2px; }
+.rcard h3 { font-size: 27px; font-weight: 800; line-height: 1.35; margin-top: 18px; }
+.rcard p { font-size: 23px; line-height: 1.5; color: var(--muted); margin-top: 10px; }
+.rcard .more { margin-top: auto; font-size: 21px; font-weight: 700; color: var(--accent2); }
+
+/* ---------- 회고 ---------- */
+.retro { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; height: 100%; }
+.rcol { padding: 26px 26px 22px; display: flex; flex-direction: column; }
+.rcol .head2 { display: flex; align-items: center; gap: 18px; margin-bottom: 14px; }
+.rcol .ava { width: 82px; height: 82px; } .rcol .nm { font-size: 32px; font-weight: 800; }
+.rcol h4 { font-size: 22px; font-weight: 800; margin: 10px 0 6px; display: flex; gap: 10px; align-items: center; }
+.rcol p { font-size: 22px; line-height: 1.55; color: #dcdaf6; }
+.rcol h4.g { color: var(--green); } .rcol h4.o { color: var(--orange); }
+
+/* ---------- 마무리 ---------- */
+.thanks { display: grid; grid-template-columns: 1fr 880px; gap: 24px; height: 100%; align-items: center; padding-top: 30px; }
+.thanks h1 { font-size: 170px; font-weight: 900; line-height: 1; letter-spacing: -.03em; background: linear-gradient(100deg, #fff 20%, #b9b5ff 60%, #5eead4); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.thanks .lines { font-size: 40px; line-height: 1.5; color: var(--muted); margin-top: 22px; } .thanks .lines b { color: var(--gold); }
+.thanks .who2 { display: flex; gap: 22px; margin-top: 36px; } .thanks .who2 .ava { width: 96px; height: 96px; border: 4px solid rgba(255,255,255,.9); }
+.thanks .who2 div { text-align: center; font-size: 20px; color: var(--muted); } .thanks .who2 b { display: block; font-size: 22px; color: #fff; margin-top: 6px; }
+.thanks .kpi { display: flex; gap: 18px; margin-top: 34px; }
+.thanks .kpi div { padding: 14px 24px; border-radius: 20px; background: var(--panel); border: 1px solid var(--line); text-align: center; }
+.thanks .kpi b { font-size: 44px; font-weight: 900; display: block; color: var(--accent2); font-variant-numeric: tabular-nums; } .thanks .kpi span { font-size: 20px; color: var(--muted); }
+.thanks img.art { width: 880px; filter: drop-shadow(0 30px 60px rgba(0,0,0,.45)); animation: float 7s ease-in-out infinite; }
+
+/* ---------- 오버레이 ---------- */
+.overlay { position: absolute; inset: 0; z-index: 50; background: rgba(6, 5, 24, .86); backdrop-filter: blur(10px); display: none; place-items: center; padding: 60px; }
+.overlay.open { display: grid; }
+.sheet { width: 100%; max-width: 1500px; max-height: 960px; overflow: auto; padding: 44px 56px; background: #1a1840; border: 1px solid var(--line); border-radius: 32px; box-shadow: 0 40px 100px rgba(0,0,0,.6); position: relative; }
+.sheet .x { position: absolute; right: 22px; top: 20px; width: 52px; height: 52px; border-radius: 16px; border: 1px solid var(--line); background: rgba(255,255,255,.08); font-size: 26px; }
+.sheet h2 { font-size: 40px; font-weight: 800; margin-bottom: 6px; }
+.sheet .who3 { display: flex; align-items: center; gap: 22px; margin-bottom: 26px; }
+.sheet .who3 .ava { width: 96px; height: 96px; }
+.sheet h5 { font-size: 24px; font-weight: 800; margin: 22px 0 6px; } .sheet h5.p { color: var(--orange); } .sheet h5.f { color: var(--accent2); } .sheet h5.g { color: var(--green); }
+.sheet p { font-size: 25px; line-height: 1.65; color: #dcdaf6; }
+.sheet img.zoom { display: block; max-width: 100%; margin: 0 auto; border-radius: 12px; }
+.toc { width: 100%; max-width: 1560px; column-count: 3; column-gap: 56px; }
+.toc > div { break-inside: avoid; margin-bottom: 26px; }
+.toc h3 { font-size: 24px; color: var(--accent2); margin-bottom: 12px; }
+.toc button { display: flex; gap: 14px; width: 100%; text-align: left; padding: 7px 14px; border-radius: 12px; border: 1px solid transparent; background: transparent; font-size: 21px; color: var(--ink); margin-bottom: 2px; }
+.toc button:hover, .toc button.cur { background: rgba(143, 137, 255, .22); border-color: rgba(143, 137, 255, .5); }
+.toc button i { font-style: normal; color: var(--dim); min-width: 34px; font-variant-numeric: tabular-nums; }
+.toc-title { column-span: all; font-size: 44px; font-weight: 800; margin-bottom: 22px; }
+.keys { position: absolute; bottom: 90px; right: 96px; font-size: 20px; color: var(--dim); }
+
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+
+/* ---------- 인쇄(PDF 저장) ---------- */
+@media print {
+	@page { size: 1920px 1080px; margin: 0; }
+	html, body { overflow: visible; height: auto; background: #0d0c24; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+	#viewport { position: static; }
+	#stage { position: static; transform: none !important; width: 1920px; height: auto; overflow: visible; }
+	.bg, .chrome, .overlay, .cover .hint, .keys { display: none !important; }
+	.slide { position: relative; opacity: 1 !important; visibility: visible !important; transform: none !important; height: 1080px; break-after: page; page-break-after: always; overflow: hidden; background: var(--bg); }
+	.frag { opacity: 1 !important; transform: none !important; visibility: visible !important; }
+	.frag.swapped { visibility: visible !important; opacity: 1 !important; transform: none !important; }
+	.swapbox { height: auto !important; display: grid; gap: 10px; }
+	.swapbox > .frag { position: relative; inset: auto; }
+	.pcard { padding: 12px 20px; overflow: visible; }
+	.pcard p { font-size: 16px; line-height: 1.4; margin-bottom: 4px; }
+	.pcard .tag { font-size: 15px; margin-bottom: 0; }
+	.dots { display: none; }
+}
+</style>
+</head>
+<body>
+<div id="viewport">
+	<div id="stage" role="application" aria-label="삼삼오오 발표 자료">
+		<div class="bg" aria-hidden="true"><i class="grid"></i><i class="b1"></i><i class="b2"></i><i class="b3"></i></div>
+		<div id="slides"></div>
+		<div class="chrome" id="chrome">
+			<span class="brand">삼삼오오</span>
+			<span class="sec" id="secName"></span>
+			<div class="progress" aria-hidden="true"><i id="progress"></i></div>
+			<span class="count" id="count" aria-live="polite"></span>
+			<button type="button" id="btnPrev" aria-label="이전 (←)" title="이전 (←)">‹</button>
+			<button type="button" id="btnNext" aria-label="다음 (→)" title="다음 (→)">›</button>
+			<button type="button" id="btnToc" aria-label="목차 (T)" title="목차 (T)">☰</button>
+			<button type="button" id="btnFs" aria-label="전체 화면 (F)" title="전체 화면 (F)">⛶</button>
+		</div>
+		<div class="overlay" id="tocOverlay" role="dialog" aria-label="목차"><div class="toc" id="toc"></div></div>
+		<div class="overlay" id="modal" role="dialog" aria-modal="true"><div class="sheet" id="sheet"></div></div>
+	</div>
+</div>
+
+<script>
+(() => {
+"use strict";
+
+/* ====================== 데이터 ====================== */
+const REPO = "https://github.com/sds-code-reviewer-26-8/battery-3-team";
+const PEOPLE = {
+	"우주상": { gh: "joosang425", img: "assets/slides/avatar-woo.png", role: "팀장" },
+	"김현곤": { gh: "GlennHKim", img: "assets/slides/avatar-glenn.png", role: "팀원" },
+	"문형석": { gh: "anglermoon", img: "assets/slides/avatar-moon.png", role: "팀원" },
+	"오재석": { gh: "Jaesuk-0307", img: "assets/slides/avatar-jaesuk.png", role: "팀원 · 발표자" },
+};
+const ava = (name, size) => `<img class="ava" src="${PEOPLE[name].img}" width="${size}" height="${size}" alt="${name} GitHub 프로필 사진 (${PEOPLE[name].gh})">`;
+const ring = (name, size) => `<span class="ring">${ava(name, size)}</span>`;
+const doc = (name) => `${REPO}/blob/main/docs/loops/${encodeURIComponent(name)}/README.md`;
+
+const SLIDES = [];
+function add(section, title, cls, html, extra = {}) { SLIDES.push({ section, title, cls, html, ...extra }); }
+
+/* ---- 1. 표지 ---- */
+add("시작", "표지", "cover", `
+	<div class="links frag" data-order="0">
+		<a class="btn" href="${REPO}/blob/main/docs/PRD.md" target="_blank" rel="noopener">PRD.md</a>
+		<a class="btn" href="${REPO}/blob/main/docs/INTENT.md" target="_blank" rel="noopener">INTENT.md</a>
+	</div>
+	<div class="eyebrow">Team presentation</div>
+	<h1>삼삼오오</h1>
+	<div class="tagline">Loop 설계 · 기능 추가 미션 · 코드 리뷰, AI와 함께한 팀 프로젝트</div>
+	<div class="team">
+		${["우주상", "김현곤", "문형석", "오재석"].map((n) => `
+		<div class="member glass frag">
+			${ring(n, 190)}
+			<div class="nm">${n}</div>
+			<span class="pill ${n === "오재석" ? "gold" : n === "우주상" ? "purple" : ""}">${PEOPLE[n].role}</span>
+			<div class="gh">@${PEOPLE[n].gh}</div>
+		</div>`).join("")}
+	</div>
+	<div class="hint">→ 키 또는 클릭으로 넘겨요 · T 목차 · F 전체 화면 · A 모두 보기</div>
+`, { allShown: false });
+
+/* ---- 2. 테스트 세팅 ---- */
+add("테스트", "테스트 세팅", "", `
+	<div class="head">
+		<div class="kicker"><b>1</b>테스트 세팅</div>
+		<h1 class="title">테스트 <span class="count" data-to="253">253</span>개, 커버리지 97.0%</h1>
+	</div>
+	<div class="body"><div class="tests">
+		${[
+			["Unit Test", 16, "개", "JUnit 5, AssertJ. PlannerTest로 Spring 없이 경로 계산 로직만 검증"],
+			["Slice Test", 49, "개", "@WebMvcTest(컨트롤러 36개) · @DataJpaTest(리포지토리 13개), MockMvc, Mockito(@MockitoBean), H2"],
+			["통합 테스트", 65, "개", "JUnit 5, @SpringBootTest, MockMvc, AssertJ, 메모리 H2"],
+			["E2E 테스트", 106, "개", "Playwright (Chromium)"],
+			["Robustness", 6, "개", "Playwright(e2e/robustness). 반복 실행 3개 + 동시 요청 3개"],
+			["Stress", 5, "개", "JUnit 5, MockMvc, ExecutorService로 16~32개 스레드 동시 요청, 메모리 H2"],
+			["성능 테스트", 6, "개", "@Tag(\"performance\"). 경로 계산 3개 + 주문 목록 조회 3개, 기준 시간 안에 끝나는지 확인"],
+			["Test Coverage", 97.0, "%", "JaCoCo(라인 기준). Java 테스트 141개 측정, Playwright E2E·Robustness는 제외"],
+		].map(([l, n, u, t], i) => `
+		<div class="tcard glass frag${i === 7 ? " hl" : ""}">
+			<h4>${l}</h4>
+			<div class="big"><span class="count" data-to="${n}" data-dec="${n % 1 ? 1 : 0}">${n}</span><small>${u}</small></div>
+			<p>${t}</p>
+		</div>`).join("")}
+	</div></div>
+`);
+
+/* ---- 3. 팀 Evidence 템플릿 ---- */
+add("Loop 설계", "팀 Evidence 템플릿", "", `
+	<div class="head">
+		<div class="kicker"><b>2</b>Loop 설계<span>· 팀 Evidence 템플릿</span></div>
+		<h1 class="title">구현 전 · 구현 후, 증거를 남기는 두 문서</h1>
+	</div>
+	<div class="body"><div class="tpl">
+		<div class="shots">
+			<div class="shot frag"><div class="tag"><span class="pill purple">구현 전 · precheck.html</span></div>
+				<div class="frame"><div class="bar"><i></i><i></i><i></i><span></span></div><img class="zoomable" data-zoom="assets/slides/template-precheck.png" src="assets/slides/template-precheck.png" alt="precheck.html 템플릿 화면 캡처" height="650"></div></div>
+			<div class="shot frag"><div class="tag"><span class="pill teal">구현 후 · report.html</span></div>
+				<div class="frame"><div class="bar"><i></i><i></i><i></i><span></span></div><img class="zoomable" data-zoom="assets/slides/template-report.png" src="assets/slides/template-report.png" alt="report.html 템플릿 화면 캡처" height="650"></div></div>
+		</div>
+		<div class="side">
+			<div class="note glass frag"><h3>precheck.html <span class="pill purple">구현 전</span><a class="btn" href="${REPO}/blob/main/docs/loops/templates/precheck.html" target="_blank" rel="noopener">원본 ↗</a></h3>
+				<p>구현을 시작하기 전에 무엇을 점검했는지 남기는 증거입니다. 사람(HITL)이 이 문서를 보고 구현 착수를 승인합니다. 목표·범위, 근거 자료, 현재 상태, 영향 범위, 통과 기준(AC)을 채웁니다.</p></div>
+			<div class="note glass frag"><h3>report.html <span class="pill teal">구현 후</span><a class="btn" href="${REPO}/blob/main/docs/loops/templates/report.html" target="_blank" rel="noopener">원본 ↗</a></h3>
+				<p>구현과 구현 이후에 진행한 검증을 요약한 증거입니다. 사람이 이 문서를 보고 완료를 승인하거나, 부족하면 사전 검토로 되돌립니다(Feedback). 통과 기준(AC)과 1:1로 대조합니다.</p></div>
+			<div class="note glass frag"><h3>공통 작성 규칙</h3>
+				<ul><li>실제로 확인한 것·실행한 결과만 적는다</li><li>실패·건너뜀·확인하지 못한 것도 숨기지 않는다</li><li>명령과 결과, 파일 위치 같은 근거를 함께 남긴다</li></ul></div>
+			<div style="font-size:20px;color:var(--dim)">문서 화면을 누르면 크게 볼 수 있어요</div>
+		</div>
+	</div></div>
+`);
+
+/* ---- 4. 공통 뼈대 ---- */
+add("Loop 설계", "팀 Loop 공통 뼈대", "", `
+	<div class="head">
+		<div class="kicker"><b>2</b>Loop 설계<span>· 팀 Loop 공통 뼈대</span></div>
+		<h1 class="title">준비 → 구현 → 검증, 실패하면 준비로</h1>
+	</div>
+	<div class="body">
+		<div class="flow frag">
+			<div class="fhilp"><span class="pill orange">HILP · 사람 판단이 필요하면 멈춰요</span></div>
+			<div class="fnode glass" style="left:0"><b>사람</b><span>/ih 구현할 내용<br>요청을 구체적으로</span></div>
+			<div class="farrow" style="left:280px">→</div>
+			<div class="fnode step" style="left:362px"><b>① Prepare</b><span>사전 점검 · 통과 기준(AC)<br>precheck.html</span></div>
+			<div class="farrow" style="left:642px">→</div>
+			<div class="fnode step" style="left:724px"><b>② Implement</b><span>계획 → 구현 → 자가검증</span></div>
+			<div class="farrow" style="left:1004px">→</div>
+			<div class="fnode step" style="left:1086px"><b>③ Verify</b><span>직접 실행해 AC와 1:1 대조<br>report.html</span></div>
+			<div class="farrow" style="left:1366px">→</div>
+			<div class="fnode glass" style="left:1448px"><b>사람</b><span>리뷰 · 완료 승인(HITL)<br>· 커밋</span></div>
+			<div class="fback" style="left:502px;width:724px"></div>
+			<div class="flabel" style="left:502px">FAIL이면 Prepare로 복귀 · 최대 3회, 이후엔 사람에게</div>
+		</div>
+		<div class="fcols frag">
+			<div>
+				<div class="mini glass"><h4><span class="pill purple">Prepare</span> 의도와 근거부터</h4><p>요청의 의도와 근거 문서(PRD·INTENT)를 확인하고 구현 전 기준선과 통과 기준(AC)을 정합니다. 사람이 결정할 일이면 구현하지 않고 멈춥니다.</p></div>
+				<div class="mini glass"><h4><span class="pill purple">Implement</span> 범위 안에서만</h4><p>계획을 세우고 범위 안에서 구현한 뒤 자가검증합니다. 합격은 단정하지 않습니다.</p></div>
+				<div class="mini glass"><h4><span class="pill purple">Verify</span> 믿지 않고 직접</h4><p>구현자의 주장을 믿지 않고 실제 코드·git diff·테스트 출력으로 AC를 하나씩 판정합니다.</p></div>
+			</div>
+			<div class="dec">
+				<div><b>순서·피드백·종료는 워크플로 코드가, 판단은 에이전트가</b><span>흐름을 모델 판단에 맡기면 단계를 건너뛰거나 끝없이 돌 수 있어요</span></div>
+				<div><b>구현자와 검증자를 분리한다</b><span>구현자가 자기 결과를 합격시키면 맹점이 같아요</span></div>
+				<div><b>검증 실패 시 구현이 아니라 준비로 돌아간다</b><span>원인이 통과 기준·환경·범위에 있을 수 있어요</span></div>
+				<div><b>재시도해도 통과 기준을 낮추지 않는다</b><span>기준을 완화하면 루프가 통과하기 쉬운 쪽으로 흘러요</span></div>
+				<div><b>반복은 최대 3회</b><span>무한 반복을 막는 안전장치, 넘으면 사람에게 넘겨요</span></div>
+			</div>
+		</div>
+	</div>
+`);
+
+/* ---- 5~8. Best Practice Loop ---- */
+function bpSlide(idx, picker, intro, loopName, docName, note, points) {
+	add("Loop 설계", `Best Practice ${idx} · ${picker} → ${intro}`, "", `
+		<div class="head">
+			<div class="kicker"><b>2</b>Loop 설계<span>· Best Practice Loop ${idx}/4</span></div>
+			<h1 class="title">${intro}의 ${loopName}</h1>
+		</div>
+		<div class="body"><div class="bp">
+			<div class="profile glass">
+				${ring(picker, 230)}
+				<div class="nm">${picker}</div>
+				<div class="cap">이 Loop를 뽑았어요</div>
+				<div class="intro">
+					${ava(intro, 84)}
+					<div class="t">소개 팀원 <b style="color:#fff">${intro}</b></div>
+					<a class="btn" href="${doc(docName)}" target="_blank" rel="noopener">Loop 설명 ↗</a>
+					${note ? `<div class="t" style="font-size:19px;color:var(--dim)">${note}</div>` : ""}
+				</div>
+			</div>
+			<div class="chats">
+				${points.map(([h, t], i) => `
+				<div class="chat frag"><div class="num">${i + 1}</div>
+					<div class="bubble tail${i === 2 ? " hl" : ""}"><h3>${h}</h3><p>${t}</p></div></div>`).join("")}
+			</div>
+		</div></div>
+	`);
+}
+bpSlide(1, "문형석", "오재석", "/ih Loop", "오재석", "", [
+	["검증이 실패하면 구현이 아니라 '준비 단계'로 돌아갑니다", "실패 원인이 구현이 아니라 통과 기준·환경·범위에 있을 수 있기 때문이고, 같은 precheck.html을 갱신해 보완 이력을 남깁니다. 첫 실행(F-01)의 2라운드에서 Prepare가 원인을 '구현 결함이 아니라 테스트 공백'으로 진단해 통과했습니다."],
+	["루프 제어를 에이전트의 판단이 아니라 워크플로 코드가 고정합니다", "Verify가 pass라고 해도 blocker나 fail·skip 항목이 있거나, src/main/이 바뀌었는데 서버 재시작 증거가 없으면 워크플로가 통과로 인정하지 않습니다. 지침으로만 적어 두었을 때 에이전트가 건너뛴 문제를 코드로 막은 사례입니다."],
+	["확인하지 못한 것과 비용을 표로 공개합니다", "'확인하지 못한 것'을 항목별로 상태(확인됨·부분 확인·미확인)와 함께 적었고, 첫 실행의 규모(에이전트 6개, 약 17분, 서브에이전트 토큰 약 41.7만)와 아직 실행해 보지 않은 경로(HILP 종료, max-rounds 종료)까지 기록했습니다."],
+]);
+bpSlide(2, "오재석", "김현곤", "/ih Loop", "김현곤", "", [
+	["사람과 에이전트의 역할이 한눈에 보입니다", "흐름도를 사람/에이전트 영역으로 나눠 그렸고, 실행 전·HILP·통과 후·실패 후 등 시점별로 사람이 할 일을 표로 정리했습니다. 에이전트가 하지 않는 일(HITL 칸 작성, 커밋·푸시, 체크리스트 완화, 열린 질문 임의 결정)도 명시했습니다."],
+	["구현자의 말을 믿지 않는 독립 검증입니다", "verify는 git diff와 직접 실행한 테스트 출력만 근거로 판정하고, 검증하지 못한 항목(skip)이 하나라도 있으면 FAIL로 처리합니다. 실패 이력은 verify_feedback.md에 덮어쓰지 않고 이어 써서 다음 회차가 가장 먼저 읽습니다."],
+	["한계를 숨기지 않고 실제 사례로 밝혔습니다", "'발주사 필수 입력' 요청이 단위 테스트는 통과했지만 Playwright E2E 22개를 깨뜨렸고 /ih가 이를 잡지 못했다는 점을 기록해, 통과 조건에 E2E를 넣을지를 열린 질문으로 남겼습니다."],
+]);
+bpSlide(3, "김현곤", "문형석", "/refactoring Loop", "문형석", "", [
+	["적대적 검토", "테스트가 통과해도 git diff를 반박하는 관점으로 다시 읽어 숨은 동작 변경을 찾고, 확인되면 FAIL로 처리합니다. 내 Verify에는 이런 단계가 없습니다."],
+	["기준선 대비 검증", "cleanTest로 결과 재사용 없이 새로 돌려 기준선과 비교하고, 동작을 고정하는 테스트가 없는 코드는 HITL로 멈춥니다. 내 Verify는 gradlew.bat test만 돌립니다."],
+	["같은 원인 2회 연속 실패 시 중단", "한도(3회) 안이어도 사람에게 넘기고, 템플릿 준수도 기계적으로 검사합니다. 내 쪽은 이 중단 규칙을 강제하지 않아서 배우고 싶은 점입니다."],
+]);
+bpSlide(4, "우주상", "오재석", "/ih Loop", "오재석", "PR #16", [
+	["Verify의 '통과'를 워크플로가 다시 확인합니다", "Verify가 통과라고 해도 워크플로가 fail, skip, blocker와 서버 재시작 증거를 코드로 다시 확인합니다. 에이전트의 말을 그대로 믿지 않고 통과를 판정합니다."],
+	["피드백 루프가 설계대로 도는 것을 보여 줬습니다", "실제 실행(결함 4건 수정)에서 Verify가 '검증하지 못함'을 숨기지 않고 실패로 돌려보냈고, Prepare가 원인을 구현이 아니라 테스트 공백으로 구분해 2라운드 만에 통과했습니다."],
+	["약점을 숨기지 않고 규칙으로 보강했습니다", "실행에서 드러난 약점(Verify가 서버 재시작을 생략한 것)을 규칙으로 보강했습니다. 확인한 것과 못 한 것을 구분해 기록했고, 설계 결정마다 이유를 적었습니다."],
+]);
+
+/* ---- 9~12. Loop를 돌리며 느낀 점 ---- */
+function feelSlide(name, good, bad, problems) {
+	const li = (a) => a.map((x) => `<li>${x}</li>`).join("");
+	add("Loop 설계", `Loop를 돌리며 느낀 점 · ${name}`, "", `
+		<div class="head">
+			<div class="kicker"><b>2</b>Loop 설계<span>· Loop를 돌리며 느낀 점</span></div>
+			<h1 class="title">${name}의 Loop 이야기</h1>
+		</div>
+		<div class="body"><div class="feel">
+			<div class="profile glass">${ring(name, 190)}<div class="nm">${name}</div><div class="cap">Loop를 돌리며<br>느낀 점</div></div>
+			<div>
+				<div class="fgroup good glass frag"><h4><span class="pill green">좋았던 점</span></h4><ul>${li(good)}</ul></div>
+				<div class="fgroup bad glass frag"><h4><span class="pill orange">아쉬웠던 점</span></h4><ul>${li(bad)}</ul></div>
+			</div>
+			<div>
+				<div class="probhead frag"><h4>문제와 개선</h4><div class="dots">${problems.map((_, i) => `<i data-dot="${i}"></i>`).join("")}</div></div>
+				<div class="swapbox" style="height:${problems.length === 1 ? 460 : problems.length === 2 ? 560 : 680}px">
+					${problems.map((p, i) => `
+					<div class="pcard glass frag" data-swap="p" data-dotidx="${i}">
+						<div class="tag p">문제 ${problems.length > 1 ? `${i + 1}/${problems.length}` : ""}</div><p>${p[0]}</p>
+						<div class="tag c">원인</div><p class="c">${p[1]}</p>
+						<div class="tag f">어떻게 개선했나</div><p class="f">${p[2]}</p>
+					</div>`).join("")}
+				</div>
+			</div>
+		</div></div>
+	`);
+}
+feelSlide("김현곤",
+	["기준을 잘 만들어 주면 <b>Agent가 정말로 많은 일</b>을 할 수 있다는 사실에 많이 놀랐습니다."],
+	["기준을 웬만큼 잘 만들지 않으면 Agent가 내부적으로 어떤 일을 하는지 알기가 어렵습니다.", "자동으로 하는 일이 많아지는 만큼 <b>인지부채</b>가 쌓여서 결국 의존하게 될 것 같은 막연한 불안감이 있습니다."],
+	[["<b>통제</b>: Agent 스스로 판단하고 하는 일이 많아지고, Evidence를 만들지만 리뷰어 입장에서 컨텍스트 이해 속도가 다르고 무엇보다 <b>리뷰 볼륨</b>이 압도적으로 많아지는 이슈",
+	  "자동화시키는 업무 단위가 너무 크거나 지시하는 내용이 모호할 경우 AI가 독자적으로 판단하는 경우가 많음",
+	  "Loop 설계 시 <b>Plan 단계</b>를 넣어서 최초 Agent 스스로 계획 후, 변경이 예상되는 범위가 발견되는 경우 리뷰어의 확인을 받도록 <b>HILP 단계</b>를 추가함"]]);
+feelSlide("문형석",
+	["<b>'끝났다'의 기준을 구현 전에</b> 정했습니다. 통과 기준(AC-1~9)을 먼저 적고 구현 뒤 기준마다 명령과 결과를 표로 대조했습니다.",
+	 "<b>새 테스트가 기능 없는 옛 코드에서 실패하는지</b> 확인했습니다. JUnit 4개·E2E 6개가 실패해서 통과만 하는 테스트가 아님을 증거로 남겼습니다.",
+	 "증거 문서 덕분에 리뷰가 빨라졌고, 리뷰어가 개인 경로·계정명이 없는지까지 점검했습니다."],
+	["내가 설계한 <b>/refactoring은 끝까지 도는 경험을 못 했습니다.</b> 첫 실행이 main 브랜치라 prepare가 사람에게 넘기며(HITL) 종료됐습니다.",
+	 "precheck에 \"소수는 서버가 검증\"이라 적었지만 <b>실제로 확인하지 않은 내용</b>이었고, 리뷰어가 재현해서 알려 주었습니다."],
+	[["서버가 requiredDays로 <b>5.5를 5로, \"10\"을 10으로</b> 조용히 바꿔 저장했습니다 (PR #23 리뷰에서 발견)",
+	  "화면에서 소수를 막는 것만 테스트했고 API를 직접 호출해 보지 않았는데, precheck에는 '서버가 검증'이라고 적었습니다",
+	  "요청 값을 JsonNode로 받아 정수만 허용(소수·문자열은 400)하고, 경계 테스트 3개와 API 케이스(DLN-06)를 추가했습니다. 새 테스트가 수정 전 컨트롤러에서 실패하는 것을 확인했고 precheck·report 문구도 정정했습니다"],
+	 ["전체 E2E를 다시 돌리다 서버 연결 오류(ERR_CONNECTION_REFUSED)로 <b>12건이 실패</b>했습니다",
+	  "앞서 시작한 백그라운드 Playwright 실행이 끝나기 전에 새로 시작해서 같은 포트(18080)와 서버를 겹쳐 썼습니다",
+	  "겹치지 않게 순차로 다시 실행해 통과(89 통과·0 실패, 반복 60/60)를 확인했고, 보고서 5장에 이 일시 실패를 사실대로 적었습니다"],
+	 ["다른 팀원 PR을 리뷰하는 사이 <b>작성자가 새 커밋</b>을 올렸습니다 (PR #25)",
+	  "리뷰한 시점과 코멘트를 게시하는 시점 사이에 PR의 head 커밋이 바뀌었습니다",
+	  "게시 직전에 head를 다시 확인했고, 코멘트 맨 위에 '리뷰 기준 커밋 4bee1f4, 이후 병합 후 테스트는 아직 실행하지 않음'을 적었습니다. 이후 최신 커밋(cda096c)을 다시 받아 재검증한 뒤 승인했습니다"]]);
+feelSlide("오재석",
+	["<b>검증이 내 구현을 막아 줬습니다.</b> F-01 1라운드에서 Verify가 검증하지 못한 항목을 실패로 돌려보냈고, 2라운드에 통과했습니다.",
+	 "<b>증거 문서 덕분에 리뷰가 빨라졌습니다.</b> PR #24 리뷰어가 report의 수치를 바로 확인했습니다."],
+	["<b>설계가 끝나도 첫 실행에서 구멍이 나옵니다.</b> HILP·max-rounds 종료는 한 번도 실행해 보지 못했습니다.",
+	 "<b>느리고 비쌉니다.</b> F-01에 약 17분, 서브에이전트 토큰 약 41.7만이 들었습니다."],
+	[["코드가 바뀌었는데 <b>서버 재시작 없이 E2E</b>를 돌렸습니다 (F-01)",
+	  "재시작을 지침으로만 적어 두었고, 에이전트가 '영향 없음'으로 판단해 건너뛰었습니다",
+	  "워크플로 코드가 <b>재시작 증거가 없으면 통과로 인정하지 않게</b> 했습니다. 규칙은 에이전트의 판단이 아니라 코드로 지켜야 했습니다"],
+	 ["리뷰 승인 뒤 다른 PR이 먼저 병합되어 <b>충돌이 났습니다</b> (TASK-006)",
+	  "다른 기능이 같은 파일과 PRD·INTENT를 함께 바꿨습니다",
+	  "두 기능을 모두 남기며 병합하고, 병합 상태에서 전체 회귀를 다시 돌렸습니다 (JUnit 72건, E2E 105건 통과)"]]);
+feelSlide("우주상",
+	["<b>반복 작업을 자동화</b>해 공수를 크게 줄일 수 있었습니다.", "진행 과정을 문서로 남기기 때문에 <b>산출물이 꾸준히 쌓였습니다.</b>"],
+	["Loop의 설계가 깊어질수록 <b>실행 시간이 길어집니다.</b>", "산출물의 분량이 늘어나면 가독성이 떨어질 수 있습니다."],
+	[["한글 비밀번호가 25자를 넘으면 <b>가입 중 서버 오류(500)</b>가 났습니다 (PR #22 리뷰에서 발견)",
+	  "사전 검토가 글자 수(8~64자)만 보고 BCrypt의 UTF-8 72바이트 제한은 보지 못했습니다. 한글은 한 글자가 3바이트라서 24자까지만 통과합니다",
+	  "72바이트 초과 시 이유를 안내하도록 검증을 추가하고 JUnit·E2E(SGN-09)를 넣었습니다. 새 테스트가 수정 전 코드에서 실패하는 것을 확인했고, 전체 3회 반복(273 통과, flaky 0)으로 재검증했습니다"],
+	 ["\"최상위 await로 E2E가 안전하다\"고 적었는데 <b>E2E가 간헐적으로 실패</b>했습니다 (PR #19)",
+	  "화면이 JS로 그려지게 되면서 테스트가 칩 건수를 그려지기 전에 읽는 경우가 생겼습니다. 한 번 실행한 결과로 'flaky 0'이라고 적은 것도 근거가 약했습니다",
+	  "본문과 report의 설명이 틀렸음을 정정했습니다. 헬퍼가 첫 요소가 보일 때까지 기다리게 고쳤고, 전체 3회 반복(234 통과, 실패 0, flaky 0)으로 다시 확인했습니다"],
+	 ["결과 파일에 <b>PC 사용자 경로</b>가 들어갔고, 읽을 수 없는 Gradle .bin 파일이 증거에 섞여 있었습니다 (PR #18, #19 리뷰)",
+	  "테스트가 남긴 결과 JSON과 로그에 C:\\Users\\… 경로가 그대로 기록되었고, 증거 폴더를 통째로 올렸습니다",
+	  "&lt;user&gt;로 치환하고 .bin을 제외했습니다. 이미 머지된 TASK-001 파일(46곳)까지 함께 치환했습니다. 다만 git 이력에는 이전 값이 남아 있다고 PR에 밝혔습니다"]]);
+
+/* ---- 13~16. 기능 추가 미션 ---- */
+const MISSIONS = [
+	{ no: 1, task: "TASK-004", name: "사용자 추가 기능", gif: "feat-task04.gif", pr: 22, action: "우주상", gate: "김현곤", c: 2, k: 9, area: "" },
+	{ no: 2, task: "TASK-005", name: "필요 납기일 지정 기능", gif: "feat-task05.gif", pr: 23, action: "문형석", gate: "오재석", c: 7, k: 4, area: "Yellow" },
+	{ no: 3, task: "TASK-006", name: "고객사 이름 기능", gif: "feat-task06.gif", pr: 24, action: "오재석", gate: "우주상", c: 9, k: 8, area: "Yellow" },
+	{ no: 4, task: "TASK-007", name: "공장 운영비 추가 기능", gif: "feat-task07.gif", pr: 25, action: "김현곤", gate: "문형석", c: 8, k: 9, area: "Red" },
+];
+MISSIONS.forEach((m) => add("기능 추가 미션", `기능 ${m.no}. ${m.name}`, "", `
+	<div class="head">
+		<div class="kicker"><b>3</b>기능 추가 미션<span>· ${m.task}</span></div>
+		<h1 class="title">기능 ${m.no}. ${m.name}</h1>
+	</div>
+	<div class="body"><div class="mission">
+		<div class="frame"><div class="bar"><i></i><i></i><i></i><span></span></div><img data-src="${m.gif}" alt="${m.name} 시연 영상(GIF)" height="700"></div>
+		<div class="mside">
+			<div class="who glass frag"><div class="row">
+				<div class="p">${ring(m.action, 120)}<b>${m.action}</b><span>Action · 구현</span></div>
+				<div class="arrow">→</div>
+				<div class="p">${ring(m.gate, 120)}<b>${m.gate}</b><span>Gate · 리뷰</span></div>
+			</div></div>
+			<div class="stats frag">
+				<div class="stat glass"><div class="n">${m.c}<small>개</small></div><div class="l">PR 리뷰 코멘트</div></div>
+				<div class="stat glass"><div class="n">${m.k}<small>개</small></div><div class="l">Commit</div></div>
+			</div>
+			<div class="frag" style="display:flex;gap:14px;flex-wrap:wrap;align-items:center">
+				<a class="btn" href="${REPO}/pull/${m.pr}" target="_blank" rel="noopener">PR #${m.pr} 보기 ↗</a>
+				${m.area ? `<span class="pill ${m.area === "Red" ? "orange" : "gold"}">영역 · ${m.area}</span>` : ""}
+			</div>
+		</div>
+	</div></div>
+`));
+
+/* ---- 17. PR 현황 ---- */
+add("PR & 코드리뷰", "미션별 PR 현황", "", `
+	<div class="head tall">
+		<div class="kicker"><b>4</b>PR &amp; 코드리뷰<span>· 미션별 PR 현황</span></div>
+		<h1 class="title">Action이 만들고, Gate가 리뷰했어요</h1>
+		<div class="sub">Action은 기능을 개발하며 Code Smell을 추가하고, Gate는 코드 리뷰로 Agent와 함께 개선안을 도출했습니다.</div>
+	</div>
+	<div class="body short">
+		<div class="prhead"><span>미션</span><span>Action → Gate</span><span>리뷰 코멘트</span><span>Commit</span></div>
+		<div class="prtable">
+		${MISSIONS.map((m) => `
+			<div class="prrow glass frag">
+				<div class="m"><b>${m.task}</b><span>${m.name}</span></div>
+				<div class="ag">${ava(m.action, 74)}<div>${m.action}<small>@${PEOPLE[m.action].gh}</small></div><span class="ar">→</span>${ava(m.gate, 74)}<div>${m.gate}<small>@${PEOPLE[m.gate].gh}</small></div></div>
+				<div class="nums"><b>${m.c}</b>개<div class="bar2"><i style="width:${m.c / 9 * 100}%"></i></div></div>
+				<div class="nums"><b>${m.k}</b>개<div class="bar2"><i style="width:${m.k / 9 * 100}%"></i></div> <a class="btn" style="margin-top:10px;padding:4px 14px;font-size:19px" href="${REPO}/pull/${m.pr}" target="_blank" rel="noopener">PR #${m.pr} ↗</a></div>
+			</div>`).join("")}
+		</div>
+	</div>
+`);
+
+/* ---- 18. 코드 리뷰 Best Practice ---- */
+const REVIEWS = [
+	{ who: "김현곤", pr: 19, reviewer: "anglermoon", title: "Thymeleaf를 제거하고 정적 HTML + JSON API로 프런트엔드 전환 (리팩토링 2)",
+	  sum: "Evidence의 \"flaky 0\" 주장을 12회 반복 실행으로 반증했습니다. 36회 중 2회 실패를 재현하고, 앱이 아니라 테스트 쪽을 고치자고 제안했습니다.",
+	  problem: "Evidence가 \"flaky 0\"이라고 적었지만 한 번 실행한 결과였습니다. 화면이 JS로 그려지도록 바뀌면서 주문 목록의 칩 건수를 읽는 chipCounts가 goto 직후 칩이 그려지기 전에 읽는 경우가 생겼습니다(Expected: NaN). 작성자는 \"최상위 await로 로딩 시점을 맞췄다\"고 설명했지만 안정적으로 보장되지 않았습니다.",
+	  how: "CNF-07·CNF-08·DTL-06을 12회씩 반복 실행해 36회 중 2회 실패를 재현했고, 전체 실행에서도 CNF-08이 한 번 실패했습니다. 수정 방향은 앱 코드를 테스트 타이밍에 맞추지 말고 테스트 쪽을 고치자는 것이었습니다(첫 칩이 보일 때까지 기다림). 결과 파일의 Windows 사용자 경로, 약해진 DTL-05·DTL-08, 취소 후 안내 문구가 정책(Q2)에 묶여 있다는 점도 함께 짚었습니다.",
+	  good: "작성자의 \"flaky 0\" 주장을 그대로 믿지 않고 반복 실행이라는 방법으로 반증했고, 원인과 해결 위치(테스트 쪽)까지 구체적으로 제시했습니다. 작성자가 설명을 정정하고 직접 재현(30회 중 1회 실패)한 뒤 LST-04·LST-06까지 넓혀 고쳤습니다. 확인하지 못한 것(Firefox·Safari, 린트, 부하)도 리뷰에 명시했습니다." },
+	{ who: "우주상", pr: 22, reviewer: "GlennHKim", title: "회원 가입 시 비밀번호가 UTF-8 72바이트를 넘으면 안내하도록 검증 추가 (TASK-004)",
+	  sum: "재현 방법·예외 위치·원인·수정 방향·우선순위([필수]/[권장])를 갖춘 리뷰라 바로 고칠 수 있었습니다.",
+	  problem: "한글 비밀번호가 길면 가입 중 서버 오류(500)가 났습니다. 검증은 글자 수(8~64자)만 보는데 BCrypt는 72바이트까지만 받기 때문입니다. 직접 재현해 보니 한글 24자는 가입되고 25자와 30자는 500이 났습니다. 또 가입 화면은 로그인 없이 열리는데 PRD와 INTENT는 \"로그인 화면만 볼 수 있다\"고 적혀 있어 FR-22와 어긋났습니다.",
+	  how: "글자 수 규칙을 통과한 비밀번호가 72바이트를 넘으면 BusinessException으로 이유를 안내했습니다(영문·숫자 64자, 한글 24자). JUnit과 E2E SGN-09를 추가했고, 수정 전 코드에서 새 테스트가 실제로 실패하는 것도 확인했습니다. 재검증은 JUnit 54/54, E2E 91 통과, 전체 3회 반복 273 통과(실패 0, flaky 0)입니다.",
+	  good: "리뷰가 추상적인 의견이 아니라 재현 방법, 예외 위치, 원인, 수정 방향, 우선순위를 갖춰서 바로 고칠 수 있었습니다. 기존 테스트로는 잡히지 않고 사전 검토도 글자 수와 바이트 수를 구분하지 못했는데, 리뷰가 그 빈틈을 정확히 짚었습니다. 수정 후에도 경계값(24자, 25자, 이모지, 혼합 문자열)과 실제 로그인까지 다시 확인하고 승인했습니다." },
+	{ who: "문형석", pr: 23, reviewer: "Jaesuk-0307", title: "필요 납기일 기입: '가능한 빨리' 또는 5~50일 선택, 납기를 넘는 경로는 빨간색 표시 (TASK-005, Yellow)",
+	  sum: "재현 입력과 기대 결과를 주고, 요청 2건·참고 5건으로 나눠 무엇부터 할지 분명했습니다.",
+	  problem: "화면은 소수 입력을 막지만 서버는 막지 않았습니다. POST /api/orders에 requiredDays: 5.5를 보내면 200으로 확정되고 5로 저장됐고 \"10\"은 10으로 저장됐습니다. precheck의 위험표는 \"소수는 서버가 검증\"이라고 적혀 있어 실제와 달랐고, 기존 JUnit은 구현식을 그대로 복제해 비교하고 있었습니다.",
+	  how: "리뷰어가 로컬에서 직접 재현해 입력값과 결과를 제시했고, 요청을 요청 사항(권장) 2건과 참고(선택) 5건으로 나눴습니다. 작성자는 납기일을 JsonNode로 받아 정수만 허용(소수·문자열은 400)하고, 경계 테스트 JUnit 3개와 E2E 케이스를 추가했습니다. 수정 전 컨트롤러에서 새 테스트가 실패하는 것도 확인했고, 리뷰어가 못 했다고 밝힌 \"기존 DB 파일 기동\"은 작성자가 대신 확인해 report에 추가했습니다.",
+	  good: "막연한 \"검증 보강\"이 아니라 재현 입력과 기대 결과를 줬습니다. 필수·참고를 나눠서 무엇부터 해야 하는지 분명했고, 리뷰어가 화면을 직접 띄워 확인한 것과 못 한 것을 구분해 적어서 작성자가 빈 곳을 채울 수 있었습니다. \"1·2번이 반영되면 승인하겠다\"는 약속대로 승인이 이어졌습니다." },
+	{ who: "오재석", pr: 25, reviewer: "anglermoon", title: "공장별 하루 운영비 추가, 비용 최소 안을 '운항비 + 운영비' 합이 가장 작은 안으로 선택 (TASK-007, Red)",
+	  sum: "운영비를 바꿔 가며 직접 계산해 세 안이 갈라지는 값을 표로 제시했고, 작성자는 변이 테스트로 증명했습니다.",
+	  problem: "기본값(운영비 1억)에서는 \"비용 최소\"와 \"가장 빠르게\"가 같은 안이 됩니다. 그래서 기존 테스트는 운영비 30억일 때만 비교해서, 선택식이 항상 FAST를 고르게 잘못 바뀌어도 통과할 수 있었습니다.",
+	  how: "리뷰어가 운영비를 바꿔 가며 직접 계산해 하루 0.5억일 때 세 안이 갈라지는 값을 표로 제시했습니다(비용 최소 24일·70억, 가장 빠르게 20일·72억, 운항비만 최소 26일·72억). 이 값을 고정하는 PlannerTest 코드를 제안했고 로컬에서 50/50 통과를 확인했습니다. 작성자는 선택식을 일부러 두 가지로 망가뜨려(운영비 무시, 소요 일수만 비교) 새 테스트가 둘 다 실패하는 것까지 확인했습니다.",
+	  good: "막연히 \"테스트 보강\"이 아니라 정확한 입력과 기대값을 줬고, 작성자가 변이 테스트로 그 테스트가 실제로 잡는지 증명했습니다. 승인 전에 #22~#24가 병합된 최신 커밋에서 세 기능(고객사·필요 납기일·운영비)을 한 주문으로 함께 확인해 병합 후 충돌도 같이 검증했습니다. \"확인하지 못한 것\"과 제품 판단 질문을 따로 남겨 머지를 막지 않는 의견을 분리했습니다." },
+];
+add("PR & 코드리뷰", "코드 리뷰 Best Practice", "", `
+	<div class="head tall">
+		<div class="kicker"><b>4</b>PR &amp; 코드리뷰<span>· Best Practice</span></div>
+		<h1 class="title">효과를 본 리뷰, 한 건씩 골랐어요</h1>
+		<div class="sub">카드를 누르면 문제 상황·적용한 방법·좋았던 점을 자세히 볼 수 있어요 (키보드 1~4)</div>
+	</div>
+	<div class="body short"><div class="rgrid">
+		${REVIEWS.map((r, i) => `
+		<button type="button" class="rcard glass frag card-btn" data-review="${i}" aria-label="${r.who}이 고른 PR #${r.pr} 리뷰 자세히 보기">
+			<div class="top">${ring(r.who, 84)}<div><div class="nm">${r.who}</div><div class="meta">PR #${r.pr} · 리뷰 @${r.reviewer}</div></div></div>
+			<h3>${r.title}</h3>
+			<p>${r.sum}</p>
+			<div class="more">자세히 보기 →</div>
+		</button>`).join("")}
+	</div></div>
+`);
+
+/* ---- 19. 회고 ---- */
+const RETRO = {
+	"김현곤": [
+		"AI가 정말 많은 일을 할 수 있다는 사실에 매일같이 놀라웠습니다. 현장에도 AI를 적극 도입하도록 힘써야겠다는 다짐을 했습니다.",
+		"AI를 통해 산출물이 많이 쌓이는데 볼륨이 생각보다 많아져서, 실질적인 리뷰 방법에 대한 고민이 많이 필요할 것 같습니다."],
+	"문형석": [
+		"Action과 Gate를 모두 맡아 \"구현자가 놓치는 것\"을 직접 경험했습니다. AI의 \"확인했다\"를 근거(직접 실행한 수치, 옛 코드에서 새 테스트 실패 확인)로 바꾸는 습관을 익혔습니다.",
+		"'인지부채'를 직접 겪었습니다(precheck의 \"소수는 서버가 검증\"). 설계한 /refactoring Loop를 끝까지 돌려 보지 못했고, 여러 PR이 같은 파일을 바꿔 병합 조율에 시간이 들었습니다."],
+	"오재석": [
+		"막연하게 시키기만 했던 AI를 더 효율적으로 활용하는 방법을 공부했습니다. Loop로 AI와 인간의 역할을 구분하며 견고한 시스템을 단기간에 구축할 수 있어, 현업에서도 활용해야겠다고 생각했습니다.",
+		"단기간이라 직접 개입해 AI와의 역할을 구분하기가 쉽지 않았습니다. '인지부채'를 실감했고, 이를 겪지 않으려면 코드 리뷰 과정이 반드시 중요하다는 것을 느꼈습니다."],
+	"우주상": [
+		"실무에서도 AI를 활용하고 있어서 교육에서 배운 내용을 바로 적용할 수 있었습니다. 배운 내용이 하나씩 쌓여 최종 결과물로 이어지는 구성이라 쉽게 이해하고 익힐 수 있었습니다.",
+		"특별히 아쉬웠던 점은 없었습니다."],
+};
+add("회고", "팀원별 회고", "", `
+	<div class="head tall">
+		<div class="kicker"><b>5</b>회고</div>
+		<h1 class="title">각자 느낀 점, 한 장씩</h1>
+		<div class="sub">Loop를 직접 설계하고 Evidence를 리뷰하는 방식으로 진행한 팀 프로젝트의 개인 회고입니다.</div>
+	</div>
+	<div class="body short"><div class="retro">
+		${["김현곤", "문형석", "오재석", "우주상"].map((n) => `
+		<div class="rcol glass frag">
+			<div class="head2">${ring(n, 82)}<div class="nm">${n}</div></div>
+			<h4 class="g"><span class="pill green">좋았던 점</span></h4><p>${RETRO[n][0]}</p>
+			<h4 class="o"><span class="pill orange">아쉬웠던 점</span></h4><p>${RETRO[n][1]}</p>
+		</div>`).join("")}
+	</div></div>
+`);
+
+/* ---- 20. Thank you ---- */
+add("마무리", "Thank you", "", `
+	<div class="thanks">
+		<div>
+			<h1 class="frag">Thank you</h1>
+			<div class="lines frag">구현 전에 점검하고,<br>구현 후에 검증하고,<br><b>사람이 최종 확인했습니다.</b></div>
+			<div class="kpi frag">
+				<div><b class="count" data-to="253">253</b><span>테스트</span></div>
+				<div><b class="count" data-to="4">4</b><span>기능 추가</span></div>
+				<div><b class="count" data-to="4">4</b><span>PR 리뷰</span></div>
+				<div><b><span class="count" data-to="97" data-dec="0">97</span>%</b><span>커버리지</span></div>
+			</div>
+			<div class="who2 frag">${["우주상", "김현곤", "문형석", "오재석"].map((n) => `<div>${ava(n, 96)}<b>${n}</b></div>`).join("")}</div>
+		</div>
+		<img class="art frag" src="assets/slides/reviewer-ai.svg" alt="코드 리뷰를 돕는 AI 로봇이 돋보기로 PR 변경 사항을 확인하는 일러스트">
+	</div>
+`);
+
+/* ====================== 엔진 ====================== */
+const $ = (s, r = document) => r.querySelector(s);
+const stage = $("#stage"), host = $("#slides");
+const SECTIONS = [...new Set(SLIDES.map((s) => s.section))];
+
+host.innerHTML = SLIDES.map((s, i) => `<section class="slide ${s.cls}" data-i="${i}" aria-label="${s.title}" aria-hidden="true">${s.html}</section>`).join("");
+const els = [...host.children];
+const N = els.length;
+let idx = 0, step = 0, modalOpen = false;
+
+function fit() {
+	const s = Math.min(innerWidth / 1920, innerHeight / 1080);
+	stage.style.transform = `translate(-50%, -50%) scale(${s})`;
+}
+addEventListener("resize", fit); fit();
+
+const fragsOf = (i) => [...els[i].querySelectorAll(".frag")];
+
+function loadMedia(i) {
+	[i - 1, i, i + 1].forEach((k) => {
+		if (k < 0 || k >= N) return;
+		els[k].querySelectorAll("img[data-src]").forEach((im) => { im.src = im.dataset.src; im.removeAttribute("data-src"); });
+	});
+}
+
+function applySteps() {
+	const f = fragsOf(idx), last = {};
+	f.forEach((el, i) => { el.classList.toggle("shown", i < step); el.classList.remove("swapped"); if (el.dataset.swap && i < step) last[el.dataset.swap] = i; });
+	f.forEach((el, i) => { if (el.dataset.swap && i < step && last[el.dataset.swap] !== i) { el.classList.remove("shown"); el.classList.add("swapped"); } });
+	const cur = f[last.p]; // 문제 카드 점 표시
+	els[idx].querySelectorAll("[data-dot]").forEach((d) => d.classList.toggle("on", !!cur && +d.dataset.dot === +cur.dataset.dotidx));
+}
+
+function countUp(root) {
+	root.querySelectorAll(".count[data-to]").forEach((el) => {
+		const to = parseFloat(el.dataset.to), dec = +(el.dataset.dec || 0);
+		if (matchMedia("(prefers-reduced-motion: reduce)").matches) { el.textContent = to.toFixed(dec); return; }
+		const t0 = performance.now(), dur = 1100;
+		const tick = (t) => { const p = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - p, 3); el.textContent = (to * e).toFixed(dec); if (p < 1) requestAnimationFrame(tick); };
+		requestAnimationFrame(tick);
+	});
+}
+
+function go(i, s = 0, silent = false) {
+	i = Math.max(0, Math.min(N - 1, i));
+	const changed = i !== idx || silent;
+	idx = i; step = s;
+	els.forEach((el, k) => { el.classList.toggle("active", k === i); el.classList.toggle("past", k < i); el.setAttribute("aria-hidden", k === i ? "false" : "true"); });
+	loadMedia(i); applySteps();
+	if (changed) countUp(els[i]);
+	$("#count").textContent = `${String(i + 1).padStart(2, "0")} / ${N}`;
+	$("#secName").textContent = SLIDES[i].section;
+	$("#progress").style.width = `${(i / (N - 1)) * 100}%`;
+	$("#btnPrev").disabled = i === 0; $("#btnNext").disabled = i === N - 1;
+	if (location.hash !== `#${i + 1}`) history.replaceState(null, "", `${location.search}#${i + 1}`);
+	renderToc();
+}
+
+function next() { const n = fragsOf(idx).length; if (step < n) { step++; applySteps(); } else if (idx < N - 1) go(idx + 1, 0); }
+function prev() { if (step > 0) { step--; applySteps(); } else if (idx > 0) go(idx - 1, fragsOf(idx - 1).length); }
+function showAll() { step = fragsOf(idx).length; applySteps(); }
+
+/* ---- 오버레이 ---- */
+const tocO = $("#tocOverlay"), modal = $("#modal"), sheet = $("#sheet");
+function renderToc() {
+	$("#toc").innerHTML = `<div class="toc-title">목차</div>` + SECTIONS.map((sec) => `<div><h3>${sec}</h3>${SLIDES.map((s, i) => s.section === sec ? `<button type="button" data-go="${i}" class="${i === idx ? "cur" : ""}"><i>${String(i + 1).padStart(2, "0")}</i>${s.title}</button>` : "").join("")}</div>`).join("");
+}
+function toggleToc(force) { const open = force ?? !tocO.classList.contains("open"); tocO.classList.toggle("open", open); }
+tocO.addEventListener("click", (e) => { const b = e.target.closest("[data-go]"); if (b) { go(+b.dataset.go); toggleToc(false); } else if (e.target === tocO) toggleToc(false); });
+
+function openSheet(html) { sheet.innerHTML = `<button type="button" class="x" aria-label="닫기 (Esc)">✕</button>${html}`; modal.classList.add("open"); modalOpen = true; sheet.scrollTop = 0; $(".x", sheet).focus(); }
+function closeSheet() { modal.classList.remove("open"); modalOpen = false; }
+modal.addEventListener("click", (e) => { if (e.target === modal || e.target.closest(".x")) closeSheet(); });
+
+function openReview(i) {
+	const r = REVIEWS[i];
+	openSheet(`<div class="who3">${ring(r.who, 96)}<div><h2>${r.who}의 Best Practice · PR #${r.pr}</h2><div style="font-size:22px;color:var(--muted)">리뷰 @${r.reviewer} · <a href="${REPO}/pull/${r.pr}" target="_blank" rel="noopener" style="color:var(--accent2)">PR 보기 ↗</a></div></div></div>
+		<p style="font-weight:700;color:#fff">${r.title}</p>
+		<h5 class="p">문제 상황</h5><p>${r.problem}</p>
+		<h5 class="f">적용한 방법</h5><p>${r.how}</p>
+		<h5 class="g">좋았던 점</h5><p>${r.good}</p>`);
+}
+
+/* ---- 입력 ---- */
+stage.addEventListener("click", (e) => {
+	if (modalOpen || tocO.classList.contains("open")) return;
+	const rc = e.target.closest("[data-review]"); if (rc) { openReview(+rc.dataset.review); return; }
+	const z = e.target.closest("[data-zoom]"); if (z) { openSheet(`<img class="zoom" src="${z.dataset.zoom}" alt="${z.alt}">`); return; }
+	if (e.target.closest("a, button, .chrome, .overlay")) return;
+	const r = stage.getBoundingClientRect();
+	(e.clientX - r.left < r.width * 0.12) ? prev() : next();
+});
+$("#btnPrev").onclick = prev; $("#btnNext").onclick = next; $("#btnToc").onclick = () => toggleToc();
+$("#btnFs").onclick = () => { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.(); };
+
+addEventListener("keydown", (e) => {
+	if (e.metaKey || e.ctrlKey || e.altKey) return;
+	const k = e.key;
+	if (k === "Escape") { if (modalOpen) closeSheet(); else toggleToc(false); return; }
+	if (modalOpen) return;
+	if (tocO.classList.contains("open")) { if (k === "t" || k === "T") toggleToc(false); return; }
+	if (["ArrowRight", "PageDown", " ", "Enter"].includes(k)) { e.preventDefault(); next(); }
+	else if (["ArrowLeft", "PageUp", "Backspace"].includes(k)) { e.preventDefault(); prev(); }
+	else if (k === "Home") go(0); else if (k === "End") go(N - 1);
+	else if (k === "t" || k === "T" || k === "m" || k === "M") toggleToc(true);
+	else if (k === "f" || k === "F") $("#btnFs").click();
+	else if (k === "a" || k === "A") showAll();
+	else if (/^[1-4]$/.test(k) && els[idx].querySelector("[data-review]")) openReview(+k - 1);
+});
+
+let tx = null;
+addEventListener("touchstart", (e) => { tx = e.touches[0].clientX; }, { passive: true });
+addEventListener("touchend", (e) => { if (tx == null) return; const dx = e.changedTouches[0].clientX - tx; tx = null; if (Math.abs(dx) > 60 && !modalOpen) (dx < 0 ? next() : prev()); }, { passive: true });
+
+addEventListener("beforeprint", () => { els.forEach((_, i) => loadMedia(i)); document.querySelectorAll("img[data-src]").forEach((im) => { im.src = im.dataset.src; }); document.querySelectorAll('.count[data-to]').forEach((el) => { el.textContent = (+el.dataset.to).toFixed(+(el.dataset.dec || 0)); }); });
+
+addEventListener("hashchange", () => { const k = (parseInt(location.hash.slice(1), 10) || 1) - 1; if (k !== idx && k >= 0 && k < N) go(k, 0); });
+
+/* ---- 시작 ---- */
+const start = Math.max(0, Math.min(N - 1, (parseInt(location.hash.slice(1), 10) || 1) - 1));
+go(start, 0, true);
+if (new URLSearchParams(location.search).has("all")) showAll();
+})();
+</script>
+</body>
+</html>
